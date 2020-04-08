@@ -13,6 +13,12 @@ export default function(containerRef) {
           Gift: 'gift',
         },
       },
+      Profile: {
+        path: 'profile',
+        screens: {
+          ProfileHome: 'profilehome'
+        }
+      }
     },
   });
 }

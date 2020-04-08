@@ -6,6 +6,7 @@ import HomeScreen from '../screens/HomeScreen';
 import SearchScreen from '../screens/SearchScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import GiftScreen from '../screens/GiftScreen';
+import ProfileNavigator from './ProfileNavigator';
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'Home';
@@ -36,11 +37,12 @@ export default function BottomTabNavigator({ navigation, route }) {
       />
       <BottomTab.Screen
         name="Profile"
-        component={ProfileScreen}
+        component={ProfileNavigator}
         options={{
           title: '',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-person" />,
-        }}
+        }
+      }
       />
       <BottomTab.Screen
         name="Gift"
@@ -63,8 +65,6 @@ function getHeaderTitle(route) {
     case 'Search':
       return 'Links to learn more';
     case 'Profile':
-      return 'Profile';
-    case 'Member/Login':
       return 'Profile';
     case 'Gift':
       return 'Links to learn more';
