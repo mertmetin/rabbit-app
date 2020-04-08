@@ -21,33 +21,29 @@ export default function LoginScreen({ navigation }) {
             <TouchableOpacity style={styles.submitButton}>
                 <Text style={styles.submitButtonText}> Login </Text>
             </TouchableOpacity>
-            <Button>
-                Forgot Password
-            </Button>
+            <TouchableOpacity style={styles.forgotPasswordButton}>
+                <Text style={styles.forgotPasswordText}>
+                    Forgot Password
+                </Text>
+            </TouchableOpacity >
+            <View style={styles.registerContainer}>
+                <TouchableOpacity style={styles.registerButton}>
+                    <Text style={styles.registerText}>
+                        Register
+                </Text>
+                </TouchableOpacity >
+            </View>
         </View>
     );
 }
 
-function OptionButton({ icon, label, onPress, isLastOption }) {
-    return (
-        <RectButton style={[styles.option, isLastOption && styles.lastOption]} onPress={onPress}>
-            <View style={{ flexDirection: 'row' }}>
-                <View style={styles.optionIconContainer}>
-                    <Ionicons name={icon} size={22} color="rgba(0,0,0,0.35)" />
-                </View>
-                <View style={styles.optionTextContainer}>
-                    <Text style={styles.optionText}>{label}</Text>
-                </View>
-            </View>
-        </RectButton>
-    );
-}
 
 const viewStyle = StyleSheet.create({
     containerStyle: {
-        marginTop: 25,
-        marginBottom: 25,
-        backgroundColor: 'rgb(254, 254, 254)'
+        paddingTop: 25,
+        paddingBottom: 25,
+        backgroundColor: 'rgb(254, 254, 254)',
+        flex: 1
     }
 });
 
@@ -57,6 +53,8 @@ const styles = StyleSheet.create({
     },
     input: {
         margin: 15,
+        marginLeft: 20,
+        marginRight: 20,
         padding:15,
         height: 50,
         borderRadius: 5,
@@ -67,15 +65,47 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         backgroundColor: '#7a42f4',
         padding: 10,
+        paddingTop: 20,
+        paddingBottom: 20,
         marginTop: 20,
         marginLeft: 20,
         marginRight: 20,
-        height: 50,
     },
     submitButtonText: {
         color: 'white',
         fontWeight: 'bold',
         textAlign: 'center',
-        alignItems: 'center'
-    }
+        alignSelf: 'center'
+    },
+    forgotPasswordButton: {
+        marginTop: 20,
+        textAlign: 'center',
+        alignSelf: 'center',
+        color: '#6d828b'
+    },
+    forgotPasswordText: {
+        color: '#6d828b'
+    },
+    registerContainer: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        textAlign: 'center',
+        width: '100%',
+    },
+    registerButton: {
+        marginBottom: 10,
+        borderWidth: 1,
+        borderColor: '#6a69c3',
+        borderRadius: 5,
+        marginLeft: 20,
+        marginRight: 20,
+        padding: 10,
+        paddingTop: 20,
+        paddingBottom: 20,
+    },
+    registerText: {
+        color: '#6a69c3',
+        textAlign: 'center',
+        fontWeight: 'bold'
+    } 
 })
