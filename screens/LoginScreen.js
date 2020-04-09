@@ -8,49 +8,49 @@ export default function LoginScreen({ navigation }) {
     const [phoneNumber, onChangeText] = React.useState('Phone Number');
 
     return (
-        <View style={viewStyle.containerStyle}>
-            <TextInput
-                style={styles.input}
-                placeholder="Phone Number" 
-                keyboardType={'numeric'} 
-            />
-            <TextInput
-                style={styles.input}
-                secureTextEntry={true}
-                placeholder="Password (min 4 characters)"
-            />
-            <TouchableOpacity style={styles.submitButton}>
-                <Text style={styles.submitButtonText}> Login </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.forgotPasswordButton}>
-                <Text style={styles.forgotPasswordText}>
-                    Forgot Password
-                </Text>
-            </TouchableOpacity >
-            <View style={styles.registerContainer}>
-                <TouchableOpacity style={styles.registerButton}>
-                    <Text style={styles.registerText}>
-                        Register
+        <ScrollView contentContainerStyle={styles.containerStyle}>
+            <View>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Phone Number"
+                    keyboardType={'numeric'}
+                />
+                <TextInput
+                    style={styles.input}
+                    secureTextEntry={true}
+                    placeholder="Password (min 4 characters)"
+                />
+                <TouchableOpacity style={styles.submitButton}>
+                    <Text style={styles.submitButtonText}> Login </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.forgotPasswordButton}>
+                    <Text style={styles.forgotPasswordText}>
+                        Forgot Password
                 </Text>
                 </TouchableOpacity >
             </View>
-        </View>
+            <View>
+                <TouchableOpacity style={styles.registerButton}>
+                    <Text style={styles.registerText}>
+                        Register
+                    </Text>
+                </TouchableOpacity >
+            </View>
+        </ScrollView>
     );
 }
 
 
-const viewStyle = StyleSheet.create({
+
+
+const styles = StyleSheet.create({
     containerStyle: {
         paddingTop: 25,
         paddingBottom: 25,
         backgroundColor: 'rgb(254, 254, 254)',
-        flex: 1
-    }
-});
-
-const styles = StyleSheet.create({
-    container: {
-        paddingTop: 23
+        display: 'flex',
+        justifyContent: 'space-between',
+        height: '100%'
     },
     input: {
         margin: 15,
@@ -86,13 +86,7 @@ const styles = StyleSheet.create({
     },
     forgotPasswordText: {
         color: '#6d828b'
-    },
-    registerContainer: {
-        flex: 1,
-        justifyContent: 'flex-end',
-        textAlign: 'center',
-        width: '100%',
-    },
+    }, 
     registerButton: {
         marginBottom: 10,
         borderWidth: 1,
