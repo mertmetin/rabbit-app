@@ -6,13 +6,14 @@ import { RectButton, ScrollView } from 'react-native-gesture-handler';
 
 export default function LoginScreen({ navigation }) {
     const [phoneNumber, onChangeText] = React.useState('Phone Number');
-    // const [password, onChangeText] = React.useState('Phone Number');
 
     return (
         <View style={viewStyle.containerStyle}>
             <TextInput
                 style={styles.input}
-                placeholder="Phone Number" />
+                placeholder="Phone Number" 
+                keyboardType={'numeric'} 
+            />
             <TextInput
                 style={styles.input}
                 secureTextEntry={true}
