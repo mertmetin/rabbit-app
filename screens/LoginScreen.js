@@ -30,7 +30,9 @@ export default function LoginScreen({ navigation }) {
                 </TouchableOpacity >
             </View>
             <View>
-                <TouchableOpacity style={styles.registerButton}>
+                <TouchableOpacity style={styles.registerButton}
+                    onPress={() => navigation.navigate('Register')}
+                >
                     <Text style={styles.registerText}>
                         Register
                     </Text>
