@@ -20,3 +20,4 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 Route::post('/activateUser', 'Auth\RegisterController@activateUser');
+Route::post('/resendCode', 'Auth\RegisterController@resendCode');

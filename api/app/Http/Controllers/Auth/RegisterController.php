@@ -70,24 +70,54 @@ class RegisterController extends Controller
 
         if ($validator->passes()) {
             $user = $this->create($input); 
-            $token = mt_rand (1000 , 9999);
-            $msg = 'Your rabbit code is ' . $token;
-            $snsClient = new SnsClient([
-                'profile' => 'default',
-                'region' => 'us-east-1',
-                'version' => '2010-03-31'
-            ]);
-            $result = $snsClient->publish([
-                'Message' => $msg,
-                'PhoneNumber' => '+1' . $user->phone,
-            ]);
-            UserActivation::create([
-                'user_id' => $user->id,
-                'token' => $token
-            ]);
+            $token = $this->sendActivationCode($user->phone);
+            $this->createUserActivation($user->id, $token);
 
             return $user->id;
         }
+    }
+
+    protected function sendActivationCode($phone)
+    {
+        $token = mt_rand (1000 , 9999);
+        $msg = 'Your rabbit code is ' . $token;
+        $snsClient = new SnsClient([
+            'profile' => 'default',
+            'region' => 'us-east-1',
+            'version' => '2010-03-31'
+        ]);
+
+        try {
+            $result = $snsClient->publish([
+                'Message' => $msg,
+                'PhoneNumber' => '+1' . $phone,
+            ]);
+        } catch (Exception $e) {
+            throw new Exception('Unable to send activation code.');
+        }
+
+        return $token;
+    }
+
+    protected function resendCode(Request $request)
+    {
+        if (!$request->filled('user_id', 'phone'))
+            throw new \Exception('Invalid request.');
+
+        $userId = $request->input('user_id');
+        $phone = $request->input('phone');
+
+        try {
+            $user = User::findOrFail($userId);
+        } catch (ModelNotFoundException $exception) {
+            throw new \Exception('User not found.');
+        }
+
+        if ($user->phone != $phone)
+            throw new \Exception('Invalid request.');
+
+        $code = $this->sendActivationCode($phone);
+        $this->createUserActivation($userId, $code);
     }
 
     protected function activateUser(Request $request)
@@ -108,17 +138,30 @@ class RegisterController extends Controller
         if ($user->active)
            throw new \Exception('User already activated.');
 
-        $userActivation = UserActivation::where('user_id', $userId)
-                        ->where('token', $token)
+        $userActivation = UserActivation::
+                        where('user_id', $userId)
+                        ->orderBy('id')
                         ->get()->last();
 
         if (!$userActivation)
-           throw new \Exception('Wrong code entered.');
+            throw new \Exception('Invalid request.');
+
+        if ($userActivation->token != $token)
+            throw new \Exception('Wrong code entered.');    
 
         User::where('id', $userId)
             ->update(['active' => 1, 'phone_verified_at' => now()]);
     }
 
+    protected function createUserActivation($userId, $token)
+    {
+        $userActivation = UserActivation::create([
+            'user_id' => $userId,
+            'token' => $token
+        ]);
+
+        return $userActivation;
+    }
 
     /**
      * Create a new user instance after a valid registration.

@@ -46,17 +46,11 @@ export default function RegisterScreen({ navigation, route }) {
                         })
                         .then(res => {
                             const user_id = res.data;
-                            navigation.navigate('UserActivation', {user_id: user_id});
+                            const phone= phoneNumber;
+                            navigation.navigate('UserActivation', {user_id: user_id, phone: phone});
                         }).catch(error => {
                             console.log(error.response.data);
                         })
-
-
-                        // axios.get(`https://jsonplaceholder.typicode.com/users`)
-                        //     .then(res => {
-                        //         const persons = res.data;
-                        //         alert(fullName);
-                        //     })
                         }
                     }
                 >
