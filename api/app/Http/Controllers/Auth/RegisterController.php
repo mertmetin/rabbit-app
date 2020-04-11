@@ -74,6 +74,8 @@ class RegisterController extends Controller
             $this->createUserActivation($user->id, $token);
 
             return $user->id;
+        } else {
+            throw new Exception('Invalid request.');
         }
     }
 

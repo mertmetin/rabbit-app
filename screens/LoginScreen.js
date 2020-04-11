@@ -23,7 +23,9 @@ export default function LoginScreen({ navigation }) {
                 <TouchableOpacity style={styles.submitButton}>
                     <Text style={styles.submitButtonText}> Login </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.forgotPasswordButton}>
+                <TouchableOpacity style={styles.forgotPasswordButton}
+                    onPress={() => navigation.navigate('ForgotPassword')}
+                >
                     <Text style={styles.forgotPasswordText}>
                         Forgot Password
                 </Text>
@@ -41,9 +43,6 @@ export default function LoginScreen({ navigation }) {
         </ScrollView>
     );
 }
-
-
-
 
 const styles = StyleSheet.create({
     containerStyle: {

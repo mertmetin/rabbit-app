@@ -36,16 +36,4 @@ class User extends Authenticatable
     protected $casts = [
         'phone_verified_at' => 'datetime',
     ];
-
-    public function hasVerifiedPhone()
-    {
-        return ! is_null($this->phone_verified_at);
-    }
-
-    public function markPhoneAsVerified()
-    {
-        return $this->forceFill([
-            'phone_verified_at' => $this->freshTimestamp(),
-        ])->save();
-    }
 }

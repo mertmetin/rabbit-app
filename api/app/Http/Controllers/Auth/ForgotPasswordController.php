@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\User;
+use App\PasswordReset;
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
+use Illuminate\Http\Request;
+use Aws\Sns\SnsClient;
 
 class ForgotPasswordController extends Controller
 {
@@ -17,6 +20,43 @@ class ForgotPasswordController extends Controller
     | your application to your users. Feel free to explore this trait.
     |
     */
+    protected function sendPasswordResetCode(Request $request)
+    {
+        if (!$request->filled('phone'))
+            throw new \Exception('Invalid request.');
 
-    use SendsPasswordResetEmails;
+        $phone = $request->input('phone');
+
+        try {
+            $user = User::where('phone', $phone)->firstOrFail();
+        } catch (Exception $e) {
+            throw new Exception('User not found.');
+        }
+
+        $token = mt_rand (1000 , 9999);
+        $msg = 'Your rabbit code is ' . $token;
+        $snsClient = new SnsClient([
+            'profile' => 'default',
+            'region' => 'us-east-1',
+            'version' => '2010-03-31'
+        ]);
+
+        try {
+            $result = $snsClient->publish([
+                'Message' => $msg,
+                'PhoneNumber' => '+1' . $phone,
+            ]);
+
+            $passwordReset = PasswordReset::create([
+                'user_id' => $user->id,
+                'token' => $token
+            ]);
+
+        } catch (Exception $e) {
+            throw new Exception('Unable to send a password reset code.');
+        }
+
+        return $user->id;
+    }
+
 }

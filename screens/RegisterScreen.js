@@ -38,6 +38,10 @@ export default function RegisterScreen({ navigation, route }) {
                 />
                 <TouchableOpacity style={styles.registerButton}
                     onPress={ () => {
+                        // if (password.length < 4)
+                        //     alert('Password problem.');
+
+
                         axios.post('http://localhost:8000/api/register', {
                             phone: phoneNumber,
                             name: fullName,

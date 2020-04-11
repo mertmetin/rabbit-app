@@ -21,3 +21,5 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 Route::post('/activateUser', 'Auth\RegisterController@activateUser');
 Route::post('/resendCode', 'Auth\RegisterController@resendCode');
+Route::post('/sendPasswordResetCode', 'Auth\ForgotPasswordController@sendPasswordResetCode');
+Route::post('/resetPassword', 'Auth\ResetPasswordController@resetPassword');
