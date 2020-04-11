@@ -5,7 +5,7 @@ import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity } from 'rea
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios';
 
-export default function RegisterScreen({ navigation }) {
+export default function RegisterScreen({ navigation, route }) {
     const [phoneNumber, setPhoneNumber] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [fullName, setFullName] = React.useState('');
@@ -45,7 +45,8 @@ export default function RegisterScreen({ navigation }) {
                             password: password
                         })
                         .then(res => {
-                            // this.props.isLoggedIn = true;
+                            const user_id = res.data;
+                            navigation.navigate('UserActivation', {user_id: user_id});
                         }).catch(error => {
                             console.log(error.response.data);
                         })

@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\User;
+use App\UserActivation;
+use Illuminate\Support\Str;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Aws\Sns\SnsClient;
-use Aws\Credentials\Credentials;
 
 // use Aws\Exception\AwsException;
 
@@ -67,77 +68,57 @@ class RegisterController extends Controller
         $input = $request->all();
         $validator = $this->validator($input);
 
-
-
-        // $s3 = App::make('aws')->createClient('s3');
-                        // error_log(json_encode(env('AWS_ACCESS_KEY_ID', '')));
-
-
-// $sns = AWS::createClient('sns');;
-
-                // error_log(json_encode($sns));
-
-
-        $SnSclient = new SnsClient([
-            'profile' => 'default',
-            'region' => 'us-east-1',
-            'version' => '2010-03-31'
-        ]);
-
-//         $SnSclient = new SnsClient([
-//     'version' => '2010-03-31',
-//     'region' => 'ca-central-1',
-//     'credentials' => new Credentials(
-//         '***REMOVED***',
-//         '***REMOVED***'
-//     )
-// ]);
-
-        error_log(json_encode($SnSclient));
-
-
-//         // $client = SnsClient::factory(array(
-// //     'profile' => 'default',
-// //     'region'  => 'us-east-1',
-// //                 'version' => '2010-03-31'
-
-// // ));
-
-        $message = 'This message is sent from a Amazon SNS code sample.';
-        $phone = '+16133278306';
-
-//         // error_log(env('AWS_SECRET_ACCESS_KEY', false));
-
-//         try {
-//             error_log(json_encode($SnSclient));
-
-            $result = $SnSclient->publish([
-                'Message' => $message,
-                'PhoneNumber' => $phone,
+        if ($validator->passes()) {
+            $user = $this->create($input); 
+            $token = mt_rand (1000 , 9999);
+            $msg = 'Your rabbit code is ' . $token;
+            $snsClient = new SnsClient([
+                'profile' => 'default',
+                'region' => 'us-east-1',
+                'version' => '2010-03-31'
             ]);
-//                         error_log(json_encode('here'));
+            $result = $snsClient->publish([
+                'Message' => $msg,
+                'PhoneNumber' => '+1' . $user->phone,
+            ]);
+            UserActivation::create([
+                'user_id' => $user->id,
+                'token' => $token
+            ]);
 
-
-//         } catch (AwsException $e) {
-//             // output error message if fails
-//                         error_log('here');
-
-//             error_log(json_encode($e));
-//         } 
-
-
-        // if ($validator->passes()) {
-        //     $user = $this->create($input); 
-        //     // $token = Str::random(90);
-        //     // UserActivation::create([
-        //     //     'user_id' => $user->id,
-        //     //     'token' => $token
-        //     // ]);
-        //     // $user->activationUrl = url("/api/activateUser/$user->id/$token");
-            
-        //     // Mail::to($user)->send(new UserRegistered($user));
-        // }
+            return $user->id;
+        }
     }
+
+    protected function activateUser(Request $request)
+    {
+        if (!$request->filled('user_id', 'token'))
+            throw new \Exception('Invalid request.');
+
+        $input = $request->all();
+        $userId = $input['user_id'];
+        $token = $input['token'];
+
+        try {
+            $user = User::findOrFail($userId);
+        } catch (ModelNotFoundException $exception) {
+            throw new \Exception('User not found.');
+        }
+
+        if ($user->active)
+           throw new \Exception('User already activated.');
+
+        $userActivation = UserActivation::where('user_id', $userId)
+                        ->where('token', $token)
+                        ->get()->last();
+
+        if (!$userActivation)
+           throw new \Exception('Wrong code entered.');
+
+        User::where('id', $userId)
+            ->update(['active' => 1, 'phone_verified_at' => now()]);
+    }
+
 
     /**
      * Create a new user instance after a valid registration.

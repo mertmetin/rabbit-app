@@ -8,6 +8,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import BottomTabNavigator from './navigation/BottomTabNavigator';
 import useLinking from './navigation/useLinking';
+import FlashMessage from "react-native-flash-message";
 
 const Stack = createStackNavigator();
 
@@ -54,6 +55,7 @@ export default function App(props) {
             <Stack.Screen name="Root" component={BottomTabNavigator} />
           </Stack.Navigator>
         </NavigationContainer>
+        <FlashMessage position="top" />
       </View>
     );
   }

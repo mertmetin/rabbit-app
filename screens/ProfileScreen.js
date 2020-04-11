@@ -38,7 +38,7 @@ export default function ProfileScreen({navigation}) {
 
             <View style={viewStyle.containerStyle}>
                 <OptionButton
-                    icon=""
+                    icon="md-ios-help"
                     label="Version"
                     onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}
                 />
