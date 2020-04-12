@@ -33,6 +33,17 @@ class ForgotPasswordController extends Controller
             throw new Exception('User not found.');
         }
 
+        $token = $this->sendCode($phone);
+        $passwordReset = PasswordReset::create([
+            'user_id' => $user->id,
+            'token' => $token
+        ]);
+
+        return $user->id;
+    }
+    
+    protected function sendCode($phone)
+    {
         $token = mt_rand (1000 , 9999);
         $msg = 'Your rabbit code is ' . $token;
         $snsClient = new SnsClient([
@@ -41,22 +52,15 @@ class ForgotPasswordController extends Controller
             'version' => '2010-03-31'
         ]);
 
-        try {
+        try { 
             $result = $snsClient->publish([
                 'Message' => $msg,
                 'PhoneNumber' => '+1' . $phone,
             ]);
-
-            $passwordReset = PasswordReset::create([
-                'user_id' => $user->id,
-                'token' => $token
-            ]);
-
         } catch (Exception $e) {
             throw new Exception('Unable to send a password reset code.');
         }
 
-        return $user->id;
+        return $token;
     }
-
 }

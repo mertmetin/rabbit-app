@@ -25,7 +25,6 @@ export default function ForgotPasswordScreen({ navigation, route }) {
                         })
                         .then(res => {
                             const user_id = res.data;
-                            const phone = phone;
                             navigation.navigate('PasswordReset', { user_id: user_id, phone: phone });
                         }).catch(error => {
                             const msg = error.response.data.message;

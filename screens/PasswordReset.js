@@ -37,7 +37,10 @@ export default function PasswordReset({ navigation, route }) {
                             password: password
                         })
                             .then(res => {
-                                console.log(res);
+                                showMessage({
+                                    message: "You password has been changed successfully.",
+                                    type: "success",
+                                });
                                 navigation.navigate('Home');
                             }).catch(error => {
                                 const msg = error.response.data.message;
@@ -55,13 +58,13 @@ export default function PasswordReset({ navigation, route }) {
                 </TouchableOpacity >
                 <TouchableOpacity style={styles.resendContainer}
                     onPress={() => {
-                        axios.post('http://localhost:8000/api/resendCode', {
+                        axios.post('http://localhost:8000/api/sendPasswordResetCode', {
                             user_id: userId,
                             phone: phone
                         })
                             .then(res => {
                                 showMessage({
-                                    message: "Activation code has been sent successfully.",
+                                    message: "Password reset code has been sent successfully.",
                                     type: "success",
                                 });
                             }).catch(error => {

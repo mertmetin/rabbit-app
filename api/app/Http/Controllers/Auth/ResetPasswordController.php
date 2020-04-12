@@ -38,7 +38,6 @@ class ResetPasswordController extends Controller
         $token = $request->input('token');
         $password = $request->input('password');
 
-
         try {
             $user = User::findOrFail($userId);
         } catch (ModelNotFoundException $exception) {
