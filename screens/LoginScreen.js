@@ -3,9 +3,12 @@ import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
 import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity } from 'react-native';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
+import axios from 'axios';
+import { showMessage, hideMessage } from "react-native-flash-message";
 
 export default function LoginScreen({ navigation }) {
-    const [phoneNumber, onChangeText] = React.useState('Phone Number');
+    const [phone, setPhoneNumber] = React.useState('');
+    const [password, setPassword] = React.useState('');
 
     return (
         <ScrollView contentContainerStyle={styles.containerStyle}>
@@ -14,13 +17,31 @@ export default function LoginScreen({ navigation }) {
                     style={styles.input}
                     placeholder="Phone Number"
                     keyboardType={'numeric'}
+                    onChangeText={(text) => setPhoneNumber(text)}
                 />
                 <TextInput
                     style={styles.input}
                     secureTextEntry={true}
                     placeholder="Password (min 4 characters)"
+                    onChangeText={(text) => setPassword(text)}
                 />
-                <TouchableOpacity style={styles.submitButton}>
+                <TouchableOpacity style={styles.submitButton}
+                    onPress={() => {
+                        axios.post('http://localhost:8000/login', {
+                            phone: phone,
+                            password: password
+                        })
+                        .then(res => {
+                            navigation.navigate('Home');
+                        }).catch(error => {
+                            const msg = error.response.data.message;
+                            showMessage({
+                                message: msg,
+                                type: "danger"
+                            });
+                        })
+                    }}
+                >
                     <Text style={styles.submitButtonText}> Login </Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.forgotPasswordButton}
