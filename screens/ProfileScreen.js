@@ -3,48 +3,105 @@ import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
+import axios from 'axios';
 
-export default function ProfileScreen({navigation}) {
-    return (
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-            <View style={viewStyle.containerStyle}>
-                <OptionButton
-                    icon="md-person"
-                    label="Login"
-                    onPress={() => navigation.navigate('Login')}
-                />
-            </View>
+export default class ProfileScreen extends React.Component {
+    constructor(props) {
+        super(props);
+        // this.setState({isLoggedIn: false});
+        this.state = { isLoggedIn: false };
+    }
 
-            <View style={viewStyle.containerStyle}>
-                <OptionButton
-                    icon="md-navigate"
-                    label="Addresses"
-                    onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}
-                />
+    componentDidMount() {
+        var self = this;
 
-                <OptionButton
-                    icon="md-heart"
-                    label="Favorite Products"
-                    onPress={() => WebBrowser.openBrowserAsync('https://forums.expo.io')}
-                    isLastOption
-                />
-                <OptionButton
-                    icon="md-help"
-                    label="Support"
-                    onPress={() => WebBrowser.openBrowserAsync('https://forums.expo.io')}
-                    isLastOption
-                />
-            </View>
+        axios.post('http://localhost:8000/getAuthUser', {
+        })
+        .then(res => {
+            if (res.data)
+            {
+                self.setState({
+                    isLoggedIn: true,
+                    email: res.data.email,
+                    name: res.data.name,
+                    phone: res.data.phone
+                });
+            }
+        }).catch(error => {
+            
+        })
+    }
 
-            <View style={viewStyle.containerStyle}>
-                <OptionButton
-                    icon="md-help"
-                    label="Version"
-                    onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}
-                />
-            </View>
-        </ScrollView>
-    );
+    drawGuestView() {
+        return (
+            <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+                <View style={viewStyle.containerStyle}>
+                    <OptionButton
+                        icon="md-person"
+                        label="Login"
+                        onPress={() => this.props.navigation.navigate('Login')}
+                    />
+                </View>
+
+                <View style={viewStyle.containerStyle}>
+                    <OptionButton
+                        icon="md-navigate"
+                        label="Addresses"
+                        onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}
+                    />
+
+                    <OptionButton
+                        icon="md-heart"
+                        label="Favorite Products"
+                        onPress={() => WebBrowser.openBrowserAsync('https://forums.expo.io')}
+                        isLastOption
+                    />
+                    <OptionButton
+                        icon="md-help"
+                        label="Support"
+                        onPress={() => WebBrowser.openBrowserAsync('https://forums.expo.io')}
+                        isLastOption
+                    />
+                </View>
+
+                <View style={viewStyle.containerStyle}>
+                    <OptionButton
+                        icon="md-help"
+                        label="Version"
+                        onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}
+                    />
+                </View>
+            </ScrollView>
+        );
+    }
+
+    drawUserView() {
+        return (
+            <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+                <View style={viewStyle.containerStyle}>
+                    <OptionButton
+                        icon="md-person"
+                        label={this.state.name}
+                    />
+                    <OptionButton
+                        icon="md-mail"
+                        label={this.state.email}
+                    />
+                    <OptionButton
+                        icon="md-phone-portrait"
+                        label={this.state.phone}
+                    />
+                </View>
+            </ScrollView>
+        );
+    }
+
+    render() {
+        const view = (this.state.isLoggedIn) ? 
+            this.drawUserView() : this.drawGuestView();
+
+        return (view);
+    }
 }
 
 function OptionButton({ icon, label, onPress, isLastOption }) {
