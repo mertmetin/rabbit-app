@@ -7,6 +7,7 @@ import axios from 'axios';
 
 export default function ProfileScreen({navigation}) {
     var [isLoggedIn, setLogin] = React.useState(false);
+    const [userId, setUserId] = React.useState('');
     const [phone, setPhone] = React.useState('');
     const [email, setEmail] = React.useState('');
     const [name, setName] = React.useState('');
@@ -69,6 +70,11 @@ export default function ProfileScreen({navigation}) {
                 </View>
                 <View style={viewStyle.containerStyle}>
                     <OptionButton
+                        icon="md-lock"
+                        label={'Change Password'}
+                        onPress={() => navigation.navigate('ChangePasswordScreen', {userId: userId})}
+                    />
+                    <OptionButton
                         icon="md-person"
                         label={"Logout"}
                         onPress={() => {
@@ -93,6 +99,7 @@ export default function ProfileScreen({navigation}) {
             .then(res => {
                 if (res.data)
                 {
+                    setUserId(res.data.id);
                     setLogin(true);
                     setPhone(res.data.phone);
                     setEmail(res.data.email);

@@ -50,7 +50,6 @@ class ResetPasswordController extends Controller
 
         if (!$passwordReset)
             throw new Exception('Invalid request.');
-        
 
         if ($passwordReset->token != $token)
             throw new \Exception('Wrong code entered.');   

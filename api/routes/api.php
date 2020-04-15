@@ -23,3 +23,4 @@ Route::post('/activateUser', 'Auth\RegisterController@activateUser');
 Route::post('/resendCode', 'Auth\RegisterController@resendCode');
 Route::post('/sendPasswordResetCode', 'Auth\ForgotPasswordController@sendPasswordResetCode');
 Route::post('/resetPassword', 'Auth\ResetPasswordController@resetPassword');
+Route::post('/changePassword', 'Auth\ChangePasswordController@changePassword');
