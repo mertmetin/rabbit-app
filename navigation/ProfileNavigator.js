@@ -7,6 +7,8 @@ import UserActivation from '../screens/UserActivationScreen';
 import ForgotPassword from '../screens/ForgotPassword';
 import PasswordReset from '../screens/PasswordReset';
 import ChangePasswordScreen from '../screens/ChangePasswordScreen';
+import PaymentMethodsScreen from '../screens/PaymentMethodsScreen';
+import AddCardScreen from '../screens/AddCardScreen';
 
 const Stack = createStackNavigator();
 
@@ -20,6 +22,8 @@ export default function ProfileNavigator({ navigation }) {
             <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
             <Stack.Screen name="PasswordReset" component={PasswordReset} />
             <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} />
+            <Stack.Screen name="PaymentMethodsScreen" component={PaymentMethodsScreen} />
+            <Stack.Screen name="AddCardScreen" component={AddCardScreen} />
         </Stack.Navigator>
     );
 }

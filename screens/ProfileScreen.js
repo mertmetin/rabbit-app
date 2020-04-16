@@ -70,6 +70,11 @@ export default function ProfileScreen({navigation}) {
                 </View>
                 <View style={viewStyle.containerStyle}>
                     <OptionButton
+                        icon="md-card"
+                        label={'Payment Methods'}
+                        onPress={() => navigation.navigate('PaymentMethodsScreen', { userId: userId })}
+                    />
+                    <OptionButton
                         icon="md-lock"
                         label={'Change Password'}
                         onPress={() => navigation.navigate('ChangePasswordScreen', {userId: userId})}
