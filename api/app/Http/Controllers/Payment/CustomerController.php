@@ -32,7 +32,7 @@ class CustomerController extends Controller
         if ($customer)
             return $customer->customer_id;
 
-        // Set Stripe API key
+        // Set the Stripe API key
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
         $customer = \Stripe\Customer::create([

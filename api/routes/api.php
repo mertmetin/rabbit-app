@@ -26,3 +26,6 @@ Route::post('/resetPassword', 'Auth\ResetPasswordController@resetPassword');
 Route::post('/changePassword', 'Auth\ChangePasswordController@changePassword');
 Route::post('/registerCustomer', 'Payment\CustomerController@register');
 Route::post('/addCard', 'Payment\CardController@add');
+Route::post('/addAddress', 'Address\AddressController@add');
+
+
