@@ -9,6 +9,17 @@ use App\AddressType;
 
 class AddressController extends Controller
 {
+    protected function get(Request $request)
+    {
+        if (!$request->filled('userId'))
+            throw new \Exception('Invalid request.');
+
+        $userId = $request->input('userId');
+        $userAddresses = UserAddress::where('user_id', $userId)->get();
+
+        return $userAddresses;
+    }
+
     protected function add(Request $request)
     {   
         if (!$request->filled('userId', 'address', 'placeId'))

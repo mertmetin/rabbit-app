@@ -7,18 +7,11 @@ import axios from 'axios';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 
-export default function AddressesScreen({ navigation, route }) {
+export default function AddAddressScreen({ navigation, route }) {
     const userId = route.params.userId;
     const [address, setAddress] = React.useState('');
     const [placeId, setPlaceId] = React.useState('');
-    // const [selectedValue, setSelectedValue] = React.useState("java");
-
-
-    // const homePlace = { description: 'Home', geometry: { location: { lat: 48.8152937, lng: 2.4597668 } } };
-    // const workPlace = { description: 'Work', geometry: { location: { lat: 48.8496818, lng: 2.2940881 } } };
-
-
-
+    
     return (
         // <ScrollView contentContainerStyle={styles.containerStyle}>
         <View style={styles.containerStyle}>

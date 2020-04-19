@@ -72,7 +72,7 @@ export default function ProfileScreen({navigation}) {
                     <OptionButton
                         icon="md-map"
                         label={'Addresses'}
-                        onPress={() => navigation.navigate('AddressesScreen', { userId: userId })}
+                        onPress={() => navigation.navigate('AddressScreen', { userId: userId })}
                     />
                     <OptionButton
                         icon="md-card"
