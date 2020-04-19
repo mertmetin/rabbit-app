@@ -21,3 +21,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::post('/getAuthUser', 'ProfileController@getAuthUser');
+
+Route::group(['prefix' => 'admin'], function () {
+    Voyager::routes();
+});
