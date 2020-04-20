@@ -1,54 +1,62 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
-import { Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ImageBackground, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-
+import axios from 'axios';
 import { MonoText } from '../components/StyledText';
+import { showMessage, hideMessage } from "react-native-flash-message";
 
 export default function HomeScreen() {
+  const [items, setItems] = React.useState();
+
+  React.useEffect(() => {
+    axios.post('http://localhost:8000/api/getProductCategories', {
+      // userId: userId
+    })
+      .then(res => {
+        var items = [];
+
+        if (res.data) {
+          const categories = res.data;
+
+          for (let i in categories) {
+            const category = categories[i];
+
+            console.log('http://localhost:8000/storage/' + category.image);
+
+            var item = (<View>
+              <Image style={{width: '100%', height: '100%'}} source={{ uri: 'http://localhost:8000/storage/' + category.image}} />
+              <Text>{category.title}</Text>
+            </View>); 
+            // setItems(item);
+            items.push(item);
+          }
+        }
+        else {
+          items.push(<Text>You have no address yet.</Text>)
+        }
+
+        setItems(items);
+
+      }).catch(error => {
+        alert(error);
+        // const msg = error.response.data.message;
+        // showMessage({
+        //   message: msg,
+        //   type: "danger"
+        // });
+      })
+
+
+  }, []);
+  
+
   return (
-    <View style={styles.container}>
-      <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-        <View style={styles.welcomeContainer}>
-          <Image
-            source={
-              __DEV__
-                ? require('../assets/images/robot-dev.png')
-                : require('../assets/images/robot-prod.png')
-            }
-            style={styles.welcomeImage}
-          />
-        </View>
-
-        <View style={styles.getStartedContainer}>
-          <DevelopmentModeNotice />
-
-          <Text style={styles.getStartedText}>Open up the code for this screen:</Text>
-
-          <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-            <MonoText>screens/HomeScreen.js</MonoText>
-          </View>
-
-          <Text style={styles.getStartedText}>
-            Change any of the text, save the file, and your app will automatically reload.
-          </Text>
-        </View>
-
-        <View style={styles.helpContainer}>
-          <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
-            <Text style={styles.helpLinkText}>Help, it didn’t automatically reload!</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-
-      <View style={styles.tabBarInfoContainer}>
-        <Text style={styles.tabBarInfoText}>This is a tab bar. You can edit it in:</Text>
-
-        <View style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-          <MonoText style={styles.codeHighlightText}>navigation/BottomTabNavigator.js</MonoText>
-        </View>
+    <ScrollView>
+      <View>
+        {items}
       </View>
-    </View>
+    </ScrollView>
   );
 }
 

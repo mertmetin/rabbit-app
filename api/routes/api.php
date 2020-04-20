@@ -28,5 +28,6 @@ Route::post('/registerCustomer', 'Payment\CustomerController@register');
 Route::post('/addCard', 'Payment\CardController@add');
 Route::post('/getAddresses', 'Address\AddressController@get');
 Route::post('/addAddress', 'Address\AddressController@add');
+Route::post('/getProductCategories', 'Product\ProductCategoryController@get');
 
 
