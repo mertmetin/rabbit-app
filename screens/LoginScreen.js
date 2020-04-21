@@ -32,7 +32,7 @@ export default function LoginScreen({ navigation }) {
                             password: password
                         })
                         .then(res => {
-                            navigation.navigate('Home');
+                            navigation.navigate('Profile');
                         }).catch(error => {
                             const msg = error.response.data.message;
                             showMessage({

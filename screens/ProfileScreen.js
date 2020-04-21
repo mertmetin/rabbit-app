@@ -93,7 +93,7 @@ export default function ProfileScreen({navigation}) {
                             })
                             .then(res => {
                                 setLogin(false);
-                                navigation.navigate('Home');
+                                navigation.navigate('Profile');
                             }).catch(error => {
                                 
                             })

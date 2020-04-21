@@ -28,9 +28,16 @@ export default function App(props) {
         setInitialNavigationState(await getInitialState());
 
         // Load fonts
+        // await Font.loadAsync({
+        //   ...Ionicons.font,
+        //   'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
+        // });
         await Font.loadAsync({
           ...Ionicons.font,
-          'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
+          'sodo-sans-bold': require('./assets/fonts/SoDoSans-Bold.ttf'),
+          'sodo-sans-semibold': require('./assets/fonts/SoDoSans-SemiBold.ttf'),
+          'sodo-sans-regular': require('./assets/fonts/SoDoSans-Regular.ttf'),
+
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service

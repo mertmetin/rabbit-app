@@ -86,7 +86,7 @@ export default function AddAddressScreen({ navigation, route }) {
                                 message: 'Address is added successfully.',
                                 type: "success"
                             });
-                            navigation.navigate('Home');
+                            navigation.navigate('Profile');
                         }).catch(error => {
                             const msg = error.response.data.message;
                             showMessage({

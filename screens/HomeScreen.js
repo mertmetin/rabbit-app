@@ -23,15 +23,7 @@ export default function HomeScreen() {
           for (let i in categories) {
             const category = categories[i];
 
-            // console.log('http://localhost:8000/storage/' + category.image);
-
-            var item = (<CategoryCard title={category.title} image={category.image} />);
-            
-            // (<View>
-            //   <Image style={{width: '100%', height: '100%'}} source={{ uri: 'http://localhost:8000/storage/' + category.image}} />
-            //   <Text>{category.title}</Text>
-            // </View>); 
-            // setItems(item);
+            var item = (<CategoryCard key={category.id} id={category.id} title={category.title} image={category.image} />);
             items.push(item);
           }
         }
@@ -42,12 +34,16 @@ export default function HomeScreen() {
         setItems(items);
 
       }).catch(error => {
-        alert(error);
-        // const msg = error.response.data.message;
-        // showMessage({
-        //   message: msg,
-        //   type: "danger"
-        // });
+
+        if (error.response)
+        {
+          const msg = error.response.data.message;
+          showMessage({
+            message: msg,
+            type: "danger"
+          });
+        }
+
       })
 
 
@@ -57,11 +53,6 @@ export default function HomeScreen() {
   return (
     <ScrollView>
       <View style={{flex:1, flexDirection:'row', flexWrap:'wrap'}}>
-        {/* <CategoryCard title={"abc"} image={'products/April2020/D10Z3AH4T0uaQLsQWqTA.png'} />
-        <CategoryCard title={"abc"} image={'products/April2020/D10Z3AH4T0uaQLsQWqTA.png'} />
-        <CategoryCard title={"abc"} image={'products/April2020/D10Z3AH4T0uaQLsQWqTA.png'} />
-        <CategoryCard title={"abc"} image={'products/April2020/D10Z3AH4T0uaQLsQWqTA.png'} /> */}
-
         {items}
       </View>
     </ScrollView>

@@ -6,7 +6,9 @@ import HomeScreen from '../screens/HomeScreen';
 import SearchScreen from '../screens/SearchScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import GiftScreen from '../screens/GiftScreen';
+import HomeNavigator from './HomeNavigator';
 import ProfileNavigator from './ProfileNavigator';
+import Colors from '../constants/Colors';
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'Home';
@@ -18,12 +20,18 @@ export default function BottomTabNavigator({ navigation, route }) {
   navigation.setOptions({ headerTitle: getHeaderTitle(route) });
 
   return (
-    <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
+    <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME} tabBarOptions={{
+      activeTintColor: Colors.tabIconSelected,
+      labelStyle: {
+        fontSize: 12,
+        fontFamily: 'sodo-sans-semibold',
+      }
+    }}>
       <BottomTab.Screen
         name="Home"
-        component={HomeScreen}
+        component={HomeNavigator}
         options={{
-          title: '',
+          title: 'Order',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-home" />,
         }}
       />
@@ -31,7 +39,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         name="Search"
         component={SearchScreen}
         options={{
-          title: '',
+          title: 'Search',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-search" />,
         }}
       />
@@ -39,7 +47,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         name="Profile"
         component={ProfileNavigator}
         options={{
-          title: '',
+          title: 'Profile',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-person" />,
         }
       }
@@ -48,7 +56,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         name="Gift"
         component={GiftScreen}
         options={{
-          title: '',
+          title: 'Promotions',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-gift" />,
         }}
       />
