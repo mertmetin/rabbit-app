@@ -41,7 +41,7 @@ export default function PasswordReset({ navigation, route }) {
                                     message: "You password has been changed successfully.",
                                     type: "success",
                                 });
-                                navigation.navigate('Home');
+                                navigation.navigate('Profile');
                             }).catch(error => {
                                 const msg = error.response.data.message;
                                 showMessage({

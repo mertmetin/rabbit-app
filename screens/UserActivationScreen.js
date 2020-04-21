@@ -29,7 +29,7 @@ export default function UserActivationScreen({navigation, route}) {
                                     message: "You're activated successfully.",
                                     type: "success",
                                 });
-                                navigation.navigate('Home');
+                                navigation.navigate('Profile');
                             }).catch(error => {
                                 const msg = error.response.data.message;
                                 showMessage({

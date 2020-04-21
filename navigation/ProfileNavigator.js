@@ -17,7 +17,7 @@ const Stack = createStackNavigator();
 export default function ProfileNavigator({ navigation }) {
     return (
         <Stack.Navigator screenOptions={screenOptions}>
-            <Stack.Screen name="Home" component={ProfileScreen} />
+            <Stack.Screen name="Profile" component={ProfileScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />
             <Stack.Screen name="UserActivation" component={UserActivation} />

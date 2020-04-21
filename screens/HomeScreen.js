@@ -23,7 +23,7 @@ export default function HomeScreen() {
           for (let i in categories) {
             const category = categories[i];
 
-            var item = (<CategoryCard key={category.id} id={category.id} title={category.title} image={category.image} />);
+            var item = (<CategoryCard key={category.id} routeName={'Products'} item={category} />);
             items.push(item);
           }
         }

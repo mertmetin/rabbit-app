@@ -7,7 +7,7 @@ import { CategoryCard } from '../components/CategoryCard';
 import { showMessage, hideMessage } from "react-native-flash-message";
 
 export default function ProductsScreen({navigation, route}) {
-    const category = route.params.category;
+    const category = route.params.item.id;
     const [items, setItems] = React.useState();
 
     React.useEffect(() => {
@@ -23,7 +23,7 @@ export default function ProductsScreen({navigation, route}) {
                     for (let i in categories) {
                         const category = categories[i];
 
-                        var item = (<CategoryCard key={category.id} title={category.title} image={category.image} />);
+                        var item = (<CategoryCard key={category.id} routeName={'ProductDetails'} item={category} />);
                         items.push(item);
                     }
                 }

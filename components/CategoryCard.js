@@ -4,17 +4,18 @@ import { useNavigation } from '@react-navigation/native';
 
 export function CategoryCard(props) {
     const navigation = useNavigation();
+    const item = props.item;
     const onPress = () => {
-        navigation.navigate('Products', {category: props.id});
+        navigation.navigate(props.routeName, {item: item});
     };
 
     return (    
         <View style={styles.container}>
             <TouchableOpacity onPress={onPress}>
                 <View>  
-                    <Image style={styles.img} source={{ uri: 'http://localhost:8000/storage/' + props.image }} />
+                    <Image style={styles.img} source={{ uri: 'http://localhost:8000/storage/' + item.image }} />
                 </View>
-                <Text style={styles.text}>{props.title}</Text>
+                <Text style={styles.text}>{item.title}</Text>
             </TouchableOpacity>
         </View> 
     );
