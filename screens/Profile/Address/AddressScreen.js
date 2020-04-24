@@ -6,10 +6,30 @@ import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { ActionButton } from '../../../components/ActionButton';
 
 export default function AddressScreen({ navigation, route }) {
-    const userId = route.params.userId;
-    const [items, setItems] = React.useState('');
+    const userId = route.params.data;
+    const [items, setItems] = React.useState([]);
+
+    const makeAddressItems = (addresses) => {
+        var items = [];
+
+        for (let i in addresses) {
+            const address = addresses[i];
+            var item = (
+                <View style={styles.addressContainer}>
+                    <Text style={styles.addressText}>
+                        <Text>{address.main_text}{"\n"}</Text>
+                        <Text>{address.secondary_text}</Text>
+                    </Text>
+                </View>
+            );
+            items.push(item);
+        }
+
+        setItems(items);
+    }
 
     React.useEffect(() => {
         axios.post('http://localhost:8000/api/getAddresses', {
@@ -19,22 +39,9 @@ export default function AddressScreen({ navigation, route }) {
             var items = [];
 
             if (res.data)
-            {
-                const addresses = res.data;
-
-                for (let i in addresses)
-                {
-                    const address = addresses[i];
-                    var item = <Text>{address.address}</Text>;
-                    items.push(item);
-                }
-            }
-            else {
+                makeAddressItems(res.data);    
+            else 
                 items.push(<Text>You have no address yet.</Text>)
-            }
-
-            setItems(items);
-
         }).catch(error => {
             const msg = error.response.data.message;
             showMessage({
@@ -44,16 +51,17 @@ export default function AddressScreen({ navigation, route }) {
         })
     }, []);
 
+    const onPress = () => {
+        navigation.navigate('AddAddressScreen', {data: userId});
+    }
+
     return(
-        <ScrollView>
-            <View>
-                <Text>{items}</Text>
-                <TouchableOpacity style={styles.submitButton}
-                    onPress={() => {
-                        navigation.navigate('AddAddressScreen', {userId: userId});
-                    }}>
-                    <Text style={styles.submitButtonText}> Add Address </Text>
-                </TouchableOpacity>
+        <ScrollView style={{
+            backgroundColor: '#f6f6f6'
+        }}>
+            <View style={styles.container}>
+                {items}
+                <ActionButton title={'Add new'} onPress={onPress} />
             </View>
         </ScrollView>
     ); 
@@ -61,11 +69,22 @@ export default function AddressScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: '#fafafa',
+        paddingTop: 20,
+        paddingLeft: 15
+    },  
+    addressContainer: {
+        flex:1,
+        paddingBottom: 15,
     },
-    contentContainer: {
-        paddingTop: 15,
+    addressText: {
+        fontSize: 16,
+        fontFamily: 'sodo-sans-semibold'
+    },
+    // container: {
+    //     flex: 1,
+    //     backgroundColor: '#fafafa',
+    // },
+    contentContainer: {        paddingTop: 15,
     },
     optionIconContainer: {
         marginRight: 12,

@@ -6,116 +6,51 @@ import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import { ActionButton } from '../../../components/ActionButton';
+import { GooglePlaces } from '../../../components/GooglePlaces';
 
 export default function AddAddressScreen({ navigation, route }) {
-    const userId = route.params.userId;
-    const [address, setAddress] = React.useState('');
-    const [placeId, setPlaceId] = React.useState('');
+    const userId = route.params.data;
+    const [address, setAddress] = React.useState([]);
+
+    const onPress = () => {
+        axios.post('http://localhost:8000/api/addAddress', {
+            userId: userId,
+            address: address,
+        })
+            .then(res => {
+                showMessage({
+                    message: 'Address is added successfully.',
+                    type: "success"
+                });
+                navigation.navigate('Profile');
+            }).catch(error => {
+                const msg = error.response.data.message;
+                showMessage({
+                    message: msg,
+                    type: "danger"
+                });
+            })
+    }
+
+    var onTextChange = (data, details) => {
+        const address = {
+            'place_id': data.place_id,
+            'description': data.description,
+            'main_text': data.structured_formatting.main_text,
+            'secondary_text': data.structured_formatting.secondary_text
+        };
+        setAddress(address);
+    }
     
     return (
         // <ScrollView contentContainerStyle={styles.containerStyle}>
-        <View style={styles.containerStyle}>
-            <GooglePlacesAutocomplete
-                placeholder='Search'
-                minLength={2} // minimum length of text to search
-                autoFocus={false}
-                returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-                keyboardAppearance={'light'} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
-                listViewDisplayed='auto'    // true/false/undefined
-                fetchDetails={true}
-                renderDescription={row => row.description} // custom description render
-                onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-                    setAddress(data['description']);
-                    setPlaceId(data['place_id']);
-                }}
-
-                getDefaultValue={() => ''}
-
-                query={{
-                    // available options: https://developers.google.com/places/web-service/autocomplete
-                    key: '***REMOVED***',
-                    language: 'en', // language of the results
-                    // types: '(cities)' // default: 'geocode'
-                }}
-
-                styles={{
-                    textInputContainer: {
-                        width: '100%'
-                    },
-                    description: {
-                        fontWeight: 'bold'
-                    },
-                    predefinedPlacesDescription: {
-                        color: '#1faadb'
-                    }
-                }}
-
-                currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
-                currentLocationLabel="Current location"
-                nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-                GoogleReverseGeocodingQuery={{
-                    // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
-                }}
-                GooglePlacesSearchQuery={{
-                    // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
-                    rankby: 'distance',
-                    type: 'cafe'
-                }}
-
-                GooglePlacesDetailsQuery={{
-                    // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
-                    fields: 'formatted_address',
-                }}
-
-                filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-                // predefinedPlaces={[homePlace, workPlace]}
-
-                debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
-                // renderLeftButton={() => <Image source={require('path/custom/left-icon')} />}
-                // renderRightButton={() => <Text>Custom text after the input</Text>}
-            />
-            <TouchableOpacity style={styles.submitButton}
-                onPress={() => {
-                    axios.post('http://localhost:8000/api/addAddress', {
-                        address: address,
-                        placeId: placeId,
-                        userId: userId
-                    })
-                        .then(res => {
-                            showMessage({
-                                message: 'Address is added successfully.',
-                                type: "success"
-                            });
-                            navigation.navigate('Profile');
-                        }).catch(error => {
-                            const msg = error.response.data.message;
-                            showMessage({
-                                message: msg,
-                                type: "danger"
-                            });
-                        })
-                }}
-            >
-                <Text style={styles.submitButtonText}> Save </Text>
-            </TouchableOpacity>
-            </View>
+        <View style={styles.containerStyle} >
+            <GooglePlaces placeholder={'Search'} onPress={onTextChange} />
+            <ActionButton title={'Save'} onPress={onPress} />
+        </View>
     );
 }
-
-// function OptionButton({ icon, label, onPress, isLastOption }) {
-//     return (
-//         <RectButton style={[styles.option, isLastOption && styles.lastOption]} onPress={onPress}>
-//             <View style={{ flexDirection: 'row' }}>
-//                 <View style={styles.optionIconContainer}>
-//                     <Ionicons name={icon} size={22} color="rgba(0,0,0,0.35)" />
-//                 </View>
-//                 <View style={styles.optionTextContainer}>
-//                     <Text style={styles.optionText}>{label}</Text>
-//                 </View>
-//             </View>
-//         </RectButton>
-//     );
-// }
 
 const styles = StyleSheet.create({
     submitButton: {

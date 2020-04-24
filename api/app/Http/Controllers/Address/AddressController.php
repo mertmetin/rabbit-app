@@ -22,12 +22,13 @@ class AddressController extends Controller
 
     protected function add(Request $request)
     {   
-        if (!$request->filled('userId', 'address', 'placeId'))
+        if (!$request->filled('userId', 'address'))
             throw new \Exception('Invalid request.');
 
         $userId = $request->input('userId');
         $address = $request->input('address');
-        $placeId = $request->input('placeId');
+        error_log(json_encode($address));
+        $placeId = $address['place_id'];
 
         $userAddress = UserAddress::where('user_id', $userId)
                 ->where('place_id', $placeId)
@@ -41,9 +42,11 @@ class AddressController extends Controller
 
         $result = UserAddress::create([
             'user_id' => $userId,
-            'address' => $address,
+            'place_id' => $placeId,
+            'description' => $address['description'],
+            'main_text' => $address['main_text'],
+            'secondary_text' => $address['secondary_text'],
             'address_type' => $type->id,
-            'place_id' => $placeId
         ]);
 
         $result;

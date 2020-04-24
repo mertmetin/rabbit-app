@@ -33,8 +33,8 @@ export default function AccountScreen(props) {
 
                 <View>
                     <Text style={styles.sectionContainer}>Profile</Text>
-                    <OptionButton title={'Personal info'} routeName={'InfoScreen'} data={user}/>
-                    <OptionButton title={'Addresses'} />
+                    <OptionButton title={'Personal info'} routeName={'InfoScreen'} data={user} />
+                    <OptionButton title={'Addresses'} routeName={'AddressScreen'} data={user.id} />
                     <OptionButton title={'Payment Methods'} />
                 </View>
                 <ActionButton title={'Log out'} onPress={onPress}/>

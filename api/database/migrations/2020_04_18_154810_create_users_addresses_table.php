@@ -17,7 +17,9 @@ class CreateUsersAddressesTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->string('address');
+            $table->string('description');
+            $table->string('main_text');
+            $table->string('secondary_text');
             $table->integer('address_type')->unsigned();
             $table->foreign('address_type')->references('id')->on('address_types');
             $table->string('place_id');
