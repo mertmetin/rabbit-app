@@ -4,13 +4,11 @@ import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios';
+import AccountScreen from './Profile/Account/AccountScreen';
 
 export default function ProfileScreen({navigation}) {
     var [isLoggedIn, setLogin] = React.useState(false);
-    const [userId, setUserId] = React.useState('');
-    const [phone, setPhone] = React.useState('');
-    const [email, setEmail] = React.useState('');
-    const [name, setName] = React.useState('');
+    const [user, setUser] = React.useState({});
 
     const guestView =
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
@@ -52,68 +50,14 @@ export default function ProfileScreen({navigation}) {
             </View>
         </ScrollView>
 
-        const userView = 
-            <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-                <View style={viewStyle.containerStyle}>
-                    <OptionButton
-                        icon="md-person"
-                        label={name}
-                    />
-                    <OptionButton
-                        icon="md-mail"
-                        label={email}
-                    />
-                    <OptionButton
-                        icon="md-phone-portrait"
-                        label={phone}
-                    />
-                </View>
-                <View style={viewStyle.containerStyle}>
-                    <OptionButton
-                        icon="md-map"
-                        label={'Addresses'}
-                        onPress={() => navigation.navigate('AddressScreen', { userId: userId })}
-                    />
-                    <OptionButton
-                        icon="md-card"
-                        label={'Payment Methods'}
-                        onPress={() => navigation.navigate('PaymentMethodsScreen', { userId: userId })}
-                    />
-                    <OptionButton
-                        icon="md-lock"
-                        label={'Change Password'}
-                        onPress={() => navigation.navigate('ChangePasswordScreen', {userId: userId})}
-                    />
-                    <OptionButton
-                        icon="md-person"
-                        label={"Logout"}
-                        onPress={() => {
-                            axios.post('http://localhost:8000/logout', {
-                          
-                            })
-                            .then(res => {
-                                setLogin(false);
-                                navigation.navigate('Profile');
-                            }).catch(error => {
-                                
-                            })
-                        }}
-                    />
-                </View>
-            </ScrollView>
-
     React.useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
             axios.post('http://localhost:8000/getAuthUser', {
             })
             .then(res => {
-                if (res.data)
-                {
-                    setUserId(res.data.id);
+                if (res.data) {
                     setLogin(true);
-                    setPhone(res.data.phone);
-                    setEmail(res.data.email);
-                    setName(res.data.name);
+                    setUser(res.data);
                 }
             }).catch(error => {
 
@@ -123,7 +67,7 @@ export default function ProfileScreen({navigation}) {
         return unsubscribe;
     }, [navigation]);
 
-    const view = (isLoggedIn) ? userView : guestView;
+    const view = (isLoggedIn) ? <AccountScreen user={user} setLogin={setLogin} /> : guestView;
 
     return (view);
 }
