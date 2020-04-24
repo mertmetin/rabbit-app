@@ -27,7 +27,6 @@ class AddressController extends Controller
 
         $userId = $request->input('userId');
         $address = $request->input('address');
-        error_log(json_encode($address));
         $placeId = $address['place_id'];
 
         $userAddress = UserAddress::where('user_id', $userId)
@@ -50,5 +49,24 @@ class AddressController extends Controller
         ]);
 
         $result;
+    }
+
+    protected function delete(Request $request)
+    {
+        if (!$request->filled('id', 'userId'))
+            throw new \Exception('Invalid request.');
+
+        $userId = $request->input('userId');
+        $addressId = $request->input('id');
+        $userAddress = UserAddress::where('user_id', $userId)
+                ->where('id', $addressId)
+                ->get()->last();
+
+        if (!$userAddress)
+            throw new \Exception('This address is already deleted');
+
+        $userAddress = UserAddress::find($addressId);
+        
+        return $userAddress->delete();
     }
 }

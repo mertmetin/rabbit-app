@@ -18,19 +18,19 @@ export default function AddAddressScreen({ navigation, route }) {
             userId: userId,
             address: address,
         })
-            .then(res => {
-                showMessage({
-                    message: 'Address is added successfully.',
-                    type: "success"
-                });
-                navigation.navigate('Profile');
-            }).catch(error => {
-                const msg = error.response.data.message;
-                showMessage({
-                    message: msg,
-                    type: "danger"
-                });
-            })
+        .then(res => {
+            showMessage({
+                message: 'Address is added successfully.',
+                type: "success"
+            });
+            navigation.navigate('Profile');
+        }).catch(error => {
+            const msg = error.response.data.message;
+            showMessage({
+                message: msg,
+                type: "danger"
+            });
+        })
     }
 
     var onTextChange = (data, details) => {

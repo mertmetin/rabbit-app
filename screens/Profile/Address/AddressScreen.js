@@ -17,8 +17,36 @@ export default function AddressScreen({ navigation, route }) {
 
         for (let i in addresses) {
             const address = addresses[i];
+
+            const onPress = () => {
+                axios.post('http://localhost:8000/api/deleteAddress', {
+                    id: address.id,
+                    userId: userId
+                })
+                .then(res => {
+                    var items = [];
+                    showMessage({
+                        message: 'Address deleted',
+                        type: "success"
+                    });
+                    navigation.navigate('Profile');
+                }).catch(error => {
+                    const msg = error.response.data.message;
+                    showMessage({
+                        message: msg,
+                        type: "danger"
+                    });
+                })
+            }
+
             var item = (
                 <View style={styles.addressContainer}>
+                    <TouchableOpacity style={{ alignSelf: 'center', paddingRight: 15}} onPress={onPress}>
+                        <Ionicons
+                            name={'md-trash'}
+                            size={24}
+                        />
+                        </TouchableOpacity>
                     <Text style={styles.addressText}>
                         <Text>{address.main_text}{"\n"}</Text>
                         <Text>{address.secondary_text}</Text>
@@ -74,6 +102,7 @@ const styles = StyleSheet.create({
     },  
     addressContainer: {
         flex:1,
+        flexDirection: 'row',
         paddingBottom: 15,
     },
     addressText: {
