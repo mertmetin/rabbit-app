@@ -20,6 +20,8 @@ class CreateUsersAddressesTable extends Migration
             $table->string('description');
             $table->string('main_text');
             $table->string('secondary_text');
+            $table->string('apt_suite_floor')->nullable();
+            $table->string('business_or_building_name')->nullable();
             $table->integer('address_type')->unsigned();
             $table->foreign('address_type')->references('id')->on('address_types');
             $table->string('place_id');

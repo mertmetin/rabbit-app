@@ -11,6 +11,7 @@ import PaymentMethodsScreen from '../screens/PaymentMethodsScreen';
 import AddCardScreen from '../screens/AddCardScreen';
 import AddressScreen from '../screens/Profile/Address/AddressScreen';
 import AddAddressScreen from '../screens/Profile/Address/AddAddressScreen';
+import AddressDetails from '../screens/Profile/Address/AddressDetails';
 import AccountScreen from '../screens/Profile/Account/AccountScreen';
 import InfoScreen from '../screens/Profile/Account/InfoScreen';
 
@@ -29,6 +30,7 @@ export default function ProfileNavigator({ navigation }) {
             <Stack.Screen name="PaymentMethodsScreen" component={PaymentMethodsScreen} />
             <Stack.Screen name="AddCardScreen" component={AddCardScreen} />
             <Stack.Screen name="AddressScreen" component={AddressScreen} />
+            <Stack.Screen name="AddressDetails" component={AddressDetails} />
             <Stack.Screen name="AddAddressScreen" component={AddAddressScreen} />
             <Stack.Screen name="AccountScreen" component={AccountScreen} />
             <Stack.Screen name="InfoScreen" component={InfoScreen} />

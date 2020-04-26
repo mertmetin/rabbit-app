@@ -45,10 +45,26 @@ class AddressController extends Controller
             'description' => $address['description'],
             'main_text' => $address['main_text'],
             'secondary_text' => $address['secondary_text'],
+            'apt_suite_floor' => $address['apt_suite_floor'],
+            'business_or_building_name' => $address['business_or_building_name'],
             'address_type' => $type->id,
         ]);
 
         $result;
+    }
+
+    protected function edit(Request $request)
+    {   
+        if (!$request->filled('userId', 'address'))
+            throw new \Exception('Invalid request.');
+
+        $userId = $request->input('userId');
+        $address = $request->input('address');
+
+        $dbUser = UserAddress::where('user_id', $userId)->where('place_id', $address['place_id'])->first();
+        $address['user_id'] = $userId;
+
+        return $dbUser->update($address);
     }
 
     protected function delete(Request $request)
@@ -66,7 +82,7 @@ class AddressController extends Controller
             throw new \Exception('This address is already deleted');
 
         $userAddress = UserAddress::find($addressId);
-        
+
         return $userAddress->delete();
     }
 }

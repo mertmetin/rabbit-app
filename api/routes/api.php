@@ -30,6 +30,7 @@ Route::post('/addCard', 'Payment\CardController@add');
 Route::post('/getAddresses', 'Address\AddressController@get');
 Route::post('/addAddress', 'Address\AddressController@add');
 Route::post('/deleteAddress', 'Address\AddressController@delete');
+Route::post('/editAddress', 'Address\AddressController@edit');
 Route::post('/getProducts', 'Product\ProductController@get');
 Route::post('/getProductCategories', 'Product\ProductCategoryController@get');
 

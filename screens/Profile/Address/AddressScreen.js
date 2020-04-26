@@ -19,38 +19,22 @@ export default function AddressScreen({ navigation, route }) {
             const address = addresses[i];
 
             const onPress = () => {
-                axios.post('http://localhost:8000/api/deleteAddress', {
-                    id: address.id,
-                    userId: userId
-                })
-                .then(res => {
-                    var items = [];
-                    showMessage({
-                        message: 'Address deleted',
-                        type: "success"
-                    });
-                    navigation.navigate('Profile');
-                }).catch(error => {
-                    const msg = error.response.data.message;
-                    showMessage({
-                        message: msg,
-                        type: "danger"
-                    });
-                })
+                navigation.navigate('AddressDetails', {userId: userId, address: address});
             }
 
             var item = (
                 <View style={styles.addressContainer}>
-                    <TouchableOpacity style={{ alignSelf: 'center', paddingRight: 15}} onPress={onPress}>
+                    <TouchableOpacity style={{flexDirection: 'row', alignSelf: 'center'}} onPress={onPress}>
                         <Ionicons
-                            name={'md-trash'}
+                            name={'md-home'}
                             size={24}
+                            style={{paddingRight: 15}}
                         />
-                        </TouchableOpacity>
-                    <Text style={styles.addressText}>
-                        <Text>{address.main_text}{"\n"}</Text>
-                        <Text>{address.secondary_text}</Text>
-                    </Text>
+                        <Text style={styles.addressText}>
+                            <Text>{address.main_text}{"\n"}</Text>
+                            <Text>{address.secondary_text}</Text>
+                        </Text>
+                    </TouchableOpacity>
                 </View>
             );
             items.push(item);
@@ -97,8 +81,8 @@ export default function AddressScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: 20,
-        paddingLeft: 15
+        padding: 20,
+        // paddingLeft: 15
     },  
     addressContainer: {
         flex:1,

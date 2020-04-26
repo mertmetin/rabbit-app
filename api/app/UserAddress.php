@@ -19,6 +19,6 @@ class UserAddress extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'description', 'main_text', 'secondary_text', 'address_type', 'place_id'
+        'user_id', 'description', 'main_text', 'secondary_text', 'apt_suite_floor', 'business_or_building_name', 'address_type', 'place_id'
     ];
 }

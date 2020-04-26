@@ -7,13 +7,28 @@ import axios from 'axios';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import { ActionButton } from '../../../components/ActionButton';
+// import { GooglePlaces } from '../../../components/GooglePlaces';
 import { GooglePlaces } from '../../../components/GooglePlaces';
+import { FloatingLabel } from '../../../components/FloatingLabel';
 
 export default function AddAddressScreen({ navigation, route }) {
     const userId = route.params.data;
-    const [address, setAddress] = React.useState([]);
+    const [addressData, setAddressData] = React.useState([]);
+    const [aptSuiteFloor, setAptSuiteFloor] = React.useState('');
+    const [businessOrBuildingName, setBusinessOrBuildingName] = React.useState('');
+
 
     const onPress = () => {
+        const address = {
+            'place_id': addressData.place_id,
+            'description': addressData.description,
+            'main_text': addressData.structured_formatting.main_text,
+            'secondary_text': addressData.structured_formatting.secondary_text,
+            'apt_suite_floor': aptSuiteFloor,
+            'business_or_building_name': businessOrBuildingName
+        }
+        console.log(address);
+
         axios.post('http://localhost:8000/api/addAddress', {
             userId: userId,
             address: address,
@@ -33,22 +48,27 @@ export default function AddAddressScreen({ navigation, route }) {
         })
     }
 
-    var onTextChange = (data, details) => {
-        const address = {
-            'place_id': data.place_id,
-            'description': data.description,
-            'main_text': data.structured_formatting.main_text,
-            'secondary_text': data.structured_formatting.secondary_text
-        };
-        setAddress(address);
-    }
+
+    // var onTextChange = (data, details) => {
+    //     const address = {
+    //         'place_id': data.place_id,
+    //         'description': data.description,
+    //         'main_text': data.structured_formatting.main_text,
+    //         'secondary_text': data.structured_formatting.secondary_text
+    //     };
+    //     setAddress(address);
+    // }
     
     return (
-        // <ScrollView contentContainerStyle={styles.containerStyle}>
-        <View style={styles.containerStyle} >
-            <GooglePlaces placeholder={'Search'} onPress={onTextChange} />
-            <ActionButton title={'Save'} onPress={onPress} />
-        </View>
+        <ScrollView style={styles.containerStyle}>
+            <View>
+                <GooglePlaces onAddressSelected={setAddressData} />
+                <FloatingLabel label={'Apt / Suite / Floor'} onTextChange={setAptSuiteFloor} />
+                <FloatingLabel label={'Business or building name'} onTextChange={setBusinessOrBuildingName} />
+                <ActionButton title={'Save'} onPress={onPress} />
+            </View>
+        </ScrollView>
+        
     );
 }
 
@@ -64,11 +84,12 @@ const styles = StyleSheet.create({
         marginRight: 20,
     },
     containerStyle: {
-        paddingTop: 25,
-        paddingBottom: 25,
+        padding: 20,
+        // paddingTop: 25,
+        // paddingBottom: 25,
         backgroundColor: 'rgb(254, 254, 254)',
-        display: 'flex',
-        justifyContent: 'space-between',
+        // display: 'flex',
+        // justifyContent: 'space-between',
         height: '100%'
     },
     input: {

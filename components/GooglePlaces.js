@@ -1,65 +1,93 @@
+import { Ionicons } from '@expo/vector-icons';
+import Colors from '../constants/Colors';
 import * as React from 'react';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import axios from 'axios';
+import {FloatingLabel } from './FloatingLabel'
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 export function GooglePlaces(props) {
+    var [address, setAddress] = React.useState([]);
+    const [value, setValue] = React.useState((props.value) ? props.value : '');
+    const [predictions, setPredictions] = React.useState([]);
+
+    const makeItems = (predictions) => {
+        let items = [];
+
+        const onPress = (data) => {
+            console.log(data);
+        }
+
+        for (let k in predictions)
+        {
+            var prediction = predictions[k];
+            var structured_formatting = prediction.structured_formatting;
+            var item = (
+                <View key={k} style={styles.container}>
+                    <TouchableOpacity key={k} onPress={() => {
+                        let address = predictions[k];
+                        let description = address.description;
+                        setValue(description);
+                        setAddress(address);
+                        setPredictions([]);
+                        props.onAddressSelected(address);
+                    }}>
+                        <Text style={styles.predictionMainText}>{structured_formatting.main_text}</Text>
+                        <Text style={styles.predictionSecondaryText}>{structured_formatting.secondary_text}</Text>
+                    </TouchableOpacity>
+                </View>
+            );
+            items.push(item);
+        }
+
+        return items;
+    }
+
+    const onTextChange = (data) => {
+        setValue(data);
+        const url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json?' +
+            'key=***REMOVED***&' + 
+            '&input=' + data +
+            '&inputtype=textquery' + 
+            '&fields=formatted_address,name,rating,opening_hours,geometry';  
+
+        axios.get(url).then(res => {
+            if (!res.data.predictions)
+                return;
+
+            const predictions = res.data.predictions;
+            const items = makeItems(predictions);
+            setPredictions(items);
+         
+        }).catch(error => {
+            // showMessage({
+            //     message: 'Invalid request.',
+            //     type: "danger"
+            // });
+        })
+    }
+    console.log(address);
     return (
-        <GooglePlacesAutocomplete
-            placeholder = {props.placeholder}
-            minLength={2} // minimum length of text to search
-            autoFocus={false}
-            returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-            keyboardAppearance={'light'} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
-            listViewDisplayed='auto'    // true/false/undefined
-            fetchDetails={true}
-            renderDescription={row => row.description} // custom description render
-            onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-                props.onPress(data, details);
-            }}
-
-            getDefaultValue={() => ''}
-
-            query={{
-                // available options: https://developers.google.com/places/web-service/autocomplete
-                key: '***REMOVED***',
-                language: 'en', // language of the results
-                // types: '(cities)' // default: 'geocode'
-            }}
-
-            styles={{
-                textInputContainer: {
-                    width: '100%'
-                },
-                description: {
-                    fontWeight: 'bold'
-                },
-                predefinedPlacesDescription: {
-                    color: '#1faadb'
-                }
-            }}
-
-            currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
-            currentLocationLabel="Current location"
-            nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-            GoogleReverseGeocodingQuery={{
-                // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
-            }}
-            GooglePlacesSearchQuery={{
-                // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
-                rankby: 'distance',
-                type: 'cafe'
-            }}
-
-            GooglePlacesDetailsQuery={{
-                // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
-                fields: 'formatted_address',
-            }}
-
-            filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-            // predefinedPlaces={[homePlace, workPlace]}
-
-            debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
-        // renderLeftButton={() => <Image source={require('path/custom/left-icon')} />}
-        // renderRightButton={() => <Text>Custom text after the input</Text>}
-        />
+        <View>
+            <FloatingLabel onTextChange={onTextChange} label={'Address'} value={value}/>
+            <View>{predictions}</View>
+        </View>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        borderBottomWidth: 2,
+        borderBottomColor: Colors.accentGreen,
+        paddingTop: 10,
+        paddingBottom: 10
+    },  
+    predictionMainText: {
+        fontFamily: 'sodo-sans-semibold',
+        fontSize: 16
+    },
+    predictionSecondaryText: {
+        fontFamily: 'sodo-sans-regular',
+        fontSize: 12,
+    }
+});
+
