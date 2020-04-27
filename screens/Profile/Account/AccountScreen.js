@@ -8,6 +8,7 @@ import { showMessage, hideMessage } from "react-native-flash-message";
 import { OptionButton } from '../../../components/OptionButton';
 import { ActionButton } from '../../../components/ActionButton';
 import { useNavigation } from '@react-navigation/native';
+import { isRearCameraAvailable } from 'expo/build/AR';
 
 export default function AccountScreen(props) {
     const user = props.user;
@@ -35,7 +36,7 @@ export default function AccountScreen(props) {
                     <Text style={styles.sectionContainer}>Profile</Text>
                     <OptionButton title={'Personal info'} routeName={'InfoScreen'} data={user} />
                     <OptionButton title={'Addresses'} routeName={'AddressScreen'} data={user.id} />
-                    <OptionButton title={'Payment Methods'} />
+                    <OptionButton title={'Payment Methods'} routeName={'CardsScreen'} data={user.id} />
                 </View>
                 <ActionButton title={'Log out'} onPress={onPress}/>
             </View>

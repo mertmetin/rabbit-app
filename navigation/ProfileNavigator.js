@@ -7,13 +7,14 @@ import UserActivation from '../screens/UserActivationScreen';
 import ForgotPassword from '../screens/ForgotPassword';
 import PasswordReset from '../screens/PasswordReset';
 import ChangePasswordScreen from '../screens/ChangePasswordScreen';
-import PaymentMethodsScreen from '../screens/PaymentMethodsScreen';
-import AddCardScreen from '../screens/AddCardScreen';
 import AddressScreen from '../screens/Profile/Address/AddressScreen';
 import AddAddressScreen from '../screens/Profile/Address/AddAddressScreen';
 import AddressDetails from '../screens/Profile/Address/AddressDetails';
 import AccountScreen from '../screens/Profile/Account/AccountScreen';
 import InfoScreen from '../screens/Profile/Account/InfoScreen';
+import CardsScreen from '../screens/Profile/Payment/CardsScreen';
+import CardDetailsScreen from '../screens/Profile/Payment/CardDetailsScreen';
+import AddCardScreen from '../screens/Profile/Payment/AddCardScreen';
 
 const Stack = createStackNavigator();
 
@@ -27,7 +28,8 @@ export default function ProfileNavigator({ navigation }) {
             <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
             <Stack.Screen name="PasswordReset" component={PasswordReset} />
             <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} />
-            <Stack.Screen name="PaymentMethodsScreen" component={PaymentMethodsScreen} />
+            <Stack.Screen name="CardsScreen" component={CardsScreen} />
+            <Stack.Screen name="CardDetailsScreen" component={CardDetailsScreen} />
             <Stack.Screen name="AddCardScreen" component={AddCardScreen} />
             <Stack.Screen name="AddressScreen" component={AddressScreen} />
             <Stack.Screen name="AddressDetails" component={AddressDetails} />

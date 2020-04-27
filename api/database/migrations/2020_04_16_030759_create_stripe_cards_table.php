@@ -22,7 +22,7 @@ class CreateStripeCardsTable extends Migration
             $table->string('last4');
             $table->string('exp_month');
             $table->string('exp_year');
-            $table->string('brand');
+            $table->string('brand')->nullable();
             $table->timestamps();
         });
     }

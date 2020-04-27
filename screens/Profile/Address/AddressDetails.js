@@ -26,19 +26,19 @@ export default function AddressDetails({ navigation, route }) {
             userId: userId,
             address: address
         })
-            .then(res => {
-                showMessage({
-                    message: 'Address updated',
-                    type: "success"
-                });
-                navigation.navigate('Profile');
-            }).catch(error => {
-                const msg = error.response.data.message;
-                showMessage({
-                    message: msg,
-                    type: "danger"
-                });
-            })
+        .then(res => {
+            showMessage({
+                message: 'Address updated',
+                type: "success"
+            });
+            navigation.navigate('Profile');
+        }).catch(error => {
+            const msg = error.response.data.message;
+            showMessage({
+                message: msg,
+                type: "danger"
+            });
+        })
     }
 
     const removeAddress = () => {
