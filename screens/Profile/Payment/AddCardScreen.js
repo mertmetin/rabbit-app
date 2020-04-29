@@ -27,7 +27,6 @@ export default function AddCardScreen({ navigation, route }) {
             })
             .then(res => {
                 navigation.navigate('Profile');
-
             }).catch(error => {
                 const msg = error.response.data.message;
                 showMessage({
