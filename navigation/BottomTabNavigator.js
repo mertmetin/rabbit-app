@@ -71,7 +71,7 @@ function getHeaderTitle(route) {
     case 'Home':
       return 'How to get started';
     case 'Search':
-      return 'Links to learn more';
+      return 'Search';
     case 'Profile':
       return 'Profile';
     case 'Gift':
