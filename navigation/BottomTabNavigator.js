@@ -32,7 +32,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         component={HomeNavigator}
         options={{
           title: 'Order',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-home" />,
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-cart" />,
         }}
       />
       <BottomTab.Screen

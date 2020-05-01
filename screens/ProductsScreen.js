@@ -49,7 +49,7 @@ export default function ProductsScreen({navigation, route}) {
 
     return(
         <ScrollView>
-            <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
+            <View style={{padding: 20, flex: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
                 {items}
             </View>
         </ScrollView>

@@ -5,6 +5,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios';
 import { CategoryCard } from '../components/CategoryCard';
 import { showMessage, hideMessage } from "react-native-flash-message";
+import { ActionButton } from '../components/ActionButton';
 
 export default function ProductDetailsScreen({ navigation, route }) {
     const item = route.params.item;
@@ -26,12 +27,15 @@ export default function ProductDetailsScreen({ navigation, route }) {
                     <Text style={{ marginTop: 3, color: '#fff', fontFamily: 'sodo-sans-bold', fontSize: 18 }}>{item.title}</Text>
                 </View>
             </View>
-            <View style={{padding:20}}>
+            <View style={{flex: 1, padding:20}}>
                 <Text style={{ color: '#585858', fontFamily: 'sodo-sans-regular'}}>{item.description}</Text>
 
                 <View style={{marginTop: 20}}>
                     <Text style={{ fontSize: 16, fontFamily: 'lander-grande-semibold'}}>Nutrition Information</Text>
                     <Text style={{marginTop: 20, fontFamily: 'sodo-sans-regular'}}>Calories: 20</Text>
+                </View>
+                <View style={{position: 'absolute', 'right': 0, bottom: 0, right: 15}}>
+                    <ActionButton title={"Add item"} />
                 </View>
             </View>
         </ScrollView>
