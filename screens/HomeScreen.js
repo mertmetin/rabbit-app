@@ -52,7 +52,7 @@ export default function HomeScreen() {
 
   return (
     <ScrollView>
-      <View style={{flex:1, flexDirection:'row', flexWrap:'wrap'}}>
+      <View style={styles.container}>
         {items}
       </View>
     </ScrollView>
@@ -98,8 +98,10 @@ function handleHelpPress() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
+    flex: 1, 
+    flexDirection: 'row', 
+    flexWrap: 'wrap',
+    padding: 20
   },
   developmentModeText: {
     marginBottom: 20,

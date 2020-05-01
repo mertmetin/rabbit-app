@@ -8,16 +8,57 @@ import { showMessage, hideMessage } from "react-native-flash-message";
 
 export default function ProductDetailsScreen({ navigation, route }) {
     const item = route.params.item;
+    const image = { uri: 'http://localhost:8000/storage/' + item.image};
+    const [imgWidth, setImageWidth] = React.useState(0);
+    const [imgHeight, setImageHeight] = React.useState(0);
+
+    Image.getSize('http://localhost:8000/storage/' + item.image, (width, height) => {
+        setImageWidth(width);
+        setImageHeight(height);
+    });
 
     return (
-        <ScrollView>
-            <View style={{backgroundColor: '#fff'}}>
-                <Image style={{height: 500, padding: 50}} source={{ uri: 'http://localhost:8000/storage/' + item.image }} />
-                <View style={{alignItems: 'center', paddingTop: 25}}>
-                    <Text>{item.title}</Text>
-                    <Text style={{ paddingTop: 10 }}>{item.description}</Text>
+        <ScrollView style={{ flex: 1, backgroundColor: '#FFFFFF'}}>
+            <View style={styles.imgContainer}>
+                <Image source={image} style={{ alignSelf: 'center', marginTop: 20, marginBottom: 20, resizeMode: 'cover', width: imgWidth, height: imgHeight}} />
+                <View style={{alignSelf: 'center', paddingBottom: 20}}>
+                    <Text style={{ textAlign: 'center', color: '#fff', fontFamily: 'sodo-sans-bold', fontSize: 16}}>${item.price}</Text>
+                    <Text style={{ marginTop: 3, color: '#fff', fontFamily: 'sodo-sans-bold', fontSize: 18 }}>{item.title}</Text>
+                </View>
+            </View>
+            <View style={{padding:20}}>
+                <Text style={{ color: '#585858', fontFamily: 'sodo-sans-regular'}}>{item.description}</Text>
+
+                <View style={{marginTop: 20}}>
+                    <Text style={{ fontSize: 16, fontFamily: 'lander-grande-semibold'}}>Nutrition Information</Text>
+                    <Text style={{marginTop: 20, fontFamily: 'sodo-sans-regular'}}>Calories: 20</Text>
                 </View>
             </View>
         </ScrollView>
-    )
+    );
 }
+
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        flexDirection: "column"
+    },
+    imgContainer: {
+        backgroundColor: '#1E3932'
+    },
+    image: {
+        // flex: 5,
+        // resizeMode: "cover",
+        // justifyContent: "center",
+        height: 282,
+        width: '100%'
+    },
+    text: {
+        // flex:1,
+        color: "grey",
+        fontSize: 30,
+        fontWeight: "bold",
+        // alignItems: "flex-end"
+    }
+});

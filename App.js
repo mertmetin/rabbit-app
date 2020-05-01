@@ -37,7 +37,11 @@ export default function App(props) {
           'sodo-sans-bold': require('./assets/fonts/SoDoSans-Bold.ttf'),
           'sodo-sans-semibold': require('./assets/fonts/SoDoSans-SemiBold.ttf'),
           'sodo-sans-regular': require('./assets/fonts/SoDoSans-Regular.ttf'),
-
+          'lander-grande-book': require('./assets/fonts/LanderGrande/LanderGrande-Book.ttf'),
+          'lander-grande-bold': require('./assets/fonts/LanderGrande/LanderGrande-Bold.ttf'),
+          'lander-grande-semibold': require('./assets/fonts/LanderGrande/LanderGrande-SemiBold.ttf'),
+          'lander-grande-regular': require('./assets/fonts/LanderGrande/LanderGrande-Regular.ttf'),
+          'lander-grande-light': require('./assets/fonts/LanderGrande/LanderGrande-Light.ttf')
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service
