@@ -21,25 +21,34 @@ const Stack = createStackNavigator();
 export default function ProfileNavigator({ navigation }) {
     return (
         <Stack.Navigator screenOptions={screenOptions}>
-            <Stack.Screen name="Profile" component={ProfileScreen} />
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Register" component={RegisterScreen} />
-            <Stack.Screen name="UserActivation" component={UserActivation} />
-            <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
-            <Stack.Screen name="PasswordReset" component={PasswordReset} />
-            <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} />
-            <Stack.Screen name="CardsScreen" component={CardsScreen} />
-            <Stack.Screen name="CardDetailsScreen" component={CardDetailsScreen} />
-            <Stack.Screen name="AddCardScreen" component={AddCardScreen} />
-            <Stack.Screen name="AddressScreen" component={AddressScreen} />
-            <Stack.Screen name="AddressDetails" component={AddressDetails} />
-            <Stack.Screen name="AddAddressScreen" component={AddAddressScreen} />
-            <Stack.Screen name="AccountScreen" component={AccountScreen} />
-            <Stack.Screen name="InfoScreen" component={InfoScreen} />
+            <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: 'Account' }} />
+            <Stack.Screen name="Login" component={LoginScreen} options={{ title: 'Login' }} />
+            <Stack.Screen name="Register" component={RegisterScreen} options={{ title: 'Register' }} />
+            <Stack.Screen name="UserActivation" component={UserActivation} options={{ title: 'Activate' }} />
+            <Stack.Screen name="ForgotPassword" component={ForgotPassword} options={{ title: 'Forgot Password' }} />
+            <Stack.Screen name="PasswordReset" component={PasswordReset} options={{ title: 'Reset Password' }} />
+            <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} options={{ title: 'Change Password' }} />
+            <Stack.Screen name="CardsScreen" component={CardsScreen} options={{ title: 'Payment' }} />
+            <Stack.Screen name="CardDetailsScreen" component={CardDetailsScreen} options={{ title: 'Card Details' }} />
+            <Stack.Screen name="AddCardScreen" component={AddCardScreen} options={{ title: 'Add Card' }} />
+            <Stack.Screen name="AddressScreen" component={AddressScreen} options={{ title: 'Addresses' }} />
+            <Stack.Screen name="AddressDetails" component={AddressDetails} options={{ title: 'Address Details' }} />
+            <Stack.Screen name="AddAddressScreen" component={AddAddressScreen} options={{ title: 'Add Address' }} />
+            <Stack.Screen name="AccountScreen" component={AccountScreen} options={{ title: 'Profile' }} />
+            <Stack.Screen name="InfoScreen" component={InfoScreen} options={{ title: 'Personal info' }} />
         </Stack.Navigator>
     );
 }
 
 const screenOptions = {
-    headerShown: false
+    headerShown: true,
+    headerStyle: {
+        backgroundColor: '#fff',
+    },
+    headerTintColor: '#18191A',
+    headerTitleStyle: {
+        fontWeight: 'bold',
+        fontFamily: 'sodo-sans-bold',
+        fontSize: 16
+    }
 }

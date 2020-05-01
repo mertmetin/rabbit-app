@@ -9,13 +9,22 @@ const Stack = createStackNavigator();
 export default function HomeNavigator({ navigation }) {
     return (
         <Stack.Navigator screenOptions={screenOptions}>
-            <Stack.Screen name="Home" component={HomeScreen} />
-            <Stack.Screen name="Products" component={ProductsScreen} />
-            <Stack.Screen name="ProductDetails" component={ProductDetailsScreen} />
+            <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Order' }} />
+            <Stack.Screen name="Products" component={ProductsScreen} options={{ title: 'Products' }} />
+            <Stack.Screen name="ProductDetails" component={ProductDetailsScreen} options={{ title: 'Product Details' }} />
         </Stack.Navigator>
     );
 }
 
 const screenOptions = {
-    headerShown: false
+    headerShown: true,
+    headerStyle: {
+        backgroundColor: '#fff',
+    },
+    headerTintColor: '#18191A',
+    headerTitleStyle: {
+        fontWeight: 'bold',
+        fontFamily: 'sodo-sans-bold',
+        fontSize: 16
+    }
 }
