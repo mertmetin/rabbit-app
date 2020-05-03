@@ -4,7 +4,6 @@ import { PasswordRecoveryForm } from '../../../components/Forms/Auth/PasswordRec
 import axios from 'axios';
 
 export default function PasswordResetScreen({ navigation, route }) {
-    console.log(route.params);
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <View>

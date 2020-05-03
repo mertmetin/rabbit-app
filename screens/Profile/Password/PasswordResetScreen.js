@@ -15,10 +15,9 @@ export default function PasswordRecoveryScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         padding: 20,
         backgroundColor: 'rgb(254, 254, 254)',
-        display: 'flex',
-        justifyContent: 'space-between',
         height: '100%'
     }
 })
