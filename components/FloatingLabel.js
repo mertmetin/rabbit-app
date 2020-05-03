@@ -48,7 +48,7 @@ export function FloatingLabel(props) {
     return (
         <Item floatingLabel error  style={{ borderColor: (isFocused) ? Colors.accentGreen : '#CCCCCC', fontFamily: 'sodo-sans-bold', marginBottom: 20 }}>
             <Label style={{ fontFamily: 'sodo-sans-regular' }}> {props.label} </Label>
-            <Input onFocus={onFocus} onBlur={onBlur} style={{ marginTop: (value) ? 0 : 5 }} onChangeText={onChangeText} value={value} maxLength={maxLength} />
+            <Input onFocus={onFocus} onBlur={onBlur} style={{ marginTop: (value) ? 0 : 5 }} onChangeText={onChangeText} value={value} maxLength={maxLength} secureTextEntry={props.secure} />
             {/* <Icon name='close-circle' /> */}
         </Item>
     );

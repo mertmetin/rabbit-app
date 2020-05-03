@@ -33,7 +33,7 @@ export function SignInForm(props) {
     return (
         <View>
             <FloatingLabel label={'Phone number'} value={phone} onTextChange={setPhoneNumber} />
-            <FloatingLabel label={'Password'} value={password} onTextChange={setPassword} />
+            <FloatingLabel label={'Password'} value={password} onTextChange={setPassword} secure={true} />
             <ActionButton title={'Sign in'} onPress={onPress} />
             <Link value={'Forgot password?'} link={'PasswordResetScreen'} />
         </View>
