@@ -3,7 +3,6 @@ import * as React from 'react';
 
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
-import ProfileScreen from '../screens/ProfileScreen';
 import HomeNavigator from './HomeNavigator';
 import SearchNavigator from './SearchNavigator';
 import ProfileNavigator from './ProfileNavigator';

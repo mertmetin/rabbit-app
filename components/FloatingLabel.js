@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Header, Content, Form, Item, Input, Label } from 'native-base';
+import { Container, Header, Content, Form, Item, Input, Label, Icon } from 'native-base';
 import Colors from '../constants/Colors';
 
 export function FloatingLabel(props) {
@@ -34,7 +34,6 @@ export function FloatingLabel(props) {
         return val.replace(/[^\dA-Z]/g, '').replace(/(.{4})/g, '$1 ').trim();
     }
 
-
     const onChangeText = (val) => {
 
         if (type == 'date')
@@ -47,9 +46,10 @@ export function FloatingLabel(props) {
     }
 
     return (
-        <Item floatingLabel style={{ borderColor: (isFocused) ? Colors.accentGreen : '#CCCCCC', fontFamily: 'sodo-sans-bold', marginBottom: 20 }}>
+        <Item floatingLabel error  style={{ borderColor: (isFocused) ? Colors.accentGreen : '#CCCCCC', fontFamily: 'sodo-sans-bold', marginBottom: 20 }}>
             <Label style={{ fontFamily: 'sodo-sans-regular' }}> {props.label} </Label>
             <Input onFocus={onFocus} onBlur={onBlur} style={{ marginTop: (value) ? 0 : 5 }} onChangeText={onChangeText} value={value} maxLength={maxLength} />
+            {/* <Icon name='close-circle' /> */}
         </Item>
     );
 }

@@ -11,35 +11,64 @@ import { useNavigation } from '@react-navigation/native';
 import { isRearCameraAvailable } from 'expo/build/AR';
 
 export default function AccountScreen(props) {
-    const user = props.user;
+    const [user, setUser] = React.useState({});
     const navigation = useNavigation();
-    const onPress = () => {
-        axios.post('http://localhost:8000/logout', {
+    var [isLoggedIn, setLogin] = React.useState(false);
 
-        })
+    React.useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            axios.post('http://localhost:8000/getAuthUser', {
+            })
+                .then(res => {
+                    if (res.data) {
+                        setLogin(true);
+                        setUser(res.data);
+                    }
+                }).catch(error => {
+                })
+        });
+
+        return unsubscribe;
+    }, [navigation]);
+
+    const guestView = (
+        <View style={styles.container}>
+            <View style={{flexDirection: 'row'}}>
+                <ActionButton title={'Join now'} onPress={() => navigation.navigate('SignUp')} />
+                <ActionButton style={'outlined'} title={'Sign in'} onPress={() => navigation.navigate('SignIn')} />
+            </View>
+        </View>
+    );
+
+    const logOut = () => {
+        axios.post('http://localhost:8000/logout', {})
         .then(res => {
-            props.setLogin(false);
-            navigation.navigate('Profile');
-        }).catch(error => {
-
+            setLogin(false);
+            navigation.navigate('AccountScreen');
         })
+        .catch(error => {})
     };
+
+    const userView = (
+        <View style={styles.container}>
+            <Text style={styles.name}>{user.name}</Text>
+            <Text style={styles.email}>{user.email}</Text>
+            <View>
+                <Text style={styles.sectionContainer}>Profile</Text>
+                <OptionButton title={'Personal info'} routeName={'InfoScreen'} data={user} />
+                <OptionButton title={'Addresses'} routeName={'AddressScreen'} data={user.id} />
+                <OptionButton title={'Payment Methods'} routeName={'CardsScreen'} data={user.id} />
+            </View>
+            <ActionButton style={'outlined'} title={'Log out'} onPress={logOut} />
+        </View>
+    );
+
+    const view = (isLoggedIn) ? userView : guestView;
         
     return (
         <ScrollView style={{
-            backgroundColor: '#f6f6f6'}}>
-            <View style={styles.container}>
-                <Text style={styles.name}>{user.name}</Text>
-                <Text style={styles.email}>{user.email}</Text>
-
-                <View>
-                    <Text style={styles.sectionContainer}>Profile</Text>
-                    <OptionButton title={'Personal info'} routeName={'InfoScreen'} data={user} />
-                    <OptionButton title={'Addresses'} routeName={'AddressScreen'} data={user.id} />
-                    <OptionButton title={'Payment Methods'} routeName={'CardsScreen'} data={user.id} />
-                </View>
-                <ActionButton title={'Log out'} onPress={onPress}/>
-            </View>
+            backgroundColor: '#f6f7f8'}}>
+                {view}
         </ScrollView>
     )
 }
