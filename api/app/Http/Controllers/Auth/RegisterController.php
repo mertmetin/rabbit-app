@@ -57,7 +57,7 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'numeric', 'min:11'],
+            'phone' => ['required', 'string', 'min:11'],
             'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', 'string', 'min:4'],
         ]);
@@ -75,7 +75,7 @@ class RegisterController extends Controller
 
             return $user->id;
         } else {
-            throw new Exception('Invalid request.');
+            throw new \Exception('Invalid request.');
         }
     }
 

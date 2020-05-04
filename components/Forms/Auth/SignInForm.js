@@ -16,11 +16,15 @@ export function SignInForm(props) {
     const navigation = useNavigation();
 
     const onPress = () => {
-        const isValidPhone = validate({ phone: phone }, constraints);
+        const fields = {
+            phone: phone,
+            password: password
+        };
 
-        if (isValidPhone)
-        {
-            setErrors({'phone': isValidPhone.phone});
+        const validation = validate(fields, constraints.signin);
+
+        if (validation) {
+            setErrors(validation)
             return false;
         }
 

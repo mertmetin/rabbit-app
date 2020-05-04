@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { showMessage, hideMessage } from "react-native-flash-message";
-import OTPTextView from 'react-native-otp-textinput';
+import { validate } from 'validate.js/validate';
 import { Ionicons } from '@expo/vector-icons';
 import { FloatingLabel } from '../../FloatingLabel';
 import { ActionButton } from '../../ActionButton';
-import Colors from '../../../constants/Colors';
+import { showMessage, hideMessage } from "react-native-flash-message";
+import constraints from '../../../constants/Constraints';
 import axios from 'axios';
 
 export function UserActivationForm(props) {
     const userId = props.params.user_id;
     const phone = props.params.phone;
     const [token, setToken] = React.useState('');
+    const [errors, setErrors] = React.useState([]);
     const navigation = useNavigation();
 
     const resendCode = () => {
@@ -35,6 +36,16 @@ export function UserActivationForm(props) {
     }
 
     const onPress = () => {
+        const fields = {
+            token: token
+        };
+        const validation = validate(fields, constraints.activation);
+
+        if (validation) {
+            setErrors(validation)
+            return false;
+        }
+        
         axios.post('http://localhost:8000/api/activateUser', {
             user_id: userId,
             token: token,
@@ -47,17 +58,14 @@ export function UserActivationForm(props) {
             navigation.navigate(props.navigateTo);
         }).catch(error => {
             const msg = error.response.data.message;
-            showMessage({
-                message: msg,
-                type: "danger"
-            });
+            setErrors({ 'token': msg });
         })
     }
 
     return (
         <View>
             <Text style={styles.activationText}>Please type the activation code sent to your phone number.</Text>
-            <FloatingLabel label={'Token'} value={token} onTextChange={setToken} />
+            <FloatingLabel label={'Token'} value={token} onTextChange={setToken} error={errors.token} />
             <ActionButton title={'Activate'} onPress={onPress} />
             <View style={{marginTop: 20}}>
                 <ActionButton title={'Resend code'} onPress={resendCode} />

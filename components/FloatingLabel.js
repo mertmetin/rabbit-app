@@ -11,7 +11,7 @@ export function FloatingLabel(props) {
     const [isFocused, setFocus] = React.useState(false);
     const error = props.error;
 
-    console.log(props);
+    console.log(props.error);
 
     if (type == 'date')
         maxLength = 5;
