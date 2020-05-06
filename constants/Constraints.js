@@ -52,6 +52,22 @@ const constraints =  {
             }
         }
     },
+    password_change: {
+        old_password: {
+            presence: true,
+            length: {
+                minimum: 4,
+                message: "must be at least 4 characters long"
+            }
+        },
+        password: {
+            presence: true,
+            length: {
+                minimum: 4,
+                message: "must be at least 4 characters long"
+            }
+        }
+    },
     password_reset: {
         phone: {
             presence: true,

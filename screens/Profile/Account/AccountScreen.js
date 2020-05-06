@@ -59,6 +59,10 @@ export default function AccountScreen(props) {
                 <OptionButton title={'Addresses'} routeName={'AddressScreen'} data={user.id} />
                 <OptionButton title={'Payment Methods'} routeName={'CardsScreen'} data={user.id} />
             </View>
+            <View>
+                <Text style={styles.sectionContainer}>Security</Text>
+                <OptionButton title={'Change password'} routeName={'ChangePasswordScreen'} data={user.id} />
+            </View>
             <ActionButton style={'outlined'} title={'Log out'} onPress={logOut} />
         </View>
     );

@@ -6,7 +6,7 @@ import SignUpScreen from '../screens/Profile/SignUp/SignUpScreen';
 import PostSignUpScreen from '../screens/Profile/SignUp/PostSignUpScreen';
 import PasswordResetScreen from '../screens/Profile/Password/PasswordResetScreen';
 import PasswordRecoveryScreen from '../screens/Profile/Password/PasswordRecoveryScreen';
-import ChangePasswordScreen from '../screens/ChangePasswordScreen';
+import ChangePasswordScreen from '../screens/Profile/Password/ChangePasswordScreen';
 import AddressScreen from '../screens/Profile/Address/AddressScreen';
 import AddAddressScreen from '../screens/Profile/Address/AddAddressScreen';
 import AddressDetails from '../screens/Profile/Address/AddressDetails';
