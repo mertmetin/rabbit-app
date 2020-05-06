@@ -49,23 +49,36 @@ class CardController extends Controller
         return $dbPaymentMethod->update($paymentMethod);
     }
 
+    protected function validateCreditCard($cardInfo)
+    {
+        if (empty($cardInfo['cardNumber']) || empty($cardInfo['cvc']) || empty($cardInfo['expiryDate']))
+            throw new \Exception('Invalid card info');
+    }
+    
+
     protected function add(Request $request)
     {
-        if (!$request->filled('customerId', 'number'))
+        if (!$request->filled('customerId', 'card_info'))
             throw new \Exception('Invalid request.');
-
+        
+        $cardInfo = $request->input('card_info');
+      
+        // Validate credit card info (e.g. cvc, expiry date etc.)
+        $this->validateCreditCard($cardInfo); 
         $customerId = $request->input('customerId');
-        $number = str_replace(' ','', $request->input('number'));
+        $cardNumber = str_replace(' ','', $cardInfo['cardNumber']);
+        $cvc = $cardInfo['cvc'];
+        list($expMonth, $expYear) = explode('/', $cardInfo['expiryDate']);
 
         // Set Stripe API key.
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
         $token = \Stripe\Token::create([
             'card' => [
-                'number' => $number,
-                'exp_month' => 01,
-                'exp_year' => 2023,
-                'cvc' => '264',
+                'number' => $cardNumber,
+                'exp_month' => $expMonth,
+                'exp_year' => $expYear,
+                'cvc' => $cvc,
             ],
         ]);
 

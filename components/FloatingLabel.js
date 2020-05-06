@@ -11,8 +11,6 @@ export function FloatingLabel(props) {
     const [isFocused, setFocus] = React.useState(false);
     const error = props.error;
 
-    console.log(props.error);
-
     if (type == 'date')
         maxLength = 5;
     else if (type == 'credit_card')
@@ -53,7 +51,6 @@ export function FloatingLabel(props) {
             val = formatPhoneNumber(val);
         
         props.onTextChange(val);
-
     }
     
     const errMsg = (
@@ -70,9 +67,10 @@ export function FloatingLabel(props) {
 
     return (
         <View>
-            <Item floatingLabel error={true} style={{ borderColor: (isFocused) ? Colors.accentGreen : '#CCCCCC', marginBottom: 20 }}>
+            <Item floatingLabel style={{ borderColor: (isFocused) ? Colors.accentGreen : '#CCCCCC', marginBottom: 20 }}>
                 <Label style={{ fontFamily: 'sodo-sans-regular' }}> {props.label} </Label>
-                <Input onFocus={onFocus} onBlur={onBlur} style={{ marginTop: (value) ? 0 : 5 }} keyboardType={props.keyboardType} onChangeText={onChangeText} value={value} maxLength={maxLength} secureTextEntry={props.secure} />
+                <Input onFocus={onFocus} onBlur={onBlur} keyboardType={props.keyboardType} 
+                    onChangeText={onChangeText} value={value} maxLength={maxLength} secureTextEntry={props.secure} disabled={props.disabled} />
                 {/* <Icon name='close-circle' /> */}
             </Item>
             {error && errMsg}

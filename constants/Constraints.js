@@ -76,7 +76,39 @@ const constraints =  {
                 message: "must be at least 4 characters long"
             }
         }
-    }
+    },
+    credit_card: {
+        card_number: {
+            presence: true,
+            length: {
+                is: 19,
+                message: "^Invalid credit card"
+            }
+        },
+        cvc: {
+            presence: true,
+            length: {
+                minimum: 3,
+                message: "^Invalid CVC"
+            }
+        },
+        expiry_date: {
+            presence: true,
+            length: {
+                is: 5,
+                message: "^Invalid expiry date"
+            }
+        }
+    },
+    credit_card_details: {
+        expiry_date: {
+            presence: true,
+            length: {
+                is: 5,
+                message: "^Invalid expiry date"
+            }
+        }
+    },
 };
 
 export default constraints;

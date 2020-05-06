@@ -29,7 +29,7 @@ export function SignUpForm(props) {
             setErrors(validation)
             return false;
         }
-        console.log('here');
+
         axios.post('http://localhost:8000/api/register', {
             phone: phoneNumber,
             name: fullName,

@@ -9,13 +9,10 @@ export function GooglePlaces(props) {
     var [address, setAddress] = React.useState([]);
     const [value, setValue] = React.useState((props.value) ? props.value : '');
     const [predictions, setPredictions] = React.useState([]);
+    const error = props.error;
 
     const makeItems = (predictions) => {
         let items = [];
-
-        const onPress = (data) => {
-            console.log(data);
-        }
 
         for (let k in predictions)
         {
@@ -65,10 +62,23 @@ export function GooglePlaces(props) {
             // });
         })
     }
-    console.log(address);
+
+    const errMsg = (
+        <View style={{ flexDirection: 'row', paddingTop: 20, paddingBottom: 20, fontSize: 12, marginTop: -30 }}>
+            <Ionicons
+                name='md-close'
+                size={18}
+                style={{ marginBottom: -5 }}
+                color={Colors.errorText}
+            />
+            <Text style={{ color: 'rgb(97,97, 98)', marginLeft: 5 }}>{error}</Text>
+        </View>
+    );
+
     return (
         <View>
-            <FloatingLabel onTextChange={onTextChange} label={'Address'} value={value}/>
+            <FloatingLabel onTextChange={onTextChange} label={'Address'} value={value} disabled={props.disabled} />
+            {error && errMsg}
             <View>{predictions}</View>
         </View>
     );
