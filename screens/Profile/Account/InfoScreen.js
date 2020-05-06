@@ -8,6 +8,7 @@ import { showMessage, hideMessage } from "react-native-flash-message";
 import { ActionButton } from '../../../components/ActionButton';
 import { useNavigation } from '@react-navigation/native';
 import { FloatingLabel } from '../../../components/FloatingLabel';
+import http from '../../../helpers/Http';
 
 export default function InfoScreen(props) {
     const user = props.route.params.data;
@@ -18,13 +19,11 @@ export default function InfoScreen(props) {
         user.name = name;
         user.email = email;
 
-        console.log(user);
-
-        axios.post('http://localhost:8000/api/editUser', {
+        http.post('editUser', {
             user: user
         })
         .then(res => {
-            props.navigation.navigate('Profile');
+            props.navigation.navigate('AccountScreen');
         }).catch(error => {
             const msg = error.response.data.message;
                 showMessage({

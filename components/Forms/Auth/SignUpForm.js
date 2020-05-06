@@ -5,7 +5,8 @@ import { Container, Header, Content, Form, Item, Input, Label, Icon, View } from
 import { FloatingLabel } from '../../FloatingLabel';
 import { ActionButton } from '../../ActionButton';
 import constraints from '../../../constants/Constraints';
-import axios from 'axios';
+import http from '../../../helpers/Http';
+// import axios from 'axios';
 
 export function SignUpForm(props) {
     const [phoneNumber, setPhoneNumber] = React.useState('');
@@ -30,7 +31,7 @@ export function SignUpForm(props) {
             return false;
         }
 
-        axios.post('http://localhost:8000/api/register', {
+        axios.http('register', {
             phone: phoneNumber,
             name: fullName,
             email: email,

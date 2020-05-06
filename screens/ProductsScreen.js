@@ -2,16 +2,17 @@ import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
 import { Image, ImageBackground, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import axios from 'axios';
 import { CategoryCard } from '../components/CategoryCard';
 import { showMessage, hideMessage } from "react-native-flash-message";
+import http from '../helpers/Http';
+
 
 export default function ProductsScreen({navigation, route}) {
     const category = route.params.item.id;
     const [items, setItems] = React.useState();
 
     React.useEffect(() => {
-        axios.post('http://localhost:8000/api/getProducts', {
+        http.post('getProducts', {
             category: category
         })
             .then(res => {

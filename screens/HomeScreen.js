@@ -2,16 +2,15 @@ import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
 import { Image, ImageBackground, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import axios from 'axios';
-import { MonoText } from '../components/StyledText';
 import { CategoryCard } from '../components/CategoryCard';
+import http from '../helpers/Http';
 import { showMessage, hideMessage } from "react-native-flash-message";
 
 export default function HomeScreen() {
   const [items, setItems] = React.useState();
 
   React.useEffect(() => {
-    axios.post('http://localhost:8000/api/getProductCategories', {
+    http.post('getProductCategories', {
       // userId: userId
     })
       .then(res => {

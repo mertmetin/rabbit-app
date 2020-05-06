@@ -6,7 +6,7 @@ import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { ActionButton } from '../../../components/ActionButton';
 import { FloatingLabel } from '../../../components/FloatingLabel';
-import axios from 'axios';
+import http from '../../../helpers/Http';
 
 export default function CardsScreen({ navigation, route }) {
     const userId = route.params.data;
@@ -43,7 +43,7 @@ export default function CardsScreen({ navigation, route }) {
     }
     
     React.useEffect(() => {
-        axios.post('http://localhost:8000/api/getCards', {
+        http.post('getCards', {
             userId: userId
         })
         .then(res => {

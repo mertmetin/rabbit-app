@@ -7,7 +7,8 @@ import { FloatingLabel } from '../../FloatingLabel';
 import { ActionButton } from '../../ActionButton';
 import { GooglePlaces } from '../../GooglePlaces';
 import constraints from '../../../constants/Constraints';
-import axios from 'axios';
+import http from '../../../helpers/Http';
+// import axios from 'axios';
 
 export function AddCardForm(props) {
     const userId = props.userId;
@@ -30,13 +31,13 @@ export function AddCardForm(props) {
             return false;
         }
 
-        axios.post('http://localhost:8000/api/registerCustomer', {
+        http.post('registerCustomer', {
             userId: userId
         })
         .then(res => {
             const customerId = res.data;
 
-            axios.post('http://localhost:8000/api/addCard', {
+            http.post('addCard', {
                 customerId: customerId,
                 card_info: {
                     cardNumber: cardNumber,

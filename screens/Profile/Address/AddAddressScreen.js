@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
 import { AddAddressForm } from '../../../components/Forms/Address/AddAddressForm';
-import axios from 'axios';
 
 export default function AddAddressScreen({ navigation, route }) {
     const userId = route.params.data;

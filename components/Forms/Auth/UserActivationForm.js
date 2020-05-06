@@ -7,7 +7,8 @@ import { FloatingLabel } from '../../FloatingLabel';
 import { ActionButton } from '../../ActionButton';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import constraints from '../../../constants/Constraints';
-import axios from 'axios';
+import http from '../../../helpers/Http';
+// import axios from 'axios';
 
 export function UserActivationForm(props) {
     const userId = props.params.user_id;
@@ -17,7 +18,7 @@ export function UserActivationForm(props) {
     const navigation = useNavigation();
 
     const resendCode = () => {
-        axios.post('http://localhost:8000/api/resendCode', {
+        http.post('resendCode', {
             user_id: userId,
             phone: phone
         })
@@ -46,7 +47,7 @@ export function UserActivationForm(props) {
             return false;
         }
         
-        axios.post('http://localhost:8000/api/activateUser', {
+        http.post('activateUser', {
             user_id: userId,
             token: token,
         })

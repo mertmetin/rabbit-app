@@ -7,7 +7,9 @@ import { FloatingLabel } from '../../FloatingLabel';
 import { ActionButton } from '../../ActionButton';
 import { GooglePlaces } from '../../GooglePlaces';
 import constraints from '../../../constants/Constraints';
-import axios from 'axios';
+import http from '../../../helpers/Http';
+
+// import axios from 'axios';
 
 export function CardDetailsForm(props) {
     const card = props.card;
@@ -31,7 +33,7 @@ export function CardDetailsForm(props) {
         card.exp_month = expiryParts[0];
         card.exp_year = expiryParts[1];
 
-        axios.post('http://localhost:8000/api/updateCard', {
+        http.post('updateCard', {
             paymentMethod: card
         })
         .then(res => {
@@ -49,7 +51,7 @@ export function CardDetailsForm(props) {
     }
 
     const removeCard = () => {
-        axios.post('http://localhost:8000/api/deleteCard', {
+        http.post('deleteCard', {
             paymentMethod: card
         })
         .then(res => {

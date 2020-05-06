@@ -7,7 +7,8 @@ import { FloatingLabel } from '../../FloatingLabel';
 import { ActionButton } from '../../ActionButton';
 import { Link } from '../../Link';
 import constraints from '../../../constants/Constraints';
-import axios from 'axios';
+import http from '../../../helpers/Http';
+// import axios from 'axios';
 
 export function PasswordRecoveryForm(props) {
     const userId = props.params.user_id;
@@ -29,7 +30,7 @@ export function PasswordRecoveryForm(props) {
             return false;
         }
 
-        axios.post('http://localhost:8000/api/resetPassword', {
+        http.post('resetPassword', {
             user_id: userId,
             token: token,
             password: password
@@ -50,7 +51,7 @@ export function PasswordRecoveryForm(props) {
     }
 
     const resendCode = () => {
-        axios.post('http://localhost:8000/api/sendPasswordResetCode', {
+        http.post('sendPasswordResetCode', {
             user_id: userId,
             phone: phone
         })

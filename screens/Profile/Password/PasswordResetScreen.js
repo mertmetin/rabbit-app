@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, ScrollView, View} from 'react-native';
 import { PasswordResetForm } from '../../../components/Forms/Auth/PasswordResetForm';
-import axios from 'axios';
 
 export default function PasswordRecoveryScreen({ navigation, route }) {
     return (

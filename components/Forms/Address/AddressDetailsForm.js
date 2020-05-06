@@ -7,7 +7,9 @@ import { FloatingLabel } from '../../FloatingLabel';
 import { ActionButton } from '../../ActionButton';
 import { GooglePlaces } from '../../GooglePlaces';
 import constraints from '../../../constants/Constraints';
-import axios from 'axios';
+import http from '../../../helpers/Http';
+
+// import axios from 'axios';
 
 export function AddressDetailsForm(props) {
     const userId = props.userId;
@@ -21,7 +23,7 @@ export function AddressDetailsForm(props) {
         address.apt_suite_floor = aptSuiteFloor;
         address.business_or_building_name = businessOrBuildingName;
 
-        axios.post('http://localhost:8000/api/editAddress', {
+        http.post('editAddress', {
             userId: userId,
             address: address
         })
@@ -41,7 +43,7 @@ export function AddressDetailsForm(props) {
     }
 
     const removeAddress = () => {
-        axios.post('http://localhost:8000/api/deleteAddress', {
+        http.post('deleteAddress', {
             userId: userId,
             id: address.id
         })

@@ -7,7 +7,9 @@ import { FloatingLabel } from '../../FloatingLabel';
 import { ActionButton } from '../../ActionButton';
 import { GooglePlaces } from '../../GooglePlaces';
 import constraints from '../../../constants/Constraints';
-import axios from 'axios';
+import http from '../../../helpers/Http';
+
+// import axios from 'axios';
 
 export function AddAddressForm(props) {
     const userId = props.userId;
@@ -37,7 +39,7 @@ export function AddAddressForm(props) {
             'business_or_building_name': businessOrBuildingName
         }
 
-        axios.post('http://localhost:8000/api/addAddress', {
+        http.post('addAddress', {
             userId: userId,
             address: address,
         })

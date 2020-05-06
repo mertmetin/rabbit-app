@@ -6,7 +6,9 @@ import { FloatingLabel } from '../../FloatingLabel';
 import { ActionButton } from '../../ActionButton';
 import { Link } from '../../Link';
 import constraints from '../../../constants/Constraints';
-import axios from 'axios';
+import http from '../../../helpers/Http';
+
+// import axios from 'axios';
 
 export function PasswordResetForm(props) {
     const [phone, setPhoneNumber] = React.useState('');
@@ -24,7 +26,7 @@ export function PasswordResetForm(props) {
             return false;
         }
 
-        axios.post('http://localhost:8000/api/sendPasswordResetCode', {
+        http.post('sendPasswordResetCode', {
             phone: phone,
         })
         .then(res => {

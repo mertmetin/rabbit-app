@@ -3,10 +3,10 @@ import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
 import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Picker } from 'react-native';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
-import axios from 'axios';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { ActionButton } from '../../../components/ActionButton';
+import http from '../../../helpers/Http';
 
 export default function AddressScreen({ navigation, route }) {
     const userId = route.params.data;
@@ -44,7 +44,7 @@ export default function AddressScreen({ navigation, route }) {
     }
 
     React.useEffect(() => {
-        axios.post('http://localhost:8000/api/getAddresses', {
+        http.post('getAddresses', {
             userId: userId
         })
         .then(res => {

@@ -4,12 +4,9 @@ import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import { Card } from '../../components/Card';
-import axios from 'axios';
 
 export default function PromotionDetailsScreen({navigation, route}) {
     const params = route.params;
-
-    console.log(params);
 
     return (
         <ScrollView style={styles.container}>
