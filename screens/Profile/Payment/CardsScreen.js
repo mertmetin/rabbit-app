@@ -23,7 +23,7 @@ export default function CardsScreen({ navigation, route }) {
         {
             var paymentMethod = paymentMethods[k];
             var item = (
-                <View>
+                <View key={k}>
                     <TouchableOpacity onPress={() => {
                         navigation.navigate('CardDetailsScreen', { paymentMethod: paymentMethod});
                     }} style={{ flexDirection: 'row' }}>

@@ -16,7 +16,7 @@ export default function PromotionsScreen() {
         {
             var promotion = promotions[k];
             var item = (
-                <Card title={promotion.title} img={promotion.image} link={'PromotionDetailsScreen'} data={promotion} />
+                <Card key={k} title={promotion.title} img={promotion.image} link={'PromotionDetailsScreen'} data={promotion} />
             );
             items.push(item);
         }

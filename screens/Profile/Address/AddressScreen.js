@@ -15,15 +15,15 @@ export default function AddressScreen({ navigation, route }) {
     const makeAddressItems = (addresses) => {
         var items = [];
 
-        for (let i in addresses) {
-            const address = addresses[i];
+        for (let k in addresses) {
+            const address = addresses[k];
 
             const onPress = () => {
                 navigation.navigate('AddressDetails', {userId: userId, address: address});
             }
 
             var item = (
-                <View style={styles.addressContainer}>
+                <View key={k} style={styles.addressContainer}>
                     <TouchableOpacity style={{flexDirection: 'row', alignSelf: 'center'}} onPress={onPress}>
                         <Ionicons
                             name={'md-home'}
