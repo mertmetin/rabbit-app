@@ -36,5 +36,6 @@ Route::post('/deleteAddress', 'Address\AddressController@delete');
 Route::post('/editAddress', 'Address\AddressController@edit');
 Route::post('/getProducts', 'Product\ProductController@get');
 Route::post('/getProductCategories', 'Product\ProductCategoryController@get');
+Route::post('/getPromotions', 'Promotions\PromotionsController@get');
 
 
