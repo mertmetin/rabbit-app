@@ -8,7 +8,6 @@ import { ActionButton } from '../../ActionButton';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import constraints from '../../../constants/Constraints';
 import http from '../../../helpers/Http';
-// import axios from 'axios';
 
 export function UserActivationForm(props) {
     const userId = props.params.user_id;

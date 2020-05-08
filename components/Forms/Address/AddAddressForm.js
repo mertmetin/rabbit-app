@@ -9,8 +9,6 @@ import { GooglePlaces } from '../../GooglePlaces';
 import constraints from '../../../constants/Constraints';
 import http from '../../../helpers/Http';
 
-// import axios from 'axios';
-
 export function AddAddressForm(props) {
     const userId = props.userId;
     const [addressData, setAddressData] = React.useState([]);

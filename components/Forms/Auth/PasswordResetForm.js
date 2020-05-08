@@ -8,8 +8,6 @@ import { Link } from '../../Link';
 import constraints from '../../../constants/Constraints';
 import http from '../../../helpers/Http';
 
-// import axios from 'axios';
-
 export function PasswordResetForm(props) {
     const [phone, setPhoneNumber] = React.useState('');
     const [errors, setErrors] = React.useState([]);

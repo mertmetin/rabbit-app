@@ -8,7 +8,6 @@ import { ActionButton } from '../../ActionButton';
 import { GooglePlaces } from '../../GooglePlaces';
 import constraints from '../../../constants/Constraints';
 import http from '../../../helpers/Http';
-// import axios from 'axios';
 
 export function AddCardForm(props) {
     const userId = props.userId;

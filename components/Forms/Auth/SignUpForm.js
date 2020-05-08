@@ -6,7 +6,6 @@ import { FloatingLabel } from '../../FloatingLabel';
 import { ActionButton } from '../../ActionButton';
 import constraints from '../../../constants/Constraints';
 import http from '../../../helpers/Http';
-// import axios from 'axios';
 
 export function SignUpForm(props) {
     const [phoneNumber, setPhoneNumber] = React.useState('');

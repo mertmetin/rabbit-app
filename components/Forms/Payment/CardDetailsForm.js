@@ -9,8 +9,6 @@ import { GooglePlaces } from '../../GooglePlaces';
 import constraints from '../../../constants/Constraints';
 import http from '../../../helpers/Http';
 
-// import axios from 'axios';
-
 export function CardDetailsForm(props) {
     const card = props.card;
     const [expiryDate, setExpiryDate] = React.useState(card.exp_month + '/' + card.exp_year); 

@@ -9,8 +9,6 @@ import { GooglePlaces } from '../../GooglePlaces';
 import constraints from '../../../constants/Constraints';
 import http from '../../../helpers/Http';
 
-// import axios from 'axios';
-
 export function AddressDetailsForm(props) {
     const userId = props.userId;
     const [address, setAddress] = React.useState(props.address);

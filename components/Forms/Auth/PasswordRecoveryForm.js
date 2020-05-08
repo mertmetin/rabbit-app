@@ -8,7 +8,6 @@ import { ActionButton } from '../../ActionButton';
 import { Link } from '../../Link';
 import constraints from '../../../constants/Constraints';
 import http from '../../../helpers/Http';
-// import axios from 'axios';
 
 export function PasswordRecoveryForm(props) {
     const userId = props.params.user_id;
