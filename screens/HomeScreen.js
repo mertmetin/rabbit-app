@@ -22,8 +22,13 @@ export default function HomeScreen() {
           for (let i in categories) {
             const category = categories[i];
 
-            var item = (<CategoryCard key={category.id} routeName={'Products'} item={category} />);
-            items.push(item);
+            console.log(category.category_id);
+
+            if (category.category_id == null)
+            {
+              var item = (<CategoryCard key={category.id} routeName={'Products'} item={category} />);
+              items.push(item);
+            }
           }
         }
         else {

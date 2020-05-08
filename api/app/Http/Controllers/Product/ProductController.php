@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Product;
+use App\ProductCategory;
 
 class ProductController extends Controller
 {
@@ -14,8 +15,14 @@ class ProductController extends Controller
             throw new \Exception('Invalid request.');
 
         $category = $request->input('category');
-        $products = Product::where('category', $category)->get();
+        $productCategories = ProductCategory::find($category)->subCategories;
 
-        return $products;
+        foreach ($productCategories as $key => &$productCategory)
+        {
+            $productCategories[$key]['products'] = 
+                Product::where('category', $productCategory['id'])->get();
+        }
+
+        return $productCategories;
     }
 }
