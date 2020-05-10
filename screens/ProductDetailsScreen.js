@@ -14,17 +14,17 @@ export default function ProductDetailsScreen({ navigation, route }) {
     const [imgHeight, setImageHeight] = React.useState(0);
 
     Image.getSize('http://localhost:8000/storage/' + item.image, (width, height) => {
-        setImageWidth(width);
-        setImageHeight(height);
+        setImageWidth(250);
+        setImageHeight(250);
     });
 
     return (
         <ScrollView style={{ flex: 1, backgroundColor: '#FFFFFF'}}>
             <View style={styles.imgContainer}>
                 <Image source={image} style={{ alignSelf: 'center', marginTop: 20, marginBottom: 20, resizeMode: 'cover', width: imgWidth, height: imgHeight}} />
-                <View style={{alignSelf: 'center', paddingBottom: 20}}>
-                    <Text style={{ textAlign: 'center', color: '#fff', fontFamily: 'sodo-sans-bold', fontSize: 16}}>${item.price}</Text>
-                    <Text style={{ marginTop: 3, color: '#fff', fontFamily: 'sodo-sans-bold', fontSize: 18 }}>{item.title}</Text>
+                <View style={{alignSelf: 'center', paddingBottom: 20, }}>
+                    <Text style={{ textAlign: 'center', color: '#1E3932', fontFamily: 'sodo-sans-bold', fontSize: 16}}>${item.price}</Text>
+                    <Text style={{ marginTop: 3, color: '#1E3932', fontFamily: 'sodo-sans-bold', fontSize: 18 }}>{item.title}</Text>
                 </View>
             </View>
             <View style={{flex: 1, padding:20}}>
@@ -49,7 +49,11 @@ const styles = StyleSheet.create({
         flexDirection: "column"
     },
     imgContainer: {
-        backgroundColor: '#1E3932'
+        backgroundColor: '#fff',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1  },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
     },
     image: {
         // flex: 5,

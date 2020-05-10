@@ -9,7 +9,7 @@ import algoliasearch from 'algoliasearch/lite';
 import { ScrollView } from 'react-native-gesture-handler';
 import { CategoryCard } from '../components/CategoryCard';
 
-export function Search(props) {
+export function Search(props) { 
     const searchClient= algoliasearch(
         'BYMKYKAKDW',
         '3778541a2aaa6f6d53acd64ebd4c9cfe'
