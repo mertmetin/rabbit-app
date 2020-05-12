@@ -35,7 +35,7 @@ export default function AccountScreen(props) {
         <View style={styles.container}>
             <View style={{flexDirection: 'row'}}>
                 <ActionButton title={'Join now'} onPress={() => navigation.navigate('SignUp')} />
-                <ActionButton style={'outlined'} title={'Sign in'} onPress={() => navigation.navigate('SignIn')} />
+                <ActionButton buttonStyle={'outlined'} title={'Sign in'} onPress={() => navigation.navigate('SignIn')} />
             </View>
         </View>
     );

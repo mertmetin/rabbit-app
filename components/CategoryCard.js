@@ -23,7 +23,8 @@ export function CategoryCard(props) {
 
 const styles = StyleSheet.create({
     container: {
-        width: '25%',
+        // height: 75,
+        // width: '33%',
         padding: 5,
         shadowColor: "#000",
         shadowOffset: {
@@ -37,20 +38,10 @@ const styles = StyleSheet.create({
         // boxShadow: 0px 4px 42px rgba(0, 0, 0, 0.25);
     },
     img: {
-        width: '100%',
-        height: 90,
+        width: 75,
+        height: 75,
         resizeMode: 'cover',
-        borderBottomLeftRadius:10,
-        borderBottomRightRadius: 10,
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.8,
-        shadowRadius: 2,
-        padding: 10
-        // marginTop: 10,
-        // marginBottom: 10
+        // padding: 10
     },  
     text: {
         fontSize: 16,

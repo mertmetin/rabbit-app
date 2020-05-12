@@ -10,63 +10,86 @@ import { ActionButton } from '../components/ActionButton';
 export default function ProductDetailsScreen({ navigation, route }) {
     const item = route.params.item;
     const image = { uri: 'http://localhost:8000/storage/' + item.image};
-    const [imgWidth, setImageWidth] = React.useState(0);
-    const [imgHeight, setImageHeight] = React.useState(0);
-
-    Image.getSize('http://localhost:8000/storage/' + item.image, (width, height) => {
-        setImageWidth(250);
-        setImageHeight(250);
-    });
 
     return (
-        <ScrollView style={{ flex: 1, backgroundColor: '#FFFFFF'}}>
-            <View style={styles.imgContainer}>
-                <Image source={image} style={{ alignSelf: 'center', marginTop: 20, marginBottom: 20, resizeMode: 'cover', width: imgWidth, height: imgHeight}} />
-                <View style={{alignSelf: 'center', paddingBottom: 20, }}>
-                    <Text style={{ textAlign: 'center', color: '#1E3932', fontFamily: 'sodo-sans-bold', fontSize: 16}}>${item.price}</Text>
-                    <Text style={{ marginTop: 3, color: '#1E3932', fontFamily: 'sodo-sans-bold', fontSize: 18 }}>{item.title}</Text>
+        <View style={styles.container}>
+            <View>
+                <View style={styles.imgContainer}>
+                    <Image source={image} style={styles.img} />
+                </View>
+                <View style={styles.contentContainer}>
+                    <View>
+                        <Text style={styles.textTitle}>{item.title}</Text>
+                        <Text style={styles.textDescription}>{item.description}</Text>
+                    </View>
+                    <View>
+                        <Text style={styles.textPrice}>${item.price}</Text>
+                    </View>
                 </View>
             </View>
-            <View style={{flex: 1, padding:20}}>
-                <Text style={{ color: '#585858', fontFamily: 'sodo-sans-regular'}}>{item.description}</Text>
-
-                <View style={{marginTop: 20}}>
-                    <Text style={{ fontSize: 16, fontFamily: 'lander-grande-semibold'}}>Nutrition Information</Text>
-                    <Text style={{marginTop: 20, fontFamily: 'sodo-sans-regular'}}>Calories: 20</Text>
-                </View>
-                <View style={{position: 'absolute', 'right': 0, bottom: 0, right: 15}}>
-                    <ActionButton title={"Add item"} />
-                </View>
+            <View style={styles.footer}>
+                <ActionButton style={styles.btnAddToCart} title={"Add to Cart"} />
             </View>
-        </ScrollView>
+        </View>
     );
 }
 
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        flexDirection: "column"
+        flex: 1, 
+        justifyContent: 'space-between', 
+        backgroundColor: '#FFFFFF'
     },
     imgContainer: {
+        padding: 20,
         backgroundColor: '#fff',
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1  },
+        shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.1,
         shadowRadius: 2,
     },
-    image: {
-        // flex: 5,
-        // resizeMode: "cover",
-        // justifyContent: "center",
-        height: 282,
-        width: '100%'
+    img: {
+        alignSelf: 'center', 
+        resizeMode: 'cover', 
+        width: 250, 
+        height: 250
     },
-    text: {
-        // flex:1,
-        color: "grey",
-        fontSize: 30,
-        fontWeight: "bold",
-        // alignItems: "flex-end"
+    contentContainer: {
+        flexDirection: 'row', 
+        padding: 20, 
+        justifyContent: 'space-between', 
+        paddingBottom: 20
+    },
+    textTitle: {
+        color: '#1E3932', 
+        fontFamily: 'sodo-sans-bold', 
+        fontSize: 18
+    },
+    textDescription: {
+        paddingTop: 10, 
+        color: '#585858', 
+        fontFamily: 'sodo-sans-regular'
+    },
+    textPrice: {
+        color: '#1E3932',
+        fontFamily: 'sodo-sans-bold', 
+        fontSize: 16
+    },
+    btnAddToCart: {
+        paddingBottom: 20, 
+        alignSelf: 'center', 
+        width: '100%', 
+        textAlign: 'center'
+    },
+    footer: {
+        padding: 20, 
+        backgroundColor: '#FFFFFF',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.40,
+        shadowRadius: 2,
+        elevation: 15,
+        width: '100%'
     }
 });

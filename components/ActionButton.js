@@ -4,21 +4,23 @@ import { useNavigation } from '@react-navigation/native';
 import Colors from '../constants/Colors';
 
 export function ActionButton(props) {
-    const style = (props.style) ? props.style : 'regular';
+    const buttonStyle = props.buttonStyle;
 
-    if (style == 'outlined')
+    console.log(buttonStyle);
+
+    if (buttonStyle == 'outlined')
     {
         var containerStyle = StyleSheet.compose(styles.container, stylesOutlined.container);
         var textStyle = StyleSheet.compose(styles.text, stylesOutlined.text);
     }
-    else if (style == 'regular')
+    else if (!buttonStyle || buttonStyle == 'regular')
     {
         var containerStyle = StyleSheet.compose(styles.container, stylesRegular.container);
         var textStyle = StyleSheet.compose(styles.text, stylesRegular.text);
     }
             
     return (
-        <TouchableOpacity onPress={props.onPress}>
+        <TouchableOpacity style={props.style} onPress={props.onPress}>
             <View style={containerStyle}>
                 <Text style={textStyle}>{props.title}</Text>
             </View>
@@ -28,7 +30,7 @@ export function ActionButton(props) {
 
 const styles = StyleSheet.create({
     container: {
-        alignSelf: 'flex-start',
+        // alignSelf: 'flex-start',
         borderTopWidth: 1,
         borderBottomWidth: 1,
         borderLeftWidth: 1,
@@ -38,6 +40,7 @@ const styles = StyleSheet.create({
 
     },
     text: {
+        textAlign: 'center',
         fontSize: 18,
         fontFamily: 'sodo-sans-semibold',
         paddingTop: 7.5,

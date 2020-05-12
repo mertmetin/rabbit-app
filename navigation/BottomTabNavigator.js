@@ -22,6 +22,13 @@ export default function BottomTabNavigator({ navigation, route }) {
       }
     );
 
+  const getTabBarVisibility = (route) => {
+    const routeName = route.state ? route.state.routes[route.state.index].name : '';
+
+    if (routeName == 'ProductDetails') 
+      return false;
+  }
+
   return (
     <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME} tabBarOptions={{
       activeTintColor: Colors.tabIconSelected,
@@ -33,10 +40,11 @@ export default function BottomTabNavigator({ navigation, route }) {
       <BottomTab.Screen
         name="Home"
         component={HomeNavigator}
-        options={{
+        options={({ route }) => ({
           title: 'Order',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-cart" />,
-        }}
+          tabBarVisible: getTabBarVisibility(route)
+        })}
       />
       <BottomTab.Screen
         name="Search"

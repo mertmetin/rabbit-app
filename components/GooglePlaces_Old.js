@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+// import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 export function GooglePlaces(props) {
     return (
