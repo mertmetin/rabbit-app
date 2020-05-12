@@ -1,63 +1,18 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
-import { Image, ImageBackground, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { CategoryCard } from '../components/CategoryCard';
 import http from '../helpers/Http';
 import { showMessage, hideMessage } from "react-native-flash-message";
+import { CategoriesCards } from '../components/Cards/CategoriesCards';
+
 
 export default function HomeScreen() {
-  const [items, setItems] = React.useState();
-
-  React.useEffect(() => {
-    http.post('getProductCategories', {
-      // userId: userId
-    })
-      .then(res => {
-        var items = [];
-
-        if (res.data) {
-          const categories = res.data;
-
-          for (let i in categories) {
-            const category = categories[i];
-
-            console.log(category.category_id);
-
-            if (category.category_id == null)
-            {
-              var item = (<CategoryCard key={category.id} routeName={'Products'} item={category} />);
-              items.push(item);
-            }
-          }
-        }
-        else {
-          items.push(<Text>You have no address yet.</Text>)
-        }
-
-        setItems(items);
-
-      }).catch(error => {
-
-        if (error.response)
-        {
-          const msg = error.response.data.message;
-          showMessage({
-            message: msg,
-            type: "danger"
-          });
-        }
-
-      })
-
-
-  }, []);
-  
-
   return (
     <ScrollView>
       <View style={styles.container}>
-        {items}
+        <CategoriesCards />
       </View>
     </ScrollView>
   );
