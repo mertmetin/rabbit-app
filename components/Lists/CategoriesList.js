@@ -69,40 +69,40 @@ export function CategoriesList(props) {
         http.post('getProductCategories', { 
             withSubCategories: true }
         )
-            .then(res => {
-                if (!res.data)
-                    return;
+        .then(res => {
+            if (!res.data)
+                return;
 
-                setList(res.data);
+            setList(res.data);
 
-                const data = res.data;
-                var categories = [];
-                var subCategories = [];
+            const data = res.data;
+            var categories = [];
+            var subCategories = [];
 
-                for (let k in data)
-                {
-                    var cat = data[k];
-                    var catId = cat.category_id;
+            for (let k in data)
+            {
+                var cat = data[k];
+                var catId = cat.category_id;
 
-                    if (!catId)
-                        categories.push(cat);
-                    else if (catId == category)
-                        subCategories.push(cat);
-                }
+                if (!catId)
+                    categories.push(cat);
+                else if (catId == category)
+                    subCategories.push(cat);
+            }
 
-                setCategories(categories);
-                setSubCategories(subCategories);
+            setCategories(categories);
+            setSubCategories(subCategories);
 
-                // makeItems(res.data);
-            }).catch(error => {
-                if (error.response) {
-                    const msg = error.response.data.message;
-                    showMessage({
-                        message: msg,
-                        type: "danger"
-                    });
-                }
-            })
+            // makeItems(res.data);
+        }).catch(error => {
+            if (error.response) {
+                const msg = error.response.data.message;
+                showMessage({
+                    message: msg,
+                    type: "danger"
+                });
+            }
+        })
     }, []);
 
     return (

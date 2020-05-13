@@ -12,12 +12,14 @@ export function ProductCard(props) {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={onPress}>
+            <TouchableOpacity onPress={onPress} style={{alignItems:'center'}}>
                 <View style={{ backgroundColor: '#fff', borderRadius: 5 }}>
                     <Image style={styles.img} source={{ uri: 'http://localhost:8000/storage/' + item.image }} />
                 </View>
-                <Text style={styles.text}>{item.title}</Text>
-                <Text style={styles.text}>${item.price}</Text>
+                <View style={{alignItems: 'flex-start'}}>
+                    <Text style={styles.text}>{item.title}</Text>
+                    <Text style={styles.text}>${item.price}</Text>
+                </View>
             </TouchableOpacity>
         </View>
     );
@@ -27,6 +29,7 @@ const styles = StyleSheet.create({
     container: {
         // height: 75,
         // width: '33%',
+        flexBasis: '32.5%',
         padding: 5,
         shadowColor: "#000",
         shadowOffset: {
@@ -40,10 +43,11 @@ const styles = StyleSheet.create({
         // boxShadow: 0px 4px 42px rgba(0, 0, 0, 0.25);
     },
     img: {
-        width: 75,
-        height: 75,
+        width: 100,
+        height: 100,
         resizeMode: 'cover',
-        // padding: 10
+        // alignItems: 'center'
+        margin: 5
     },
     text: {
         fontSize: 16,
