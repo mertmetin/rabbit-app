@@ -45,6 +45,8 @@ export function CategoriesCards(props) {
                 numColumns={4}
                 keyExtractor={item => item.id}
                 extraData={selected}
+                style={{padding:10}}
+                // contentContainerStyle={{alignItems: 'center'}}
             />
         </SafeAreaView>
     )

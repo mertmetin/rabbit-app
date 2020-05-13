@@ -10,9 +10,7 @@ export default function ProductsScreen({navigation, route}) {
     return(
         <View>
             <CategoriesList category={category} />
-            <ScrollView>
-                <ProductsCards category={category} />
-            </ScrollView>
+            <ProductsCards category={category} />
         </View>
     );
 }

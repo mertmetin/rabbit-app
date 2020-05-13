@@ -19,8 +19,8 @@ class ProductController extends Controller
 
         foreach ($productCategories as $key => &$productCategory)
         {
-            $productCategories[$key]['products'] = 
-                Product::where('category', $productCategory['id'])->get();
+            $productCategories[$key]['data'] = 
+                [Product::where('category', $productCategory['id'])->get()];
         }
 
         return $productCategories;

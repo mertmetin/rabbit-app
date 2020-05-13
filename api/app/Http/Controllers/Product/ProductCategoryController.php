@@ -13,7 +13,7 @@ class ProductCategoryController extends Controller
         if ($request->input('withSubCategories'))
             return ProductCategory::all();
 
-        return ProductCategory::where('category_id', null)->get();
+          return ProductCategory::where('category_id', null)->get();
     }
 
     protected function getSubCategories(Request $request)
