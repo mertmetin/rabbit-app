@@ -5,6 +5,7 @@ import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import HomeNavigator from './HomeNavigator';
 import SearchNavigator from './SearchNavigator';
+import CartNavigator from './CartNavigator';
 import ProfileNavigator from './ProfileNavigator';
 import PromotionsNavigator from './PromotionsNavigator';
 import Colors from '../constants/Colors';
@@ -42,7 +43,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         component={HomeNavigator}
         options={({ route }) => ({
           title: 'Order',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-cart" />,
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-home" />,
           tabBarVisible: getTabBarVisibility(route)
         })}
       />
@@ -53,6 +54,15 @@ export default function BottomTabNavigator({ navigation, route }) {
           title: 'Search',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-search" />,
         }}
+      />
+      <BottomTab.Screen
+        name="Cart"
+        component={CartNavigator}
+        options={{
+          title: 'Cart',
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-cart" />,
+        }
+        }
       />
       <BottomTab.Screen
         name="Profile"
