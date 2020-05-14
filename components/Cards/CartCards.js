@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, View, SafeAreaView, FlatList, Text, TouchableOpacity, Image } from 'react-native';
 import { showMessage, hideMessage } from "react-native-flash-message";
@@ -23,12 +24,12 @@ export function CartCards(props) {
                     <View>
                         <Image source={img} style={styles.img} />
                     </View>
-                    <View style={{ justifyContent: 'center' }}>
+                    <View style={{ justifyContent: 'center', flexBasis: '45%', padding: 10 }}>
                         <Text style={{marginBottom: 5, fontFamily: 'sodo-sans-semibold'}}>{item.title}</Text>
                         <Text style={{ marginBottom: 5, fontFamily: 'sodo-sans-regular' }}>{item.description}</Text>
                         <Text style={{ marginBottom: 5, fontFamily: 'sodo-sans-semibold' }}>{item.price}</Text>
                     </View>
-                    <View>
+                    <View style={{ flexBasis: '55%', justifyContent: 'center'}}>
                         <IncreaseDecreaseInput />
                     </View>
                 </View>
@@ -37,7 +38,7 @@ export function CartCards(props) {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={styles.container} >
             <FlatList
                 data={items}
                 renderItem={({ item }) => <Item item={item} />}
@@ -46,7 +47,7 @@ export function CartCards(props) {
             <View style={styles.footer}>
                 <ActionButton title={'Continue'} />
             </View>
-         </SafeAreaView>
+        </SafeAreaView >
     )
 }
 
