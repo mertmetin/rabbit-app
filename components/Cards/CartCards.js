@@ -39,6 +39,8 @@ export function CartCards(props) {
         );
     }
 
+    console.log(items.items);
+
     return (
         <SafeAreaView style={styles.container} >
             <FlatList
