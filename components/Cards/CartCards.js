@@ -12,6 +12,8 @@ export function CartCards(props) {
     const navigation = useNavigation();
 
     function Item({ item }) {
+        var itemId = Object.keys(item)[0];
+        item = item[itemId];
         const img = { uri: 'http://localhost:8000/storage/' + item.image };
 
         const onPress = () => {
@@ -30,7 +32,7 @@ export function CartCards(props) {
                         <Text style={{ marginBottom: 5, fontFamily: 'sodo-sans-semibold' }}>{item.price}</Text>
                     </View>
                     <View style={{ flexBasis: '55%', justifyContent: 'center'}}>
-                        <IncreaseDecreaseInput />
+                        <IncreaseDecreaseInput start={items.quantity[itemId]}/>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -40,7 +42,7 @@ export function CartCards(props) {
     return (
         <SafeAreaView style={styles.container} >
             <FlatList
-                data={items}
+                data={[items.items]}
                 renderItem={({ item }) => <Item item={item} />}
                 keyExtractor={item => item.id}
             />

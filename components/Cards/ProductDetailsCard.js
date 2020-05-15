@@ -7,11 +7,27 @@ import {connect} from 'react-redux';
 export function ProductDetailsCard(props) {
     const item = props.item;
     const image = { uri: 'http://localhost:8000/storage/' + item.image };
-    const [addBtnClicked, setBtnClickedState] = React.useState(false);
+    // const [addBtnClicked, setBtnClickedState] = React.useState(false);
+    const [itemCount, setItemCount] = React.useState(0);
 
-    const onPress = () => {
-        setBtnClickedState(true);
-        props.addItemToCart(item);
+    const showIncreaseDecreaseInput = (itemCount == 0) ? { display: 'none' } : { display: 'flex' };
+    const showAddToCartButton = (itemCount) ? { display: 'none' } : { display: 'flex' };
+
+    console.log(props);
+
+    const onPress = () => { 
+        setItemCount(1);
+        // setBtnClickedState(true);
+        props.dispatch.addItemToCart(item);
+    }
+
+    const onIncrease = (num) => {
+        props.dispatch.increaseItemQuantity(item);
+    }
+
+    const onDecrease = (num) => {
+        props.dispatch.decreaseItemQuantity(item);
+
     }
 
     return (
@@ -31,19 +47,11 @@ export function ProductDetailsCard(props) {
                 </View>
             </View>
             <View style={styles.footer}>
-                <View style={{ alignItems: 'center', marginBottom: 10 }}>
-                    <IncreaseDecreaseInput style={[(!addBtnClicked) ? { display: 'none' } : { display: 'flex' }]} start={1} />
-                </View>
-                <ActionButton style={[(addBtnClicked) ? { display: 'none' } : { display: 'flex' }, styles.btnAddToCart]} title={"Add to Cart"} onPress={onPress} />
+                <ActionButton style={[showAddToCartButton, styles.btnAddToCart]} title={"Add to Cart"} onPress={onPress} />
+                <IncreaseDecreaseInput style={showIncreaseDecreaseInput} onDecrease={onDecrease} onIncrease={onIncrease} start={1} />
             </View>
         </View>
     )
-}
-
-const mapStateToProps = (state) => {
-    return {
-        cartItems: state 
-    }
 }
 
 // export default connect()(ProductCard)
@@ -103,6 +111,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.40,
         shadowRadius: 2,
         elevation: 15,
-        width: '100%'
+        width: '100%',
+        alignItems: 'center', 
+        marginBottom: 10
     }
 });

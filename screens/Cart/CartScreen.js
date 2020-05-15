@@ -6,7 +6,7 @@ import { EmptyCart } from '../../components/Other/EmptyCart';
 
 function CartScreen(props) {
     console.log(props.cartItems);
-    const view = (props.cartItems.length) 
+    const view = (props.cartItems.items) 
         ? (<CartCards items={props.cartItems} />) : <EmptyCart /> 
 
     return(view)

@@ -14,6 +14,7 @@ export function ProductsCards(props) {
         return (
             <FlatList
                 data={item}
+                keyExtractor={item => item.id}
                 renderItem={({ item }) => <ProductCard
                     routeName={'ProductDetails'}
                     item={item}
@@ -36,7 +37,7 @@ export function ProductsCards(props) {
             const sections = (
                 <SectionList
                     sections={data}
-                    keyExtractor={(item, index) => item + index}
+                    keyExtractor={(item, index) => (item + index).toString() }
                     renderItem={renderList}
                     renderSectionHeader={({ section: { title } }) => (
                         <Text style={styles.header}>{title}</Text>
