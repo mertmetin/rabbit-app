@@ -5,11 +5,14 @@ const initialState = {
 }
 
 const cartItems = (state = initialState, action) => {
+    let item;
+    let itemId;
+
     switch (action.type)
     {
         case 'ADD_TO_CART':
-            const item = action.payload;
-            const itemId = item.id;
+            item = action.payload;
+            itemId = item.id;
 
             if (!state.items[itemId])
                 state.items[itemId] = item;
@@ -19,25 +22,31 @@ const cartItems = (state = initialState, action) => {
 
             state.totalCost = state.totalCost + item.price;
 
-            return state;
+            return {...state};
         case 'INCREASE_ITEM_QUANTITY':
-            const product = action.payload;
-            const productId = product.id;
+            item = action.payload;
+            itemId = item.id;
 
-            state.quantity[productId] = state.quantity[productId] + 1;
+            state.quantity[itemId] = state.quantity[itemId] + 1;
 
-            // console.log(state);
-
-            return state;
+            return { ...state };
         case 'DECREASE_ITEM_QUANTITY':
-            const pro = action.payload;
-            const proId = pro.id;
+            item = action.payload;
+            itemId = item.id;
+            state.quantity[itemId] = state.quantity[itemId] - 1;
+            let totalQuantity = state.quantity[itemId];
 
-            state.quantity[proId] = state.quantity[proId] - 1;
-            // console.log(state);
+            if (totalQuantity == 0)
+            {
+                delete state.items[itemId];
+                delete state.quantity[itemId];
+            }
 
-            return state;
+            return { ...state };
         case 'REMOVE_FROM_CART':
+            item = action.payload;
+            itemId = item.id;
+
             return state.filter(cartItem => cartItem.id !== action.payload.id)
     }
 

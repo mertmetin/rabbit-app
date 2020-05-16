@@ -14,7 +14,7 @@ export function IncreaseDecreaseInput(props)
             return;
         
         setNum(num - 1);
-        props.onDecrease(num - 1);
+        props.onDecrease();
     }
 
     const increase = () => {
@@ -22,7 +22,7 @@ export function IncreaseDecreaseInput(props)
             return;
 
         setNum(num + 1);
-        props.onIncrease(num + 1);
+        props.onIncrease();
     }
 
     return(

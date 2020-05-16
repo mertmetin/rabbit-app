@@ -12,12 +12,19 @@ export function CartCards(props) {
     const navigation = useNavigation();
 
     function Item({ item }) {
-        var itemId = Object.keys(item)[0];
-        item = item[itemId];
+        var itemId = item.id;
         const img = { uri: 'http://localhost:8000/storage/' + item.image };
 
         const onPress = () => {
             navigation.navigate('ProductDetails', {item: item});
+        }
+
+        const onIncrease = () => {
+            props.onIncrease(item);
+        }
+
+        const onDecrease = () => {
+            props.onDecrease(item);
         }
 
         return (
@@ -32,19 +39,17 @@ export function CartCards(props) {
                         <Text style={{ marginBottom: 5, fontFamily: 'sodo-sans-semibold' }}>{item.price}</Text>
                     </View>
                     <View style={{ flexBasis: '55%', justifyContent: 'center'}}>
-                        <IncreaseDecreaseInput start={items.quantity[itemId]}/>
+                        <IncreaseDecreaseInput onIncrease={onIncrease} onDecrease={onDecrease} start={items.quantity[itemId]}/>
                     </View>
                 </View>
             </TouchableOpacity>
         );
     }
 
-    console.log(items.items);
-
     return (
         <SafeAreaView style={styles.container} >
             <FlatList
-                data={[items.items]}
+                data={Object.values(items.items)}
                 renderItem={({ item }) => <Item item={item} />}
                 keyExtractor={item => item.id}
             />

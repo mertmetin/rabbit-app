@@ -117,7 +117,7 @@ export function CategoriesList(props) {
                         onSelect={onSelect}
                     />
                 )}
-                keyExtractor={item => item.id}
+                keyExtractor={item => item.id.toString()}
                 horizontal={true}   
                 extraData={selected}
             />
@@ -131,7 +131,7 @@ export function CategoriesList(props) {
                         onSelect={onSelect}
                     />
                 )}
-                keyExtractor={item => item.id}
+                keyExtractor={item => item.id.toString()}
                 horizontal={true}
             />
         </SafeAreaView>

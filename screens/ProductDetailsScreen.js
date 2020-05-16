@@ -4,16 +4,22 @@ import { ProductDetailsCard } from '../components/Cards/ProductDetailsCard';
 import { connect } from 'react-redux'
 
 function ProductDetailsScreen(props) {
-    console.log(props);     
+    var quantity = 0;
     const item = props.route.params.item;
     const dispatch = {
         addItemToCart: props.addItemToCart,
         increaseItemQuantity: props.increaseItemQuantity,
         decreaseItemQuantity: props.decreaseItemQuantity
     }
-    
+
+    if (props.cartItems.quantity[item.id])
+        quantity = props.cartItems.quantity[item.id]
+
+    console.log(quantity);
+
+
     return (
-        <ProductDetailsCard item={item} dispatch={dispatch} cardItems={props.cardItems}/>
+        <ProductDetailsCard item={item} dispatch={dispatch} quantity={quantity} />
     ); 
 }
 

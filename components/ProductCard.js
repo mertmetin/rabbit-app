@@ -5,7 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 export function ProductCard(props) {
     const navigation = useNavigation();
     const item = props.item;
-    console.log('here');
 
     const onPress = () => {
         navigation.navigate(props.routeName, { item: item });

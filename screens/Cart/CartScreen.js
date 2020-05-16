@@ -4,10 +4,15 @@ import { connect } from 'react-redux';
 import { CartCards } from '../../components/Cards/CartCards';
 import { EmptyCart } from '../../components/Other/EmptyCart';
 
+
 function CartScreen(props) {
+    const itemCount = Object.keys(props.cartItems.items).length;
     console.log(props.cartItems);
-    const view = (props.cartItems.items) 
-        ? (<CartCards items={props.cartItems} />) : <EmptyCart /> 
+
+    const view = (itemCount > 0) 
+        ? (<CartCards items={props.cartItems} onIncrease={props.increaseItemQuantity} 
+            onDecrease={props.decreaseItemQuantity}
+        />) : <EmptyCart /> 
 
     return(view)
 }
@@ -20,7 +25,15 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        removeItem: (product) => dispatch({ type: 'REMOVE_FROM_CART', payload: product })
+        removeItem: (product) => dispatch({ type: 'REMOVE_FROM_CART', payload: product }),
+        increaseItemQuantity: (product) => dispatch({
+            type: 'INCREASE_ITEM_QUANTITY',
+            payload: product
+        }),
+        decreaseItemQuantity: (product) => dispatch({
+            type: 'DECREASE_ITEM_QUANTITY',
+            payload: product
+        })
     }
 }
 

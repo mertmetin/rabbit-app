@@ -6,8 +6,6 @@ import Colors from '../constants/Colors';
 export function ActionButton(props) {
     const buttonStyle = props.buttonStyle;
 
-    console.log(buttonStyle);
-
     if (buttonStyle == 'outlined')
     {
         var containerStyle = StyleSheet.compose(styles.container, stylesOutlined.container);

@@ -9,8 +9,6 @@ export function Card(props) {
     const data = props.data;
     const navigation = useNavigation();
 
-    console.log(link);
-
     const onPress = () => {
         if (link)
             navigation.navigate(link, data);
