@@ -6,6 +6,7 @@ import { CategoryCard } from '../components/CategoryCard';
 import http from '../helpers/Http';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { CategoriesCards } from '../components/Cards/CategoriesCards';
+import { AddressPicker } from '../components/Other/AddressPicker';
 import MapView from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 
@@ -15,28 +16,34 @@ export default function HomeScreen() {
   const GOOGLE_MAPS_APIKEY = '***REMOVED***';
 
   const { width, height } = Dimensions.get('window');
-
   const ASPECT_RATIO = width / height;
   const LATITUDE = 37.771707;
   const LONGITUDE = -122.4053769;
   const LATITUDE_DELTA = 0.0922;
-  const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+  const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO / 2;
 
   return (
       <View style={styles.container}>
-        <MapView style={{height: 300}}>
-          <MapViewDirections
-            origin={origin}
-            destination={destination}
-            apikey={GOOGLE_MAPS_APIKEY}
-            strokeWidth={3}
-            strokeColor="rgb(0,139,241)" />
-        </MapView>
+        <MapView
+          initialRegion={{
+            latitude: LATITUDE,
+            longitude: LONGITUDE,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA,
+          }}
+          style={{height: 250}}>
+            <MapViewDirections
+              origin={origin}
+              destination={destination}
+              apikey={GOOGLE_MAPS_APIKEY}
+              strokeWidth={3}
+              strokeColor="rgb(0,139,241)" />
+          </MapView>
+        <AddressPicker />
         <CategoriesCards />
       </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {

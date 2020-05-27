@@ -36,8 +36,7 @@ class AddressController extends Controller
         if ($userAddress)
             throw new \Exception('This address is already added.');
         
-        // Later, this will be changed.
-        $type = AddressType::where('type', 'home')->get()->last();
+        $type = AddressType::where('type', $address['address_type'])->get()->last();
 
         $result = UserAddress::create([
             'user_id' => $userId,
