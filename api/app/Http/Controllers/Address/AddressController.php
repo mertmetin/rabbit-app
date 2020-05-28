@@ -15,7 +15,15 @@ class AddressController extends Controller
             throw new \Exception('Invalid request.');
 
         $userId = $request->input('userId');
-        $userAddresses = UserAddress::where('user_id', $userId)->get();
+        // $use = UserAddress::with('address_type')
+                //   ->find('19');
+        //   error_log(json_encode(UserAddress::with('AddressTypes')));
+        // try {
+        //     error_log(json_encode(UserAddress::find(19)->addressTypes->type));
+        // } catch (\Exception $e) {
+        //     error_log($e);
+        // }
+        $userAddresses = UserAddress::with('address_type')->where('user_id', $userId)->get();
 
         return $userAddresses;
     }
