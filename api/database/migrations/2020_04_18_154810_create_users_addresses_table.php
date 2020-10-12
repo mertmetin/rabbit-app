@@ -25,6 +25,8 @@ class CreateUsersAddressesTable extends Migration
             $table->integer('address_type')->unsigned();
             $table->foreign('address_type')->references('id')->on('address_types');
             $table->string('place_id');
+            $table->decimal('lng', 9, 6)->default(0);	
+            $table->decimal('lat', 8, 6)->default(0);	
             $table->timestamps();
         });
     }

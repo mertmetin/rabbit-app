@@ -11,7 +11,12 @@ export function UserAddressesList(props) {
     const navigation = useNavigation();
 
     const renderItem = ({ item }) => {
+
         const onPress = () => {
+            navigation.navigate('Home', {deliveryAddress: item});
+        }
+
+        const onEditPress = () => {
             navigation.navigate('AddressDetails', { userId: userId, address: item });
         }
         const addressType = item.address_type.type;
@@ -26,16 +31,23 @@ export function UserAddressesList(props) {
 
         return (
             <View key={item.id} style={styles.addressContainer}>
-                <TouchableOpacity style={{ flexDirection: 'row', alignSelf: 'center' }} onPress={onPress}>
-                    <Ionicons
-                        name={icon}
-                        size={24}
-                        style={{ paddingRight: 15 }}
-                    />
-                    <Text style={styles.addressText}>
-                        <Text>{item.main_text}{"\n"}</Text>
-                        <Text>{item.secondary_text}</Text>
-                    </Text>
+                <TouchableOpacity onPress={onPress}>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Ionicons
+                            name={icon}
+                            size={24}
+                            style={{ paddingRight: 15 }}
+                        />
+                        <Text style={styles.addressText}>
+                            <Text>{item.main_text}{"\n"}</Text>
+                            <Text>{item.secondary_text}</Text>
+                        </Text>
+                    </View>
+                    <TouchableOpacity style={styles.editButton} onPress={onEditPress}>
+                        <Text>
+                            <Text>Edit</Text>
+                        </Text>
+                    </TouchableOpacity>
                 </TouchableOpacity>
             </View>
         );
@@ -79,11 +91,16 @@ export function UserAddressesList(props) {
 const styles = StyleSheet.create({
     addressContainer: {
         flex: 1,
-        flexDirection: 'row',
+        flexDirection: 'column',
         paddingBottom: 15,
     },
     addressText: {
         fontSize: 16,
         fontFamily: 'sodo-sans-semibold'
     },
+    editButton: {
+        flexDirection: 'column', 
+        marginTop: 10, 
+        paddingLeft: 35
+    }
 });

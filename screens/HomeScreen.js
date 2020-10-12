@@ -7,10 +7,11 @@ import http from '../helpers/Http';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { CategoriesCards } from '../components/Cards/CategoriesCards';
 import { AddressPicker } from '../components/Other/AddressPicker';
+import { useNavigation } from '@react-navigation/native';
 import MapView from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation, route }) {
   const origin = { latitude: 37.3318456, longitude: -122.0296002 };
   const destination = { latitude: 37.771707, longitude: -122.4053769 };
   const GOOGLE_MAPS_APIKEY = '***REMOVED***';
@@ -21,9 +22,26 @@ export default function HomeScreen() {
   const LONGITUDE = -122.4053769;
   const LATITUDE_DELTA = 0.0922;
   const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO / 2;
+  var [isLoggedIn, setLogin] = React.useState(false);
+  const [user, setUser] = React.useState({});
+
+  React.useEffect(() => {
+      http.post('http://localhost:8000/getAuthUser', {})
+      .then(res => {
+          if (res.data) {
+            setLogin(true);
+            setUser(res.data);
+          }
+      }).catch(error => {
+
+      })
+  }, []);
+  
+  // console.log(route.params.deliveryAddress);
 
   return (
-      <View style={styles.container}>
+    <View style={styles.container}>
+      <AddressPicker label={"Choose Delivery Address"} userId={user.id}/>
         <MapView
           initialRegion={{
             latitude: LATITUDE,
@@ -39,7 +57,6 @@ export default function HomeScreen() {
               strokeWidth={3}
               strokeColor="rgb(0,139,241)" />
           </MapView>
-        <AddressPicker />
         <CategoriesCards />
       </View>
   );

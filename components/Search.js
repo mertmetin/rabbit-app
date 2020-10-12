@@ -12,8 +12,9 @@ import { CategoryCard } from '../components/CategoryCard';
 export function Search(props) { 
     const searchClient = algoliasearch(
         'TJEJH855OJ',
-        '00f441614d17af1d361059d44b691129'
+        '4c62c3aa3ade23a3d65355440835f0bf'
     );
+
     const SearchBox = (props) => {
         return (
         <View>
@@ -22,6 +23,7 @@ export function Search(props) {
             />
         </View>);
     }
+
 
     const Hits = (data) => {
         const hits = data.hits;
@@ -58,6 +60,6 @@ export function Search(props) {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 10
+        padding: 20
     }
 });

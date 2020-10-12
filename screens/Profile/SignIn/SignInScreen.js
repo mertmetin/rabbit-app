@@ -12,7 +12,7 @@ export default function SignInScreen({ navigation }) {
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <View>
-                <SignInForm navigateTo={'AccountScreen'} />
+                <SignInForm navigateTo={'Home'} />
             </View>
         </ScrollView>
     );

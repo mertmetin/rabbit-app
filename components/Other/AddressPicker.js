@@ -4,20 +4,22 @@ import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, View, Text } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 
-
 export function AddressPicker(props) {
     const label = props.label;
-    const icon = props.icon;
-    const onPress = props.onPress;
+    const navigation = useNavigation();
+
+    const onPress = () => {
+        navigation.navigate('AddressScreen', { data: props.userId });
+    }
 
     return (
         <RectButton style={styles.option} onPress={onPress}>
             <View style={{ flexDirection: 'row' }}>
-                <View style={styles.optionIconContainer}>
-                    <Ionicons name={icon} size={22} color="rgba(0,0,0,0.35)" />
-                </View>
                 <View style={styles.optionTextContainer}>
                     <Text style={styles.optionText}>{label}</Text>
+                </View>
+                <View style={styles.optionIconContainer}>
+                    <Ionicons name={'ios-arrow-forward'} size={22} color="rgba(0,0,0,0.35)" />
                 </View>
             </View>
         </RectButton>
@@ -33,7 +35,8 @@ const styles = StyleSheet.create({
         paddingTop: 15,
     },
     optionIconContainer: {
-        marginRight: 12,
+        position: 'absolute',
+        right: 0,
     },
     option: {
         backgroundColor: '#fdfdfd',
@@ -47,6 +50,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: StyleSheet.hairlineWidth,
     },
     optionText: {
+        fontWeight: 'bold',
         fontSize: 15,
         alignSelf: 'flex-start',
         marginTop: 1,

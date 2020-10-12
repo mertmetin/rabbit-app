@@ -55,6 +55,8 @@ class AddressController extends Controller
             'apt_suite_floor' => $address['apt_suite_floor'],
             'business_or_building_name' => $address['business_or_building_name'],
             'address_type' => $type->id,
+            'lng' => $address['lng'],
+            'lat' => $address['lat']
         ]);
 
         $result;

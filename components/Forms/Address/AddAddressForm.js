@@ -9,6 +9,7 @@ import { GooglePlaces } from '../../GooglePlaces';
 import { SmartPicker } from '../../Core/SmartPicker';
 import constraints from '../../../constants/Constraints';
 import http from '../../../helpers/Http';
+import axios from 'axios';
 
 export function AddAddressForm(props) {
     const userId = props.userId;
@@ -38,26 +39,42 @@ export function AddAddressForm(props) {
             'secondary_text': place.structured_formatting.secondary_text,
             'apt_suite_floor': aptSuiteFloor,
             'business_or_building_name': businessOrBuildingName,
-            'address_type': addressType
+            'address_type': addressType,
         }
 
-        http.post('addAddress', {
-            userId: userId,
-            address: address,
-        })
-        .then(res => {
-            showMessage({
-                message: 'Address is added successfully.',
-                type: "success"
-            });
-            navigation.navigate('AddressScreen');
-        }).catch(error => {
-            const msg = error.response.data.message;
-            showMessage({
-                message: msg,
-                type: "danger"
-            });
-        })
+        const url = 'https://maps.googleapis.com/maps/api/place/details/json?' +
+            'key=***REMOVED***&' +
+            '&input=bar' +
+            '&placeid=' + place.place_id;
+        
+        axios.get(url).then(res => {
+
+            if (!res.data)
+                return;
+
+            var result = res.data.result;
+            var geometry = result.geometry;
+            address.lat = geometry.location.lat;
+            address.lng = geometry.location.lng;
+
+            http.post('addAddress', {
+                userId: userId,
+                address: address,
+            })
+            .then(res => {
+                showMessage({
+                    message: 'Address is added successfully.',
+                    type: "success"
+                });
+                navigation.navigate('AddressScreen');
+            }).catch(error => {
+                const msg = error.response.data.message;
+                showMessage({
+                    message: msg,
+                    type: "danger"
+                });
+            })
+        });
     }
 
     React.useEffect(() => {

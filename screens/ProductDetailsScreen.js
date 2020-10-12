@@ -15,9 +15,6 @@ function ProductDetailsScreen(props) {
     if (props.cartItems.quantity[item.id])
         quantity = props.cartItems.quantity[item.id]
 
-    console.log(quantity);
-
-
     return (
         <ProductDetailsCard item={item} dispatch={dispatch} quantity={quantity} />
     ); 

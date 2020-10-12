@@ -45,11 +45,13 @@ export function GooglePlaces(props) {
             'key=***REMOVED***&' + 
             '&input=' + data +
             '&inputtype=textquery' + 
-            '&fields=formatted_address,name,rating,opening_hours,geometry';  
+            '&fields=formatted_address,name,rating,opening_hours';  
 
         axios.get(url).then(res => {
             if (!res.data.predictions)
                 return;
+
+            console.log(res.data.predictions);
 
             const predictions = res.data.predictions;
             const items = makeItems(predictions);

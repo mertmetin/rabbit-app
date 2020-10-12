@@ -25,6 +25,7 @@ export function SignInForm(props) {
 
         if (validation) {
             setErrors(validation)
+            
             return false;
         }
 
