@@ -66,7 +66,7 @@ export function AddAddressForm(props) {
                     message: 'Address is added successfully.',
                     type: "success"
                 });
-                navigation.navigate('AddressScreen');
+                navigation.push('AddressScreen', {data: userId});
             }).catch(error => {
                 const msg = error.response.data.message;
                 showMessage({

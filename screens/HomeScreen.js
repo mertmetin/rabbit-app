@@ -10,52 +10,85 @@ import { AddressPicker } from '../components/Other/AddressPicker';
 import { useNavigation } from '@react-navigation/native';
 import MapView from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
+// import Geolocation from '@react-native-community/geolocation';
 
 export default function HomeScreen({ navigation, route }) {
-  const origin = { latitude: 37.3318456, longitude: -122.0296002 };
-  const destination = { latitude: 37.771707, longitude: -122.4053769 };
+  var origin = { latitude: 45.415355, longitude: -75.670803 };
+  const destination = { latitude: 45.415355, longitude: -75.670803 };
   const GOOGLE_MAPS_APIKEY = '***REMOVED***';
-
   const { width, height } = Dimensions.get('window');
   const ASPECT_RATIO = width / height;
-  const LATITUDE = 37.771707;
-  const LONGITUDE = -122.4053769;
+  const LATITUDE = 45.415355;
+  const LONGITUDE = -90.670803;
   const LATITUDE_DELTA = 0.0922;
-  const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO / 2;
+  const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO / 4;
   var [isLoggedIn, setLogin] = React.useState(false);
   const [user, setUser] = React.useState({});
 
+
   React.useEffect(() => {
-      http.post('http://localhost:8000/getAuthUser', {})
+    http.post('http://localhost:8000/getAuthUser', {})
       .then(res => {
-          if (res.data) {
-            setLogin(true);
-            setUser(res.data);
-          }
+        if (res.data) {
+          setLogin(true);
+          setUser(res.data);
+        }
       }).catch(error => {
 
       })
   }, []);
-  
-  // console.log(route.params.deliveryAddress);
+
+
+  var markerLat = 45.415355;
+  var markerLng = -75.670803;
+  var initialRegionLat = 45.415355;
+  var initialRegionLng = -75.670803;
+
+  var region = {
+    latitude: initialRegionLat,
+    longitude: initialRegionLng,
+    latitudeDelta: 0.015,
+    longitudeDelta: 0.0121
+  }
+
+  if (route.params && route.params.deliveryAddress)
+  {
+    const deliveryAddress = route.params.deliveryAddress;
+    markerLat = parseFloat(deliveryAddress.lat);
+    markerLng = parseFloat(deliveryAddress.lng);
+    console.log(deliveryAddress.lat);
+    initialRegionLat = markerLat;
+    initialRegionLng = markerLng;
+    region.latitude = markerLat;
+    region.longitude = markerLng;
+  }
+
+  console.log(initialRegionLat);
 
   return (
     <View style={styles.container}>
       <AddressPicker label={"Choose Delivery Address"} userId={user.id}/>
         <MapView
           initialRegion={{
-            latitude: LATITUDE,
-            longitude: LONGITUDE,
+            latitude: initialRegionLat,
+            longitude: initialRegionLng,
             latitudeDelta: LATITUDE_DELTA,
             longitudeDelta: LONGITUDE_DELTA,
           }}
+        region={region}
           style={{height: 250}}>
-            <MapViewDirections
+        <MapView.Marker
+          coordinate={{
+            latitude: markerLat,
+            longitude: markerLng
+          }}
+        />
+            {/* <MapViewDirections
               origin={origin}
               destination={destination}
               apikey={GOOGLE_MAPS_APIKEY}
               strokeWidth={3}
-              strokeColor="rgb(0,139,241)" />
+              strokeColor="rgb(0,139,241)" /> */}
           </MapView>
         <CategoriesCards />
       </View>
