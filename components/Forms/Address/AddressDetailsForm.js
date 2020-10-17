@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import { SafeAreaView, Dimensions, StyleSheet, TouchableOpacity} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import MapView from 'react-native-maps';
 import { validate } from 'validate.js/validate';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { Container, Header, Text, Content, Form, Item, Input, Label, Icon, View } from 'native-base';
@@ -12,63 +14,59 @@ import http from '../../../helpers/Http';
 export function AddressDetailsForm(props) {
     const userId = props.userId;
     const [address, setAddress] = React.useState(props.address);
-    const [aptSuiteFloor, setAptSuiteFloor] = React.useState(address.apt_suite_floor);
-    const [businessOrBuildingName, setBusinessOrBuildingName] = React.useState(address.business_or_building_name);
     const [errors, setErrors] = React.useState([]);
     const navigation = useNavigation();
 
-    const saveAddress = () => {
-        address.apt_suite_floor = aptSuiteFloor;
-        address.business_or_building_name = businessOrBuildingName;
+    const { width, height } = Dimensions.get('window');
+    const ASPECT_RATIO = width / height;
+    const LATITUDE_DELTA = parseFloat(0.0922);
+    const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO / 2;
 
-        http.post('editAddress', {
-            userId: userId,
-            address: address
-        })
-        .then(res => {
-            showMessage({
-                message: 'Address updated',
-                type: "success"
-            });
-            navigation.navigate('AddressScreen');
-        }).catch(error => {
-            const msg = error.response.data.message;
-            showMessage({
-                message: msg,
-                type: "danger"
-            });
-        })
-    }
+    const lat = parseFloat(address.lat);
+    const lng = parseFloat(address.lng);
 
-    const removeAddress = () => {
-        http.post('deleteAddress', {
-            userId: userId,
-            id: address.id
-        })
-        .then(res => {
-            showMessage({
-                message: 'Address deleted',
-                type: "success"
-            });
-            navigation.navigate('AccountScreen');
-        }).catch(error => {
-            const msg = error.response.data.message;
-            showMessage({
-                message: msg,
-                type: "danger"
-            });
-        })
+    var region = {
+        latitude: lat,
+        longitude: lng,
+        latitudeDelta: 0.015,
+        longitudeDelta: 0.0121
     }
 
     return (
-        <View>
-            <GooglePlaces onAddressSelected={setAddress} value={address.description} error={errors.address} disabled={true} />
-            <FloatingLabel label={'Apt / Suite / Floor'} onTextChange={setAptSuiteFloor} value={aptSuiteFloor} />
-            <FloatingLabel label={'Business or building name'} onTextChange={setBusinessOrBuildingName} value={businessOrBuildingName} />
-            <ActionButton title={'Remove saved address'} onPress={removeAddress} />
-            <View style={{ marginTop: 20 }}>
-                <ActionButton title={'Save'} onPress={saveAddress} />
-            </View>
-        </View>
+        <SafeAreaView>
+            <MapView
+                initialRegion={{
+                    latitude: lat,
+                    longitude: lng,
+                    latitudeDelta: LATITUDE_DELTA,
+                    longitudeDelta: LONGITUDE_DELTA
+                }}
+                region={region}
+                style={styles.map}>
+                <MapView.Marker
+                    coordinate={{
+                        latitude: lat,
+                        longitude: lng
+                    }}
+                />
+            </MapView>
+            <ActionButton style={styles.button} title={'Use this address'} />
+        </SafeAreaView>
     )
 }
+
+const styles = StyleSheet.create({
+    map: {
+        height: 475
+    },
+    button: {
+        paddingTop: 10
+    },
+    text: {
+        color: '#00754a',
+        fontSize: 16,
+        fontFamily: 'sodo-sans-semibold',
+        paddingTop: 10,
+        paddingBottom: 10
+    }
+});
