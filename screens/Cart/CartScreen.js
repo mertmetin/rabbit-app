@@ -6,10 +6,10 @@ import { EmptyCart } from '../../components/Other/EmptyCart';
 
 
 function CartScreen(props) {
-    const itemCount = Object.keys(props.cartItems.items).length;
+    const itemCount = Object.keys(props.cartItems.cartItems.items).length;
 
     const view = (itemCount > 0) 
-        ? (<CartCards items={props.cartItems} onIncrease={props.increaseItemQuantity} 
+        ? (<CartCards items={props.cartItems.cartItems} onIncrease={props.increaseItemQuantity} 
             onDecrease={props.decreaseItemQuantity}
         />) : <EmptyCart /> 
 

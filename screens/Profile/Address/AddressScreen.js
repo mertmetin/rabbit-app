@@ -5,7 +5,7 @@ import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Picker, Sa
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { ActionButton } from '../../../components/ActionButton';
-import { UserAddressesList } from '../../../components/Lists/UserAddressesList';
+import  UserAddressesList  from '../../../components/Lists/UserAddressesList';
 
 import http from '../../../helpers/Http';
 

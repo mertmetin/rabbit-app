@@ -10,8 +10,9 @@ import { ActionButton } from '../../ActionButton';
 import { GooglePlaces } from '../../GooglePlaces';
 import constraints from '../../../constants/Constraints';
 import http from '../../../helpers/Http';
+import { connect } from 'react-redux'
 
-export function AddressDetailsForm(props) {
+function AddressDetailsForm(props) {
     const userId = props.userId;
     const [address, setAddress] = React.useState(props.address);
     const [errors, setErrors] = React.useState([]);
@@ -32,6 +33,11 @@ export function AddressDetailsForm(props) {
         longitudeDelta: 0.0121
     }
 
+    const onPress = () => {
+        props.setDeliveryAddress(address);
+        navigation.navigate('AddressScreen', { data: userId });
+    }
+
     return (
         <SafeAreaView>
             <MapView
@@ -50,7 +56,7 @@ export function AddressDetailsForm(props) {
                     }}
                 />
             </MapView>
-            <ActionButton style={styles.button} title={'Use this address'} />
+            <ActionButton style={styles.button} title={'Use this address'} onPress={onPress} />
         </SafeAreaView>
     )
 }
@@ -70,3 +76,24 @@ const styles = StyleSheet.create({
         paddingBottom: 10
     }
 });
+
+const mapStateToProps = (state) => {
+    return {
+        deliveryAddress: state
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setDeliveryAddress: (address) => dispatch({ 
+            type: 'SET_DELIVERY_ADDRESS', 
+            payload: address 
+        }),
+        removeDeliveryAddress: (address) => dispatch({ 
+            type: 'REMOVE_DELIVERY_ADDRESS', 
+            payload: address 
+        }),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddressDetailsForm);

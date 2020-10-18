@@ -5,19 +5,20 @@ import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, FlatList, Touch
 import { showMessage, hideMessage } from "react-native-flash-message";
 import AppleStyleSwipeableRow from '../AppleStyleSwipeableRow';
 import http from '../../helpers/Http';
+import { connect } from 'react-redux'
 
-export function UserAddressesList(props) {
+function UserAddressesList(props) {
     const userId = props.userId;
     const [items, setItems] = React.useState([]);
     const navigation = useNavigation();
 
     const renderItem = ({ item }) => {
         const onPress = () => {
-            console.log(item);
             navigation.navigate('AddressDetails', { userId: userId, address: item });
         }
 
         const addressType = item.address_type.type;
+        var checkMarkIcon;
         var icon = '';
 
         if (addressType == 'home')
@@ -26,6 +27,15 @@ export function UserAddressesList(props) {
             icon = 'md-business';
         else if (addressType == 'other')
             icon = 'md-navigate';
+
+        if (props.deliveryAddress.deliveryAddress[item.id])
+        {
+            checkMarkIcon = (<Ionicons
+                name={'ios-checkmark-circle'}
+                size={24}
+                style={{ position: 'absolute', right: 0 }} />);
+        }
+
 
         const removeAddress = () => {
             http.post('deleteAddress', {
@@ -65,6 +75,7 @@ export function UserAddressesList(props) {
                                 <Text>{item.main_text}{"\n"}</Text>
                                 <Text>{item.secondary_text}</Text>
                             </Text>
+                            {checkMarkIcon}
                         </View>
                         <View style={styles.editButton}>
                             <Text>
@@ -128,3 +139,26 @@ const styles = StyleSheet.create({
         paddingLeft: 35
     }
 });
+
+
+const mapStateToProps = (state) => {
+    return {
+        deliveryAddress: state
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setDeliveryAddress: (address) => dispatch({
+            type: 'SET_DELIVERY_ADDRESS',
+            payload: address
+        }),
+        removeDeliveryAddress: (address) => dispatch({
+            type: 'REMOVE_DELIVERY_ADDRESS',
+            payload: address
+        }),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserAddressesList);
+

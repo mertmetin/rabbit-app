@@ -10,9 +10,12 @@ import { AddressPicker } from '../components/Other/AddressPicker';
 import { useNavigation } from '@react-navigation/native';
 import MapView from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
+import { connect } from 'react-redux'
+import { Ionicons } from '@expo/vector-icons';
+
 // import Geolocation from '@react-native-community/geolocation';
 
-export default function HomeScreen({ navigation, route }) {
+function HomeScreen(props) {
   var origin = { latitude: 45.415355, longitude: -75.670803 };
   const destination = { latitude: 45.415355, longitude: -75.670803 };
   const GOOGLE_MAPS_APIKEY = '***REMOVED***';
@@ -51,23 +54,60 @@ export default function HomeScreen({ navigation, route }) {
     longitudeDelta: 0.0121
   }
 
-  if (route.params && route.params.deliveryAddress)
+  var deliveryAddress;
+
+
+
+  if (props.deliveryAddress.deliveryAddress)
   {
-    const deliveryAddress = route.params.deliveryAddress;
-    markerLat = parseFloat(deliveryAddress.lat);
-    markerLng = parseFloat(deliveryAddress.lng);
-    console.log(deliveryAddress.lat);
-    initialRegionLat = markerLat;
-    initialRegionLng = markerLng;
-    region.latitude = markerLat;
-    region.longitude = markerLng;
+    var addressData = props.deliveryAddress.deliveryAddress;
+    var key = Object.keys(addressData)[0];
+    var addressData = addressData[key]; 
+
+    if (addressData.address_type)
+    {
+      var addressType = addressData.address_type.type;
+      var icon;
+
+      if (addressType == 'home')
+        icon = 'md-home';
+      else if (addressType == 'work')
+        icon = 'md-business';
+      else if (addressType == 'other')
+        icon = 'md-navigate';
+
+      deliveryAddress = (
+        <View style={{flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: '#FFF'}}>
+          <Ionicons
+            name={icon}
+            size={24} />
+          <Text style={{marginLeft: 5, marginRight: 10, fontWeight: 'bold'}}>{addressType.charAt(0).toUpperCase() + addressType.slice(1)}:</Text>
+          <Text>{addressData.main_text}</Text>
+        </View>
+      );
+    }
+    
   }
 
-  console.log(initialRegionLat);
+  // if (route.params && route.params.deliveryAddress)
+  // {
+  //   const deliveryAddress = route.params.deliveryAddress;
+  //   markerLat = parseFloat(deliveryAddress.lat);
+  //   markerLng = parseFloat(deliveryAddress.lng);
+  //   console.log(deliveryAddress.lat);
+  //   initialRegionLat = markerLat;
+  //   initialRegionLng = markerLng;
+  //   region.latitude = markerLat;
+  //   region.longitude = markerLng;
+  // }
+
+
+
+
+
 
   return (
     <View style={styles.container}>
-      <AddressPicker label={"Choose Delivery Address"} userId={user.id}/>
         <MapView
           initialRegion={{
             latitude: initialRegionLat,
@@ -90,6 +130,12 @@ export default function HomeScreen({ navigation, route }) {
               strokeWidth={3}
               strokeColor="rgb(0,139,241)" /> */}
           </MapView>
+        
+      {deliveryAddress
+        ? deliveryAddress
+        : <AddressPicker label={"Choose Delivery Address"} userId={user.id} />
+      }
+
         <CategoriesCards />
       </View>
   );
@@ -185,3 +231,25 @@ const styles = StyleSheet.create({
     color: '#2e78b7',
   },
 });
+
+const mapStateToProps = (state) => {
+  return {
+    deliveryAddress: state
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setDeliveryAddress: (address) => dispatch({
+      type: 'SET_DELIVERY_ADDRESS',
+      payload: address
+    }),
+    removeDeliveryAddress: (address) => dispatch({
+      type: 'REMOVE_DELIVERY_ADDRESS',
+      payload: address
+    }),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
+
