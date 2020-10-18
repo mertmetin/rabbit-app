@@ -43,13 +43,13 @@ function HomeScreen(props) {
     var key = Object.keys(addressData)[0];
     var addressData = addressData[key]; 
     initialRegion = {
-      lat: addressData.lat,
-      lng: addressData.lng
+      latitude: addressData.lat,
+      longitude: addressData.lng
     }
 
     marker = {
-      lat: addressData.lat,
-      lng: addressData.lng
+      latitude: addressData.lat,
+      longitude: addressData.lng
     }
   }
 

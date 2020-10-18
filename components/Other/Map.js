@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, View, Text, Dimensions } from 'react-native';
-import MapView from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 
 function Map(props) {
@@ -16,15 +16,20 @@ function Map(props) {
         longitude: -75.670803
     }
 
-    if (!initialRegion.lat || !initialRegion.lng)
+    if (!initialRegion.latitude || !initialRegion.longitude)
     {
-        initialRegion.lat = parseFloat(currentCoordinates.latitude);
-        initialRegion.lng = parseFloat(currentCoordinates.longitude);
+        initialRegion.latitude = currentCoordinates.latitude;
+        initialRegion.longitude = currentCoordinates.longitude;
     }
 
+    initialRegion.latitudeDelta = LATITUDE_DELTA;
+    initialRegion.longitudeDelta = LONGITUDE_DELTA;
+
+    console.log(initialRegion);
+
     var region = {
-        latitude: initialRegion.lat,
-        longitude: initialRegion.lng,
+        latitude: initialRegion.latitude,
+        longitude: initialRegion.longitude,
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA
     }
@@ -35,11 +40,11 @@ function Map(props) {
     {
         const marker = props.marker;
 
-        if (marker.lng && marker.lat)
+        if (marker.latitude && marker.longitude)
         {
             markerCoords = {
-                latitude: parseFloat(marker.lat),
-                longitude: parseFloat(marker.lng),
+                latitude: parseFloat(marker.latitude),
+                longitude: parseFloat(marker.longitude),
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA
             }
@@ -48,12 +53,8 @@ function Map(props) {
 
     return (
         <MapView
-            initialRegion={{
-                latitude: parseFloat(initialRegion.lat),
-                longitude: parseFloat(initialRegion.lng),
-                latitudeDelta: LATITUDE_DELTA,
-                longitudeDelta: LONGITUDE_DELTA,
-            }}
+            initialRegion={initialRegion}
+            provider={PROVIDER_GOOGLE}
             region={region}
             style={ styles.map }>
             {markerCoords &&
