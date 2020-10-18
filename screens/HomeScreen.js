@@ -6,7 +6,7 @@ import { CategoryCard } from '../components/CategoryCard';
 import http from '../helpers/Http';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { CategoriesCards } from '../components/Cards/CategoriesCards';
-import { AddressPicker } from '../components/Other/AddressPicker';
+import AddressPickerButton from '../components/Buttons/AddressPickerButton';
 import { useNavigation } from '@react-navigation/native';
 import MapView from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
@@ -54,9 +54,8 @@ function HomeScreen(props) {
     longitudeDelta: 0.0121
   }
 
+  var addressData;
   var deliveryAddress;
-
-
 
   if (props.deliveryAddress.deliveryAddress)
   {
@@ -64,29 +63,28 @@ function HomeScreen(props) {
     var key = Object.keys(addressData)[0];
     var addressData = addressData[key]; 
 
-    if (addressData.address_type)
-    {
-      var addressType = addressData.address_type.type;
-      var icon;
+    // if (addressData.address_type)
+    // {
+    //   var addressType = addressData.address_type.type;
+    //   var icon;
 
-      if (addressType == 'home')
-        icon = 'md-home';
-      else if (addressType == 'work')
-        icon = 'md-business';
-      else if (addressType == 'other')
-        icon = 'md-navigate';
+    //   if (addressType == 'home')
+    //     icon = 'md-home';
+    //   else if (addressType == 'work')
+    //     icon = 'md-business';
+    //   else if (addressType == 'other')
+    //     icon = 'md-navigate';
 
-      deliveryAddress = (
-        <View style={{flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: '#FFF'}}>
-          <Ionicons
-            name={icon}
-            size={24} />
-          <Text style={{marginLeft: 5, marginRight: 10, fontWeight: 'bold'}}>{addressType.charAt(0).toUpperCase() + addressType.slice(1)}:</Text>
-          <Text>{addressData.main_text}</Text>
-        </View>
-      );
-    }
-    
+    //   deliveryAddress = (
+    //     <View style={{flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: '#FFF'}}>
+    //       <Ionicons
+    //         name={icon}
+    //         size={24} />
+    //       <Text style={{marginLeft: 5, marginRight: 10, fontWeight: 'bold'}}>{addressType.charAt(0).toUpperCase() + addressType.slice(1)}:</Text>
+    //       <Text>{addressData.main_text}</Text>
+    //     </View>
+    //   );
+    // }
   }
 
   // if (route.params && route.params.deliveryAddress)
@@ -131,10 +129,7 @@ function HomeScreen(props) {
               strokeColor="rgb(0,139,241)" /> */}
           </MapView>
         
-      {deliveryAddress
-        ? deliveryAddress
-        : <AddressPicker label={"Choose Delivery Address"} userId={user.id} />
-      }
+      <AddressPickerButton address={addressData} />
 
         <CategoriesCards />
       </View>
