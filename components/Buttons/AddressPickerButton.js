@@ -6,6 +6,7 @@ import { RectButton } from 'react-native-gesture-handler';
 
 function AddressPickerButton(props) {
     const address = props.address;
+    const navigation = useNavigation();
     var btnChooseAddress = (
         <View style={styles.innerContainer}>
             <Text style={styles.textChooseDelivery}>Choose Delivery Address</Text>
@@ -42,8 +43,12 @@ function AddressPickerButton(props) {
         );
     }
 
+    const onPress = () => {
+        navigation.navigate('ChooseAddress', { data: props.userId });
+    }
+
     return (
-        <RectButton style={styles.container} >
+        <RectButton style={styles.container} onPress={onPress}>
             {btnChooseAddress}
         </RectButton>
     );

@@ -14,7 +14,15 @@ function UserAddressesList(props) {
 
     const renderItem = ({ item }) => {
         const onPress = () => {
-            navigation.navigate('AddressDetails', { userId: userId, address: item });
+            var redirectScreen = 'AddressDetails';
+
+            if (props.redirectScreen)
+            {
+                redirectScreen =  props.redirectScreen;
+                props.setDeliveryAddress(item);
+            }
+
+            navigation.navigate(redirectScreen, { userId: userId, address: item });
         }
 
         const addressType = item.address_type.type;

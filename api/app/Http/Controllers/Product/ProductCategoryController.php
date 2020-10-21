@@ -5,15 +5,17 @@ namespace App\Http\Controllers\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\ProductCategory;
+use App\Store;
 
 class ProductCategoryController extends Controller
 {
     protected function get(Request $request)
     {
+        error_log(json_encode(Store::all()));
         if ($request->input('withSubCategories'))
             return ProductCategory::all();
 
-          return ProductCategory::where('category_id', null)->get();
+        return ProductCategory::where('category_id', null)->get();
     }
 
     protected function getSubCategories(Request $request)

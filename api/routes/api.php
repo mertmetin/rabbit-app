@@ -38,4 +38,5 @@ Route::post('/editAddress', 'Address\AddressController@edit');
 Route::post('/getProducts', 'Product\ProductController@get');
 Route::post('/getProductCategories', 'Product\ProductCategoryController@get');
 Route::post('/getPromotions', 'Promotions\PromotionsController@get');
+Route::post('/getStore', 'Store\StoreController@getStore');
 

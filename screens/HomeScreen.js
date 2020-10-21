@@ -14,8 +14,6 @@ import MapViewDirections from 'react-native-maps-directions';
 import { connect } from 'react-redux'
 import { Ionicons } from '@expo/vector-icons';
 
-// import Geolocation from '@react-native-community/geolocation';
-
 function HomeScreen(props) {
   var [isLoggedIn, setLogin] = React.useState(false);
   const [user, setUser] = React.useState({});
@@ -29,9 +27,10 @@ function HomeScreen(props) {
           setUser(res.data);
         }
       }).catch(error => {
-
+        console.log(error);
       })
   }, []);
+  
 
   var addressData;
   var initialRegion;
@@ -51,12 +50,27 @@ function HomeScreen(props) {
       latitude: addressData.lat,
       longitude: addressData.lng
     }
+
+    React.useEffect(() => {
+      http.post('getStore', { address: addressData })
+        .then(res => {
+
+          if (res.data) {
+              console.log('heere');
+          }
+        }).catch(error => {
+          console.log(error);
+
+        })
+    });
+
+
   }
 
   return (
     <View style={styles.container}>
         <Map initialRegion={initialRegion} marker={marker} />
-        <AddressPickerButton address={addressData} />
+        <AddressPickerButton userId={user.id} address={addressData} />
         <CategoriesCards />
       </View> 
   );
