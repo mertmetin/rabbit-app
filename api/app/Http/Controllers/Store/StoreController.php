@@ -10,22 +10,40 @@ class StoreController extends Controller
 {
     protected function getStore(Request $request)
     {
-        // if (!$request->filled('address'))
-        //     throw new \Exception('Invalid request.');
+        if (!$request->filled('address'))
+            throw new \Exception('Invalid request.');
 
         $stores = Store::all();
+        $address = $request->input('address');
+        $addressLat = $address['lat'];
+        $addressLng = $address['lng'];
 
-        $output = new Symfony\Component\Console\Output\ConsoleOutput();
-        $output->writeln("asd");
+        foreach ($stores as $store) {
+            $storeLat = $store['coordinates']->getLat();
+            $storeLng = $store['coordinates']->getLng();
+            $dist = $this->getDistance($storeLat, $storeLng, $addressLat, $addressLng);
 
+            if ($dist < 10) {
+                return [
+                    'latitude' => $storeLat, 
+                    'longitude' => $storeLng
+                ];
+            }
+        }
 
-        error_log(json_encode('e'));
-
-        // error_log('asd');
-        // error_log(json_encode(Store::all()));
-        // \Log::info('This is some useful information.');
-
-
-        return json_encode($stores);
+        return false;
     }
+
+    function getDistance($latitude1, $longitude1, $latitude2, $longitude2) {  
+        $earth_radius = 6371;  
+      
+        $dLat = deg2rad($latitude2 - $latitude1);  
+        $dLon = deg2rad($longitude2 - $longitude1);  
+        
+        $a = sin($dLat/2) * sin($dLat/2) + cos(deg2rad($latitude1)) * cos(deg2rad($latitude2)) * sin($dLon/2) * sin($dLon/2);  
+        $c = 2 * asin(sqrt($a));  
+        $d = $earth_radius * $c;  
+      
+        return $d;  
+}  
 }

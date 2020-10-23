@@ -25,5 +25,4 @@ class Store extends Model
     protected $spatialFields = [
         'coordinates'
     ];
-
 }    

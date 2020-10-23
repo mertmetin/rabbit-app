@@ -17,6 +17,7 @@ import { Ionicons } from '@expo/vector-icons';
 function HomeScreen(props) {
   var [isLoggedIn, setLogin] = React.useState(false);
   const [user, setUser] = React.useState({});
+  const [destination, setDestination] = React.useState();
 
 
   React.useEffect(() => {
@@ -51,25 +52,28 @@ function HomeScreen(props) {
       longitude: addressData.lng
     }
 
+
     React.useEffect(() => {
       http.post('getStore', { address: addressData })
         .then(res => {
 
           if (res.data) {
-              console.log('heere');
+            setDestination(res.data);
           }
+          
         }).catch(error => {
-          console.log(error);
+          // console.log(error);
 
         })
-    });
-
-
+    }, []);
   }
+
+  // console.log(destination);
+
 
   return (
     <View style={styles.container}>
-        <Map initialRegion={initialRegion} marker={marker} />
+        <Map initialRegion={initialRegion} marker={marker} destination={destination} />
         <AddressPickerButton userId={user.id} address={addressData} />
         <CategoriesCards />
       </View> 

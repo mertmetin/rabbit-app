@@ -8,9 +8,10 @@ import MapViewDirections from 'react-native-maps-directions';
 
 function Map(props) {
     var initialRegion = props.initialRegion;
+    var destination = props.destination;
     const { width, height } = Dimensions.get('window');
     const ASPECT_RATIO = width / height;
-    const LATITUDE_DELTA = 0.0922;
+    const LATITUDE_DELTA = 0.0933;
     const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO / 4;
     const currentCoordinates = {
         latitude: 45.415355,
@@ -25,8 +26,6 @@ function Map(props) {
 
     initialRegion.latitudeDelta = LATITUDE_DELTA;
     initialRegion.longitudeDelta = LONGITUDE_DELTA;
-
-    console.log(initialRegion);
 
     var region = {
         latitude: initialRegion.latitude,
@@ -52,6 +51,9 @@ function Map(props) {
         }
     }
 
+
+    console.log(destination);
+
     return (
         <MapView
             initialRegion={initialRegion}
@@ -60,6 +62,22 @@ function Map(props) {
             style={ styles.map }>
             {markerCoords &&
                 <MapView.Marker coordinate={markerCoords} />
+            }
+
+            { destination &&
+                <MapView.Marker coordinate={destination} />
+            }
+
+            { destination &&
+                <MapViewDirections
+                origin={region}
+                destination={destination}
+                apikey={'***REMOVED***'}
+                    strokeWidth={3}
+                    strokeColor="hotpink"
+                onReady={result => {
+                }}
+                />
             }
         </MapView>
     );
