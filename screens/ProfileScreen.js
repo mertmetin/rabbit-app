@@ -5,6 +5,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios';
 import AccountScreen from './Profile/Account/AccountScreen';
+import getToken from '../helpers/Token';
 
 export default function ProfileScreen({navigation}) {
     var [isLoggedIn, setLogin] = React.useState(false);
@@ -50,23 +51,7 @@ export default function ProfileScreen({navigation}) {
             </View>
         </ScrollView>
 
-    React.useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            axios.post('http://localhost:8000/getAuthUser', {
-            })
-            .then(res => {
-                if (res.data) {
-                    setLogin(true);
-                    setUser(res.data);
-                }
-            }).catch(error => {
-
-            })
-        });
-
-        return unsubscribe;
-    }, [navigation]);
-
+    
     const view = (isLoggedIn) ? <AccountScreen user={user} setLogin={setLogin} /> : guestView;
 
     return (view);

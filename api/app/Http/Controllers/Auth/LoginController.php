@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class LoginController extends Controller
 {
@@ -18,8 +20,6 @@ class LoginController extends Controller
     | to conveniently provide its functionality to your applications.
     |
     */
-
-    use AuthenticatesUsers;
 
     /**
      * Where to redirect users after login.
@@ -41,5 +41,46 @@ class LoginController extends Controller
     public function username()
     {
         return 'phone';
+    }
+
+    public function login(Request $request)
+    {
+        $request->validate([
+            'phone' => 'required', 
+            'password' => 'required'
+        ]);
+
+        $credentials = $request->only('phone', 'password');
+
+        if( Auth::attempt($credentials) ) {
+            $user = Auth::user();
+
+            $token = $user->createToken($user->phone.'-'.now());
+
+            return [
+                'id' => $token->token->id,
+                'token' => $token->accessToken
+            ];
+        }
+    }
+
+    public function logout(Request $request)
+    {
+        if (!$request->filled('tokenId'))
+            throw new \Exception('Invalid request.');
+
+        $tokenId = $request->input('tokenId');
+                error_log($tokenId);
+
+
+
+        $tokenRepository = app('Laravel\Passport\TokenRepository');
+        $refreshTokenRepository = app('Laravel\Passport\RefreshTokenRepository');
+
+        // Revoke an access token...
+        $tokenRepository->revokeAccessToken($tokenId);
+
+        // Revoke all of the token's refresh tokens...
+        $refreshTokenRepository->revokeRefreshTokensByAccessTokenId($tokenId);
     }
 }

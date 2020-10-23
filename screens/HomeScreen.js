@@ -19,7 +19,7 @@ function HomeScreen(props) {
   const [user, setUser] = React.useState({});
   const [destination, setDestination] = React.useState();
 
-
+  
   React.useEffect(() => {
     http.post('http://localhost:8000/getAuthUser', {})
       .then(res => {

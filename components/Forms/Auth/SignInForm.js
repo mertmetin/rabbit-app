@@ -7,7 +7,8 @@ import { FloatingLabel } from '../../FloatingLabel';
 import { ActionButton } from '../../ActionButton';
 import { Link } from '../../Link';
 import constraints from '../../../constants/Constraints';
-import axios from 'axios';
+import http from '../../../helpers/Http';
+import Token from '../../../helpers/Token';
 
 export function SignInForm(props) {
     const [phone, setPhoneNumber] = React.useState('');
@@ -29,15 +30,20 @@ export function SignInForm(props) {
             return false;
         }
 
-        axios.post('http://localhost:8000/login', {
+        const credentials = {
             phone: phone,
             password: password
-        })
+        }
+
+        http.post('login', credentials)
         .then(res => {
+            const _token = res.data.token;
+            Token.setToken(_token);
             navigation.navigate(props.navigateTo);
         }).catch(error => {
+            console.log(error);
             setErrors({ 'password': 'The phone number and password you entered don\'t match'});
-        })
+        });
     }
 
     return (

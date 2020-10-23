@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Auth::routes();
+// Auth::routes();
 Route::post('/activateUser', 'Auth\RegisterController@activateUser');
 Route::post('/resendCode', 'Auth\RegisterController@resendCode');
 Route::post('/sendPasswordResetCode', 'Auth\ForgotPasswordController@sendPasswordResetCode');
@@ -39,4 +39,6 @@ Route::post('/getProducts', 'Product\ProductController@get');
 Route::post('/getProductCategories', 'Product\ProductCategoryController@get');
 Route::post('/getPromotions', 'Promotions\PromotionsController@get');
 Route::post('/getStore', 'Store\StoreController@getStore');
+Route::post('login', 'Auth\LoginController@login');
+Route::post('logout', 'Auth\LoginController@logout');
 

@@ -8,28 +8,36 @@ import { showMessage, hideMessage } from "react-native-flash-message";
 import { OptionButton } from '../../../components/OptionButton';
 import { ActionButton } from '../../../components/ActionButton';
 import { useNavigation } from '@react-navigation/native';
-import { isRearCameraAvailable } from 'expo/build/AR';
+import http from '../../../helpers/Http';
+import Token from '../../../helpers/Token';
 
 export default function AccountScreen(props) {
     const [user, setUser] = React.useState({});
     const navigation = useNavigation();
-    var [isLoggedIn, setLogin] = React.useState(false);
+    const [_token, setToken] = React.useState({});
 
-    React.useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            axios.post('http://localhost:8000/getAuthUser', {
-            })
-                .then(res => {
-                    if (res.data) {
-                        setLogin(true);
-                        setUser(res.data);
-                    }
-                }).catch(error => {
-                })
+    Token.getToken((_token) => {
+        setToken(_token);
+    });
+
+    const logOut = () => {
+        console.log(_token);
+        http.post('logout', { tokenId: _token.id })
+        .then(res => {
+            navigation.navigate('AccountScreen');
+            Token.removeToken();
+        }).catch(error => {
+            console.log(error);
         });
 
-        return unsubscribe;
-    }, [navigation]);
+
+        // axios.post('http://localhost:8000/logout', {})
+        //     .then(res => {
+        //         setLogin(false);
+        //         navigation.navigate('AccountScreen');
+        //     })
+        //     .catch(error => { })
+    };
 
     const guestView = (
         <View style={styles.container}>
@@ -39,15 +47,6 @@ export default function AccountScreen(props) {
             </View>
         </View>
     );
-
-    const logOut = () => {
-        axios.post('http://localhost:8000/logout', {})
-        .then(res => {
-            setLogin(false);
-            navigation.navigate('AccountScreen');
-        })
-        .catch(error => {})
-    };
 
     const userView = (
         <View style={styles.container}>
@@ -67,6 +66,7 @@ export default function AccountScreen(props) {
         </View>
     );
 
+    const isLoggedIn = (_token) && true;
     const view = (isLoggedIn) ? userView : guestView;
         
     return (
