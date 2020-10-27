@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
+import HomeScreen from '../screens/HomeScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import SignInScreen from '../screens/Profile/SignIn/SignInScreen';
 import SignUpScreen from '../screens/Profile/SignUp/SignUpScreen';

@@ -51,8 +51,6 @@ export function GooglePlaces(props) {
             if (!res.data.predictions)
                 return;
 
-            console.log(res.data.predictions);
-
             const predictions = res.data.predictions;
             const items = makeItems(predictions);
             setPredictions(items);

@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
+import { useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Picker } from 'react-native';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios';
@@ -11,33 +12,38 @@ import { useNavigation } from '@react-navigation/native';
 import http from '../../../helpers/Http';
 import Token from '../../../helpers/Token';
 
-export default function AccountScreen(props) {
+function AccountScreen(props) {
     const [user, setUser] = React.useState({});
     const navigation = useNavigation();
-    const [_token, setToken] = React.useState({});
+    const [_token, setToken] = React.useState(null);
 
-    Token.getToken((_token) => {
-        setToken(_token);
-    });
+    useEffect(() => {
+        Token.getToken().then((_token) => {
+
+            if (_token)
+            {
+                setToken((_token));
+
+                http.post('getUser', {}).then((res) => {
+                    setUser(res.data);
+                }).catch((error) => {
+                    console.log(error);
+                })
+            }
+        });
+    }, []);
 
     const logOut = () => {
-        console.log(_token);
         http.post('logout', { tokenId: _token.id })
         .then(res => {
-            navigation.navigate('AccountScreen');
             Token.removeToken();
+            navigation.push('AccountScreen');
+
         }).catch(error => {
             console.log(error);
         });
-
-
-        // axios.post('http://localhost:8000/logout', {})
-        //     .then(res => {
-        //         setLogin(false);
-        //         navigation.navigate('AccountScreen');
-        //     })
-        //     .catch(error => { })
     };
+
 
     const guestView = (
         <View style={styles.container}>
@@ -65,6 +71,7 @@ export default function AccountScreen(props) {
             <ActionButton style={'outlined'} title={'Log out'} onPress={logOut} />
         </View>
     );
+ 
 
     const isLoggedIn = (_token) && true;
     const view = (isLoggedIn) ? userView : guestView;
@@ -97,3 +104,5 @@ const styles = StyleSheet.create({
         marginTop: 5
     }
 });
+
+export default AccountScreen;

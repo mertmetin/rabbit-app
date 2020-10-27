@@ -41,4 +41,21 @@ Route::post('/getPromotions', 'Promotions\PromotionsController@get');
 Route::post('/getStore', 'Store\StoreController@getStore');
 Route::post('login', 'Auth\LoginController@login');
 Route::post('logout', 'Auth\LoginController@logout');
+    Route::post('getUser', 'UsersController@getUser');
 
+
+// Route::middleware('auth:api')->post('/getUser', function(Request $request) {
+//          error_log(json_encode('here'));
+// });
+
+
+
+// Route::post('getUser', 'UsersController@getUser');
+ Route::group(['middleware' => ['auth:api']], function () {
+
+    Route::post('getUser', 'UsersController@getUser');
+
+        //  error_log(json_encode($request));
+
+    //    Route::post('/getUser', 'UsersController@getUser');
+});

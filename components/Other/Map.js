@@ -51,9 +51,6 @@ function Map(props) {
         }
     }
 
-
-    console.log(destination);
-
     return (
         <MapView
             initialRegion={initialRegion}

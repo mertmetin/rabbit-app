@@ -55,12 +55,17 @@ class LoginController extends Controller
         if( Auth::attempt($credentials) ) {
             $user = Auth::user();
 
-            $token = $user->createToken($user->phone.'-'.now());
+            $token = $user->createToken($user->phone.'-'. now());
 
             return [
                 'id' => $token->token->id,
                 'token' => $token->accessToken
             ];
+
+            // return ([
+            //     'id' => 'asad',
+            //     'token' => 'asd'
+            // ]);
         }
     }
 
@@ -70,9 +75,6 @@ class LoginController extends Controller
             throw new \Exception('Invalid request.');
 
         $tokenId = $request->input('tokenId');
-                error_log($tokenId);
-
-
 
         $tokenRepository = app('Laravel\Passport\TokenRepository');
         $refreshTokenRepository = app('Laravel\Passport\RefreshTokenRepository');

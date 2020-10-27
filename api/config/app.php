@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'America/Toronto',
 
     /*
     |--------------------------------------------------------------------------
@@ -163,6 +163,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Aws\Laravel\AwsServiceProvider::class,
         Grimzy\LaravelMysqlSpatial\SpatialServiceProvider::class,
+        FruitCake\Cors\CorsServiceProvider::class,
 
         /*
          * Package Service Providers...

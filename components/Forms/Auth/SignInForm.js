@@ -7,7 +7,7 @@ import { FloatingLabel } from '../../FloatingLabel';
 import { ActionButton } from '../../ActionButton';
 import { Link } from '../../Link';
 import constraints from '../../../constants/Constraints';
-import http from '../../../helpers/Http';
+import http, { setClientToken } from '../../../helpers/Http';
 import Token from '../../../helpers/Token';
 
 export function SignInForm(props) {
@@ -37,11 +37,13 @@ export function SignInForm(props) {
 
         http.post('login', credentials)
         .then(res => {
-            const _token = res.data.token;
+            const _token = res.data;
             Token.setToken(_token);
-            navigation.navigate(props.navigateTo);
+            setClientToken(_token);
+            console.log(_token);
+            navigation.push('AccountScreen');
         }).catch(error => {
-            console.log(error);
+            // console.log(error);
             setErrors({ 'password': 'The phone number and password you entered don\'t match'});
         });
     }

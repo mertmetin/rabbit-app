@@ -19,19 +19,13 @@ function HomeScreen(props) {
   const [user, setUser] = React.useState({});
   const [destination, setDestination] = React.useState();
 
-  
-  React.useEffect(() => {
-    http.post('http://localhost:8000/getAuthUser', {})
-      .then(res => {
-        if (res.data) {
-          setLogin(true);
-          setUser(res.data);
-        }
-      }).catch(error => {
-        console.log(error);
-      })
-  }, []);
-  
+
+  http.post('/getUser', {})
+    .then(res => {
+      console.log(res);
+    }).catch(error => {
+      console.log(error);
+    });
 
   var addressData;
   var initialRegion;
@@ -67,9 +61,6 @@ function HomeScreen(props) {
         })
     }, []);
   }
-
-  // console.log(destination);
-
 
   return (
     <View style={styles.container}>
