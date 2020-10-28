@@ -18,10 +18,9 @@ function AccountScreen(props) {
     const [_token, setToken] = React.useState(null);
 
     useEffect(() => {
-        Token.getToken().then((_token) => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            Token.getToken().then((_token) => {
 
-            if (_token)
-            {
                 setToken((_token));
 
                 http.post('getUser', {}).then((res) => {
@@ -29,8 +28,9 @@ function AccountScreen(props) {
                 }).catch((error) => {
                     console.log(error);
                 })
-            }
+            });
         });
+
     }, []);
 
     const logOut = () => {
@@ -54,11 +54,13 @@ function AccountScreen(props) {
         </View>
     );
 
-    const userView = (
-        <View style={styles.container}>
-            <Text style={styles.name}>{user.name}</Text>
-            <Text style={styles.email}>{user.email}</Text>
-            <View>
+    const userView = (  
+        <View>
+            <View style={{ padding: 15 }}>
+                <Text style={styles.name}>{user.name}</Text>
+                <Text style={styles.email}>{user.email}</Text>
+            </View>
+            <View >
                 <Text style={styles.sectionContainer}>Profile</Text>
                 <OptionButton title={'Personal info'} routeName={'InfoScreen'} data={user} />
                 <OptionButton title={'Addresses'} routeName={'AddressScreen'} data={user.id} />
@@ -68,12 +70,14 @@ function AccountScreen(props) {
                 <Text style={styles.sectionContainer}>Security</Text>
                 <OptionButton title={'Change password'} routeName={'ChangePasswordScreen'} data={user.id} />
             </View>
-            <ActionButton style={'outlined'} title={'Log out'} onPress={logOut} />
+            <View style={{padding: 20}}>
+                <ActionButton style={'outlined'} title={'Log out'} onPress={logOut} />
+            </View>
         </View>
     );
  
 
-    const isLoggedIn = (_token) && true;
+    const isLoggedIn = (_token) && true;    
     const view = (isLoggedIn) ? userView : guestView;
         
     return (
@@ -86,11 +90,13 @@ function AccountScreen(props) {
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: 20,
-        paddingLeft: 15
+        margin: 10
+        // paddingTop: 20,
+        // paddingLeft: 15
     },  
     sectionContainer: {
-        marginTop: 50, 
+        marginTop: 30,
+        padding: 15, 
         fontSize: 18, 
         fontFamily: 'sodo-sans-semibold'
     },

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { SafeAreaView, Dimensions, StyleSheet, TouchableOpacity} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import MapView from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { validate } from 'validate.js/validate';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { Container, Header, Text, Content, Form, Item, Input, Label, Icon, View } from 'native-base';
@@ -47,6 +47,7 @@ function AddressDetailsForm(props) {
                     latitudeDelta: LATITUDE_DELTA,
                     longitudeDelta: LONGITUDE_DELTA
                 }}
+                provider={PROVIDER_GOOGLE}
                 region={region}
                 style={styles.map}>
                 <MapView.Marker
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
         height: 475
     },
     button: {
-        paddingTop: 10
+        padding: 20
     },
     text: {
         color: '#00754a',

@@ -17,6 +17,6 @@ export default function AddressDetails({ navigation, route }) {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20
+        // padding: 20
     }
 });
