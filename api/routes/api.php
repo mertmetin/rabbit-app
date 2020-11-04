@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-// Auth::routes();
 Route::post('/activateUser', 'Auth\RegisterController@activateUser');
 Route::post('/resendCode', 'Auth\RegisterController@resendCode');
 Route::post('/sendPasswordResetCode', 'Auth\ForgotPasswordController@sendPasswordResetCode');
@@ -41,7 +40,7 @@ Route::post('/getPromotions', 'Promotions\PromotionsController@get');
 Route::post('/getStore', 'Store\StoreController@getStore');
 Route::post('login', 'Auth\LoginController@login');
 Route::post('logout', 'Auth\LoginController@logout');
-    Route::post('getUser', 'UsersController@getUser');
+    // Route::post('getUser', 'UsersController@gestUser');
 
 
 // Route::middleware('auth:api')->post('/getUser', function(Request $request) {
@@ -49,9 +48,13 @@ Route::post('logout', 'Auth\LoginController@logout');
 // });
 
 
+// error_log(json_encode($_POST));
+
+
 
 // Route::post('getUser', 'UsersController@getUser');
  Route::group(['middleware' => ['auth:api']], function () {
+
 
     Route::post('getUser', 'UsersController@getUser');
 

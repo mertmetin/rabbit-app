@@ -1,9 +1,11 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { Platform, StyleSheet, Text, View, Dimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { CategoryCard } from '../components/CategoryCard';
 import http from '../helpers/Http';
+import Token from '../helpers/Token';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { CategoriesCards } from '../components/Cards/CategoriesCards';
 import AddressPickerButton from '../components/Buttons/AddressPickerButton';
@@ -13,29 +15,64 @@ import MapView from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import { connect } from 'react-redux'
 import { Ionicons } from '@expo/vector-icons';
+// import * as Location from 'expo-location';
 
 function HomeScreen(props) {
   var [isLoggedIn, setLogin] = React.useState(false);
+  const navigation = useNavigation();
   const [user, setUser] = React.useState({});
   const [destination, setDestination] = React.useState();
+  const [location, setLocation] = useState(null);
 
 
-  http.post('/getUser', {})
-    .then(res => {
-      console.log(res);
-    }).catch(error => {
-      console.log(error);
-    });
+
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener('focus', () => {
+
+  //       http.post('getUser', {}).then((res) => {
+  //         setUser(res.data);
+
+  //       }).catch((error) => {
+  //         console.log(error);
+  //       })
+
+
+
+
+  //     http.post('getStore', { address: addressData })
+  //       .then(res => {
+
+  //         console.log('mm');
+
+  //         if (res.data) {
+  //           setDestination(res.data);
+
+  //         } else {
+
+
+  //         }
+
+  //       }).catch(error => {
+
+
+  //       })
+
+
+
+  //   });
+
+  // }, []);
+
+
 
   var addressData;
   var initialRegion;
   var marker;
 
-  if (props.deliveryAddress.deliveryAddress)
-  {
+  if (props.deliveryAddress.deliveryAddress) {
     var addressData = props.deliveryAddress.deliveryAddress;
     var key = Object.keys(addressData)[0];
-    var addressData = addressData[key]; 
+    var addressData = addressData[key];
     initialRegion = {
       latitude: addressData.lat,
       longitude: addressData.lng
@@ -45,28 +82,27 @@ function HomeScreen(props) {
       latitude: addressData.lat,
       longitude: addressData.lng
     }
-
-
-    React.useEffect(() => {
-      http.post('getStore', { address: addressData })
-        .then(res => {
-
-          if (res.data) {
-            setDestination(res.data);
-          }
-          
-        }).catch(error => {
-          // console.log(error);
-
-        })
-    }, []);
   }
+
+
+
+          // (async () => {
+          //   let { status } = await Location.requestPermissionsAsync();
+          //   if (status !== 'granted') {
+          //     setErrorMsg('Permission to access location was denied');
+          //   }
+
+          //   let location = await Location.getCurrentPositionAsync({});
+          //   setDestination(location.coords);
+          // })();
+
+
 
   return (
     <View style={styles.container}>
-        <Map initialRegion={initialRegion} marker={marker} destination={destination} />
+        <Map initialRegion={initialRegion} marker={marker}  />
         <AddressPickerButton userId={user.id} address={addressData} />
-        <CategoriesCards />
+        {/* <CategoriesCards /> */}
       </View> 
   );
 }

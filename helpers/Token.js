@@ -4,19 +4,32 @@ import { get } from 'react-native/Libraries/Utilities/PixelRatio';
 const getToken = async () => {
     try {
         const item = await AsyncStorage.getItem('token');
-        const token = JSON.parse(item);
+        var token = JSON.parse(item);
+
         return token;
     } catch (error) {
         console.log(error);
     }
 }
 
+
 const setToken = async (token) => {
-    await AsyncStorage.setItem('token', JSON.stringify(token));
+    // try {
+        await AsyncStorage.setItem('token', JSON.stringify(token));
+    // } catch (e) {
+    //     console.log('here');
+    // }
 }
 
-const removeToken = async => {
-    AsyncStorage.removeItem('token');
+const removeToken = async () => {
+    // await AsyncStorage.removeItem('token');
+
+    AsyncStorage.removeItem('token', (err) => {
+        // key 'key' will be removed, if they existed
+        // callback to do some action after removal of item
+        console.log(err);
+    });
+
 }
 
 const Token = {

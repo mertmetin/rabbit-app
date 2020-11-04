@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Token from './Token';
 import { API_URL } from 'react-native-dotenv'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const config = { 
     baseURL: API_URL, 
@@ -9,13 +10,18 @@ const config = {
 }
 const http = axios.create(config);   
 
-// Set JSON Web Token in Client to be included in all calls
-export const setClientToken = token => {
-    http.interceptors.request.use(function (config) {
-        config.headers.Authorization = 'Bearer ' + token.token;
-
-        return config;
-    });
-};
+http.interceptors.request.use(
+    async config => {
+        var token = await AsyncStorage.getItem('token')
+        if (token) {
+            token = JSON.parse(token);
+            config.headers.Authorization = "Bearer " + token.token
+        }
+        return config
+    },
+    error => {
+        return Promise.reject(error)
+    }
+);
 
 export default http;

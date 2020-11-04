@@ -4,52 +4,63 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Picker } from 'react-native';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
-import axios from 'axios';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { OptionButton } from '../../../components/OptionButton';
 import { ActionButton } from '../../../components/ActionButton';
 import { useNavigation } from '@react-navigation/native';
-import http from '../../../helpers/Http';
 import Token from '../../../helpers/Token';
+import http from '../../../helpers/Http';
 
 function AccountScreen(props) {
     const [user, setUser] = React.useState({});
+    const [isLoggedIn, setLogin] = React.useState(false);
     const navigation = useNavigation();
-    const [_token, setToken] = React.useState(null);
+
+    const getUser = () => {
+        http.post('getUser').then((res) => {
+
+            setUser(res.data);
+        }, {}).catch((error) => {
+            console.log(error);
+        })
+    }
 
     useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
+        // const unsubscribe = navigation.addListener('focus', () => {
             Token.getToken().then((_token) => {
+                if (!_token)
+                    return;
 
-                setToken((_token));
-
-                http.post('getUser', {}).then((res) => {
-                    setUser(res.data);
-                }).catch((error) => {
-                    console.log(error);
-                })
+                setLogin(true);
+                getUser();
             });
-        });
-
+        // });
     }, []);
 
     const logOut = () => {
-        http.post('logout', { tokenId: _token.id })
-        .then(res => {
-            Token.removeToken();
-            navigation.push('AccountScreen');
+        Token.getToken().then((_token) => {
 
-        }).catch(error => {
-            console.log(error);
-        });
+            if (!_token)
+                return;
+
+            http.post('logout', { tokenId: _token.id })
+            .then(res => {
+
+                Token.removeToken();
+                setLogin(false);
+                navigation.push('AccountScreen');
+
+            }).catch(error => {
+                console.log(error);
+            });
+        })
     };
-
 
     const guestView = (
         <View style={styles.container}>
             <View style={{flexDirection: 'row'}}>
-                <ActionButton title={'Join now'} onPress={() => navigation.navigate('SignUp')} />
-                <ActionButton buttonStyle={'outlined'} title={'Sign in'} onPress={() => navigation.navigate('SignIn')} />
+                <ActionButton title={'Join now'} onPress={() => navigation.push('SignUp')} />
+                <ActionButton buttonStyle={'outlined'} title={'Sign in'} onPress={() => navigation.push('SignIn')} />
             </View>
         </View>
     );
@@ -74,10 +85,8 @@ function AccountScreen(props) {
                 <ActionButton style={'outlined'} title={'Log out'} onPress={logOut} />
             </View>
         </View>
-    );
- 
+    ); 
 
-    const isLoggedIn = (_token) && true;    
     const view = (isLoggedIn) ? userView : guestView;
         
     return (

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { validate } from 'validate.js/validate';
 import { showMessage, hideMessage } from "react-native-flash-message";
@@ -11,11 +12,11 @@ import http, { setClientToken } from '../../../helpers/Http';
 import Token from '../../../helpers/Token';
 
 export function SignInForm(props) {
-    const [phone, setPhoneNumber] = React.useState('');
-    const [password, setPassword] = React.useState('');
+    const [phone, setPhoneNumber] = React.useState(null);
+    const [password, setPassword] = React.useState(null);
     const [errors, setErrors] = React.useState([]);
     const navigation = useNavigation();
-
+    
     const onPress = () => {
         const fields = {
             phone: phone,
@@ -38,12 +39,12 @@ export function SignInForm(props) {
         http.post('login', credentials)
         .then(res => {
             const _token = res.data;
+            // setClientToken(_token);
+            Token.removeToken();
             Token.setToken(_token);
-            setClientToken(_token);
-            console.log(_token);
             navigation.push('AccountScreen');
         }).catch(error => {
-            // console.log(error);
+            console.log(error);
             setErrors({ 'password': 'The phone number and password you entered don\'t match'});
         });
     }
