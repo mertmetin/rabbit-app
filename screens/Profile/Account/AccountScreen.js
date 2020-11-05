@@ -26,7 +26,6 @@ function AccountScreen(props) {
     }
 
     useEffect(() => {
-        // const unsubscribe = navigation.addListener('focus', () => {
             Token.getToken().then((_token) => {
                 if (!_token)
                     return;
@@ -34,7 +33,6 @@ function AccountScreen(props) {
                 setLogin(true);
                 getUser();
             });
-        // });
     }, []);
 
     const logOut = () => {

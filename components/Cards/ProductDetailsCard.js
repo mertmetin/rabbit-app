@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Image, ImageBackground, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ImageBackground, Platform, StyleSheet, Text, TouchableOpacity, SafeAreaView, View } from 'react-native';
 import { ActionButton } from '../ActionButton';
 import { IncreaseDecreaseInput } from '../IncreaseDecreaseInput';
 import {connect} from 'react-redux';
@@ -26,7 +26,7 @@ export function ProductDetailsCard(props) {
     }
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View>
                 <View style={styles.imgContainer}>
                     <Image source={image} style={styles.img} />
@@ -45,7 +45,7 @@ export function ProductDetailsCard(props) {
                 <ActionButton style={[showAddToCartButton, styles.btnAddToCart]} title={"Add to Cart"} onPress={onPress} />
                 <IncreaseDecreaseInput style={showIncreaseDecreaseInput} onDecrease={onDecrease} onIncrease={onIncrease} start={(itemCount) ? itemCount : 1} />
             </View>
-        </View>
+        </SafeAreaView>
     )
 }
 
@@ -105,7 +105,6 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
         elevation: 15,
         width: '100%',
-        alignItems: 'center', 
-        marginBottom: 10
+        alignItems: 'center'
     }
 });

@@ -15,7 +15,6 @@ import MapView from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import { connect } from 'react-redux'
 import { Ionicons } from '@expo/vector-icons';
-// import * as Location from 'expo-location';
 
 function HomeScreen(props) {
   var [isLoggedIn, setLogin] = React.useState(false);
@@ -24,45 +23,12 @@ function HomeScreen(props) {
   const [destination, setDestination] = React.useState();
   const [location, setLocation] = useState(null);
 
-
-
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener('focus', () => {
-
-  //       http.post('getUser', {}).then((res) => {
-  //         setUser(res.data);
-
-  //       }).catch((error) => {
-  //         console.log(error);
-  //       })
-
-
-
-
-  //     http.post('getStore', { address: addressData })
-  //       .then(res => {
-
-  //         console.log('mm');
-
-  //         if (res.data) {
-  //           setDestination(res.data);
-
-  //         } else {
-
-
-  //         }
-
-  //       }).catch(error => {
-
-
-  //       })
-
-
-
-  //   });
-
-  // }, []);
-
+  
+  useEffect(() => {
+    http.post('getUser').then((res) => {
+      setUser(res.data);
+    }); 
+  }, []);
 
 
   var addressData;
@@ -85,24 +51,11 @@ function HomeScreen(props) {
   }
 
 
-
-          // (async () => {
-          //   let { status } = await Location.requestPermissionsAsync();
-          //   if (status !== 'granted') {
-          //     setErrorMsg('Permission to access location was denied');
-          //   }
-
-          //   let location = await Location.getCurrentPositionAsync({});
-          //   setDestination(location.coords);
-          // })();
-
-
-
   return (
     <View style={styles.container}>
         <Map initialRegion={initialRegion} marker={marker}  />
         <AddressPickerButton userId={user.id} address={addressData} />
-        {/* <CategoriesCards /> */}
+        <CategoriesCards />
       </View> 
   );
 }

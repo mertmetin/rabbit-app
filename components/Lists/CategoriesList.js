@@ -159,10 +159,16 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         flexDirection: 'row',
         width: '100%',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 0.1 },
-        shadowOpacity: 0.8,
-        shadowRadius: 2,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+
+        elevation: 5,
+        overflow: 'visible'
     },
     sublistContainerStyle: {
 
@@ -178,7 +184,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontFamily: 'sodo-sans-bold',
         color: '#00754a',
-        marginRight: 10
+        marginRight: 10,
+
     },
     sublistTextSelected: {
         color: '#000'

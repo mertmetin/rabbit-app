@@ -28,8 +28,7 @@ export function ProductsCards(props) {
     React.useEffect(() => {
         http.post('getProducts', {
             category: category
-        })
-        .then(res => {
+        }).then(res => {
             if (!res.data)
                 return;
 
@@ -75,7 +74,7 @@ const styles = StyleSheet.create({
     header: {
         fontSize: 20,
         fontFamily: 'sodo-sans-semibold',
-        marginBottom: 10
+        marginBottom: 15
     },
     title: {
         fontSize: 24

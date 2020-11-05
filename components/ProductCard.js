@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { View, Image, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { SafeAreaView, View, Image, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { RectButton} from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
 export function ProductCard(props) {
@@ -8,30 +9,35 @@ export function ProductCard(props) {
 
     const onPress = () => {
         navigation.navigate(props.routeName, { item: item });
-        // props.onPress(item);
     };
 
     return (
-        <View style={styles.container}>
-            <TouchableOpacity onPress={onPress} style={{alignItems:'center'}}>
-                <View style={{ backgroundColor: '#fff', borderRadius: 5 }}>
-                    <Image style={styles.img} source={{ uri: 'http://localhost:8000/storage/' + item.image }} />
-                </View>
-                <View style={{alignItems: 'flex-start'}}>
-                    <Text style={styles.text}>{item.title}</Text>
-                    <Text style={styles.text}>${item.price}</Text>
-                </View>
-            </TouchableOpacity>
-        </View>
+        <SafeAreaView style={styles.container}>
+            <View style={styles.imgContainer}>
+                <RectButton onPress={onPress}>
+                    <View>
+                        <View style={{ backgroundColor: '#fff', borderRadius: 5, alignItems: 'center' }}>
+                            <Image style={styles.img} source={{ url: 'http://localhost:8000/storage/' + item.image }} />
+                        </View>
+                    </View>
+                </RectButton>
+            </View>
+            <View style={{ alignItems: 'flex-start', marginTop: 10, marginLeft: 2.5 }}>
+                <Text style={styles.title}>{item.title}</Text>
+                <Text style={styles.price}>${item.price}</Text>
+            </View>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        // height: 75,
-        // width: '33%',
-        flexBasis: '32.5%',
+        flexBasis: '30%',
         padding: 5,
+        elevation: 5,
+        marginRight: 10
+    },
+    imgContainer: {
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -39,22 +45,24 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-
-        elevation: 5,
-        // boxShadow: 0px 4px 42px rgba(0, 0, 0, 0.25);
     },
     img: {
         width: 100,
         height: 100,
         resizeMode: 'cover',
         // alignItems: 'center'
-        margin: 5
+        margin: 5,
     },
-    text: {
-        fontSize: 16,
-        textAlign: 'center',
-        marginTop: 10,
-        color: '#22292F',
-        fontFamily: 'sodo-sans-regular'
+    title: {
+        fontSize: 14,
+        marginBottom: 5,
+        fontFamily: 'sodo-sans-regular',
+        color: '#22292F'
+    },  
+    price: {
+        fontSize: 15,
+        fontWeight: 'bold',
+        color: '#00754a',
+        marginLeft: 2.5
     }
 });
