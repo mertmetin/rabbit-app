@@ -7,78 +7,50 @@ import MapViewDirections from 'react-native-maps-directions';
 // import Geolocation from '@react-native-community/geolocation';
 
 function Map(props) {
-    var initialRegion = props.initialRegion;
+    var marker = props.marker;
+    var region = props.region;
     var destination = props.destination;
     const { width, height } = Dimensions.get('window');
     const ASPECT_RATIO = width / height;
-    const LATITUDE_DELTA = 0.0933;
-    const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO / 4;
-    const currentCoordinates = {
-        latitude: 45.415355,
-        longitude: -75.670803
-    }
+    const LATITUDE_DELTA = 0.0401;
+    const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO / 2;
+    var mapMarkers = [];
+    var mapViewDirections = null;
+ 
+    if (!region) 
+        region = marker;
+   
+    region.latitudeDelta = LATITUDE_DELTA;
+    region.longitudeDelta = LONGITUDE_DELTA;
 
-    if (!initialRegion.latitude || !initialRegion.longitude)
+    if (marker) 
+        mapMarkers.push(<MapView.Marker coordinate={marker} />);
+
+    if (destination)
     {
-        initialRegion.latitude = currentCoordinates.latitude;
-        initialRegion.longitude = currentCoordinates.longitude;
-    }
-
-    initialRegion.latitudeDelta = LATITUDE_DELTA;
-    initialRegion.longitudeDelta = LONGITUDE_DELTA;
-
-    var region = {
-        latitude: initialRegion.latitude,
-        longitude: initialRegion.longitude,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA
-    }
-
-    var markerCoords;
-
-    if (props.marker)
-    {
-        const marker = props.marker;
-
-        if (marker.latitude && marker.longitude)
-        {
-            markerCoords = {
-                latitude: parseFloat(marker.latitude),
-                longitude: parseFloat(marker.longitude),
-                latitudeDelta: LATITUDE_DELTA,
-                longitudeDelta: LONGITUDE_DELTA
-            }
-        }
+        mapMarkers.push(<MapView.Marker coordinate={destination} />);
+        mapViewDirections = (
+            <MapViewDirections
+                origin={marker}
+                destination={destination}
+                apikey={'***REMOVED***'}
+                strokeWidth={3}
+                strokeColor="#00754a"
+                onReady={result => { }}
+            />
+        )
     }
 
     return (
         <MapView
-            initialRegion={initialRegion}
             provider={PROVIDER_GOOGLE}
             region={region}
             style={ styles.map }>
-            {markerCoords &&
-                <MapView.Marker coordinate={markerCoords} />
-            }
+            {mapMarkers}
+            {mapViewDirections}
 
-            { destination &&
-                <MapView.Marker coordinate={destination} />
-            }
-
-            { destination &&
-                <MapViewDirections
-                origin={region}
-                destination={destination}
-                apikey={'***REMOVED***'}
-                    strokeWidth={3}
-                    strokeColor="hotpink"
-                onReady={result => {
-                }}
-                />
-            }
         </MapView>
     );
-
 }
 
 const styles = StyleSheet.create({

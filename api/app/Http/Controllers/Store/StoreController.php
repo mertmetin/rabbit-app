@@ -18,12 +18,13 @@ class StoreController extends Controller
         $addressLat = $address['lat'];
         $addressLng = $address['lng'];
 
-        foreach ($stores as $store) {
+        foreach ($stores as $key => $store) {
             $storeLat = $store['coordinates']->getLat();
             $storeLng = $store['coordinates']->getLng();
             $dist = $this->getDistance($storeLat, $storeLng, $addressLat, $addressLng);
 
             if ($dist < 10) {
+
                 return [
                     'latitude' => $storeLat, 
                     'longitude' => $storeLng

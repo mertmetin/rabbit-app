@@ -1,62 +1,71 @@
 import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Platform, StyleSheet, Text, View, Dimensions } from 'react-native';
+import { Platform, StyleSheet, Text, View, SafeAreaView, Dimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { CategoryCard } from '../components/CategoryCard';
 import http from '../helpers/Http';
 import Token from '../helpers/Token';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { CategoriesCards } from '../components/Cards/CategoriesCards';
-import AddressPickerButton from '../components/Buttons/AddressPickerButton';
 import Map from '../components/Other/Map';
-import { useNavigation } from '@react-navigation/native';
-import MapView from 'react-native-maps';
-import MapViewDirections from 'react-native-maps-directions';
+// import DeliveryMap from '../components/Other/DeliveryMap';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { connect } from 'react-redux'
 import { Ionicons } from '@expo/vector-icons';
+import DeliveryMap from '../components/Other/DeliveryMap';
+import AddressPickerButton from '../components/Buttons/AddressPickerButton';
+
 
 function HomeScreen(props) {
-  var [isLoggedIn, setLogin] = React.useState(false);
-  const navigation = useNavigation();
+  // var [isLoggedIn, setLogin] = React.useState(false);
+  // const navigation = useNavigation();
   const [user, setUser] = React.useState({});
-  const [destination, setDestination] = React.useState();
-  const [location, setLocation] = useState(null);
+  const [store, setStore] = React.useState();
 
-  
+  const deliveryAddress = props.state.deliveryAddress;
+
+  var key = Object.keys(deliveryAddress)[0];
+  var address = deliveryAddress[key];
+
   useEffect(() => {
-    http.post('getUser').then((res) => {
-      setUser(res.data);
-    }); 
-  }, []);
+    http.post('getStore', { address: address }).then((response) => {
+      if (response.data) {
+        var data = response.data;
 
+        setStore(data);
+      } else {
+        setStore(false);
+      }
+    });
 
-  var addressData;
-  var initialRegion;
-  var marker;
+    const getUser = () => {
+      http.post('getUser').then((res) => {
 
-  if (props.deliveryAddress.deliveryAddress) {
-    var addressData = props.deliveryAddress.deliveryAddress;
-    var key = Object.keys(addressData)[0];
-    var addressData = addressData[key];
-    initialRegion = {
-      latitude: addressData.lat,
-      longitude: addressData.lng
+        setUser(res.data);
+      }, {}).catch((error) => {
+        console.log(error);
+      })
     }
 
-    marker = {
-      latitude: addressData.lat,
-      longitude: addressData.lng
-    }
-  }
+
+    Token.getToken().then((_token) => {
+      if (!_token)
+        return;
+
+      getUser();
+    });
+
+  }, [address.id]);
 
 
   return (
-    <View style={styles.container}>
-        <Map initialRegion={initialRegion} marker={marker}  />
-        <AddressPickerButton userId={user.id} address={addressData} />
-        <CategoriesCards />
-      </View> 
+    <SafeAreaView style={styles.container}>
+      {store ? <Map marker={{ latitude: parseFloat(address.lat), 
+          longitude: parseFloat(address.lng)}} destination={store} /> : <Text>asd</Text>}
+      <AddressPickerButton userId={user.id} address={address} />
+      <CategoriesCards />
+    </SafeAreaView> 
   );
 }
 
@@ -70,7 +79,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   return {
-    deliveryAddress: state
+    state
   }
 }
 

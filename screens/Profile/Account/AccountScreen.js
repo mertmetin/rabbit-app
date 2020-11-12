@@ -30,6 +30,8 @@ function AccountScreen(props) {
                 if (!_token)
                     return;
 
+                console.log(_token);
+
                 setLogin(true);
                 getUser();
             });

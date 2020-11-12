@@ -38,6 +38,8 @@ Route::post('/getProducts', 'Product\ProductController@get');
 Route::post('/getProductCategories', 'Product\ProductCategoryController@get');
 Route::post('/getPromotions', 'Promotions\PromotionsController@get');
 Route::post('/getStore', 'Store\StoreController@getStore');
+Route::post('/getStore2', 'Store\StoreController@getStore2');
+
 Route::post('login', 'Auth\LoginController@login');
 Route::post('logout', 'Auth\LoginController@logout');
     // Route::post('getUser', 'UsersController@gestUser');

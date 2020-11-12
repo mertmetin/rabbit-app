@@ -36,7 +36,7 @@ function UserAddressesList(props) {
         else if (addressType == 'other')
             icon = 'md-navigate';
 
-        if (props.deliveryAddress.deliveryAddress[item.id])
+        if (props.state.deliveryAddress[item.id])
         {
             checkMarkIcon = (<Ionicons
                 name={'ios-checkmark-circle'}
@@ -151,8 +151,11 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
     return {
-        deliveryAddress: state
+        state
     }
+    // return {
+    //     deliveryAddress: state
+    // }
 }
 
 const mapDispatchToProps = (dispatch) => {
