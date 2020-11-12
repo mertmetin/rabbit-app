@@ -52,20 +52,14 @@ class LoginController extends Controller
 
         $credentials = $request->only('phone', 'password');
 
-        if( Auth::attempt($credentials) ) {
+        if (Auth::attempt($credentials)) {
             $user = Auth::user();
-
             $token = $user->createToken($user->phone.'-'. now());
 
             return [
                 'id' => $token->token->id,
                 'token' => $token->accessToken
             ];
-
-            // return ([
-            //     'id' => 'asad',
-            //     'token' => 'asd'
-            // ]);
         }
     }
 

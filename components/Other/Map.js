@@ -45,7 +45,8 @@ function Map(props) {
         <MapView
             provider={PROVIDER_GOOGLE}
             region={region}
-            style={ styles.map }>
+            style={ styles.map }
+            scrollEnabled={false}>
             {mapMarkers}
             {mapViewDirections}
 

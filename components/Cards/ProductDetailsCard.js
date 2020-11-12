@@ -32,7 +32,7 @@ export function ProductDetailsCard(props) {
                     <Image source={image} style={styles.img} />
                 </View>
                 <View style={styles.contentContainer}>
-                    <View>
+                    <View style={{flexBasis: '80%'}}>
                         <Text style={styles.textTitle}>{item.title}</Text>
                         <Text style={styles.textDescription}>{item.description}</Text>
                     </View>
@@ -91,10 +91,9 @@ const styles = StyleSheet.create({
         fontSize: 16
     },
     btnAddToCart: {
-        paddingBottom: 20,
-        alignSelf: 'center',
         width: '100%',
-        textAlign: 'center'
+        marginLeft: 20,
+        marginRight: 20
     },
     footer: {
         padding: 20,
@@ -104,7 +103,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.40,
         shadowRadius: 2,
         elevation: 15,
-        width: '100%',
-        alignItems: 'center'
+        // width: '100%',
+        alignItems: 'center',
     }
 });

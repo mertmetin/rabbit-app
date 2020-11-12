@@ -11,7 +11,7 @@ export function CategoryCard(props) {
 
     return (    
         <View style={styles.container}>
-            <TouchableOpacity onPress={onPress} style={{alignItems:'center'}}>
+            <TouchableOpacity onPress={onPress} style={{ alignItems: 'center' }} activeOpacity={.7}>
                 <View style={{backgroundColor: '#fff', borderRadius: 5}}>  
                     <Image style={styles.img} source={{ uri: 'http://localhost:8000/storage/' + item.image }} />
                 </View>

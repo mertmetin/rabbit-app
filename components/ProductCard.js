@@ -13,19 +13,17 @@ export function ProductCard(props) {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.imgContainer}>
-                <RectButton onPress={onPress}>
-                    <View>
-                        <View style={{ backgroundColor: '#fff', borderRadius: 5, alignItems: 'center' }}>
-                            <Image style={styles.img} source={{ url: 'http://localhost:8000/storage/' + item.image }} />
-                        </View>
+            <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
+                <View style={styles.imgContainer}>
+                    <View style={{ backgroundColor: '#fff', borderRadius: 5, alignItems: 'center' }}>
+                        <Image style={styles.img} source={{ url: 'http://localhost:8000/storage/' + item.image }} />
                     </View>
-                </RectButton>
-            </View>
-            <View style={{ alignItems: 'flex-start', marginTop: 10, marginLeft: 2.5 }}>
-                <Text style={styles.title}>{item.title}</Text>
-                <Text style={styles.price}>${item.price}</Text>
-            </View>
+                </View>
+                <View style={{ alignItems: 'flex-start', marginTop: 10, marginLeft: 2.5 }}>
+                    <Text style={styles.title}>{item.title}</Text>
+                    <Text style={styles.price}>${item.price}</Text>
+                </View>
+            </TouchableOpacity>
         </SafeAreaView>
     );
 }

@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { View, Image, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Colors from '../constants/Colors';
+import { RectButton } from 'react-native-gesture-handler';
 
 export function ActionButton(props) {
     const buttonStyle = props.buttonStyle;
@@ -18,7 +19,7 @@ export function ActionButton(props) {
     }
             
     return (
-        <TouchableOpacity style={props.style} onPress={props.onPress}>
+        <TouchableOpacity style={props.style} onPress={props.onPress} activeOpacity={.7}>
             <View style={containerStyle}>
                 <Text style={textStyle}>{props.title}</Text>
             </View>
@@ -34,7 +35,7 @@ const styles = StyleSheet.create({
         borderLeftWidth: 1,
         borderRightWidth: 1,
         borderRadius: 50,
-        marginRight: 20
+        // marginRight: 20
 
     },
     text: {
