@@ -15,12 +15,13 @@ class ProductController extends Controller
             throw new \Exception('Invalid request.');
 
         $category = $request->input('category');
+
         $productCategories = ProductCategory::find($category)->subCategories;
 
         foreach ($productCategories as $key => &$productCategory)
         {
-            $productCategories[$key]['data'] = 
-                [Product::where('category', $productCategory['id'])->get()];
+            $products = Product::where('category', $productCategory['id'])->get();
+            $productCategories[$key]['data'] = [$products];
         }
 
         return $productCategories;

@@ -6,11 +6,12 @@ import { ProductsCards } from '../components/Cards/ProductsCards';
 
 export default function ProductsScreen({navigation, route}) {
     const category = route.params.item.id;
+    const storeId = route.params.storeId;
 
     return(
         <View>
-            <CategoriesList category={category} />
-            <ProductsCards category={category} />
+            <CategoriesList category={category} storeId={storeId}/>
+            <ProductsCards category={category} storeId={storeId} />
         </View>
     );
 }

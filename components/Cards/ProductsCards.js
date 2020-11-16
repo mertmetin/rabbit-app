@@ -8,6 +8,7 @@ import http from '../../helpers/Http';
 
 export function ProductsCards(props) {
     const category = props.category;
+    const storeId = props.storeId;
     const [sections, setSections] = React.useState([]);
 
     const renderList = ({ item }) => {
@@ -26,12 +27,13 @@ export function ProductsCards(props) {
     } 
 
     React.useEffect(() => {
-        http.post('getProducts', {
-            category: category
+        http.post('getStoreProducts', {
+            category: category,
+            storeId: storeId
         }).then(res => {
             if (!res.data)
                 return;
-
+            
             const data = res.data;
             const sections = (
                 <SectionList

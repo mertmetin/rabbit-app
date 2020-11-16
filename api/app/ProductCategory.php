@@ -15,6 +15,11 @@ class ProductCategory extends Model
         'title', 'description', 'img'
     ];
 
+    public function parent()
+    {
+        return $this->belongsTo('App\ProductCategory', 'category_id');
+    }
+
     protected function categories()
     {
         return $this->belongsTo('App\ProductCategory', 'category_id');

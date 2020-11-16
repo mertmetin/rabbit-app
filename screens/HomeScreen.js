@@ -9,7 +9,6 @@ import Token from '../helpers/Token';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { CategoriesCards } from '../components/Cards/CategoriesCards';
 import Map from '../components/Other/Map';
-// import DeliveryMap from '../components/Other/DeliveryMap';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { connect } from 'react-redux'
 import { Ionicons } from '@expo/vector-icons';
@@ -58,13 +57,12 @@ function HomeScreen(props) {
 
   }, [address.id]);
 
-
   return (
     <SafeAreaView style={styles.container}>
       {store ? <Map marker={{ latitude: parseFloat(address.lat), 
           longitude: parseFloat(address.lng)}} destination={store} /> : <Text>asd</Text>}
       <AddressPickerButton userId={user.id} address={address} />
-      <CategoriesCards />
+      {store && <CategoriesCards storeId={store.id} /> }
     </SafeAreaView> 
   );
 }

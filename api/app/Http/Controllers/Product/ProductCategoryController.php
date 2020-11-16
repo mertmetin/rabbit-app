@@ -11,7 +11,6 @@ class ProductCategoryController extends Controller
 {
     protected function get(Request $request)
     {
-        error_log(json_encode(Store::all()));
         if ($request->input('withSubCategories'))
             return ProductCategory::all();
 

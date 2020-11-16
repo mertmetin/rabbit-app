@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, View, SafeAreaView, FlatList, Text, TouchableOpacity } from 'react-native';
 import { showMessage, hideMessage } from "react-native-flash-message";
@@ -8,27 +8,28 @@ import http from '../../helpers/Http';
 export function CategoriesCards(props) {
     const [selected, setSelected] = React.useState(new Map());
     const [data, setData] = React.useState([]);
+    const storeId = props.storeId;
 
-    React.useEffect(() => {
-        http.post('getProductCategories', {})
-        .then(res => {
-            setData(res.data);
-        }).catch(error => {
-            if (error.response) {
-                const msg = error.response.data.message;
-                showMessage({
-                    message: msg,
-                    type: "danger"
-                });
-            }
-        })
+    useEffect(() => {
+        http.post('getStoreProductCategories', {storeId: storeId})
+            .then(res => {
+                setData(Object.values(res.data));
+            }).catch(error => { 
+                if (error.response) {
+                    const msg = error.response.data.message;
+                    showMessage({
+                        message: msg,
+                        type: "danger"
+                    });
+                }
+            })
     }, []);
 
     function Item({ item }) {
         return (
             <CategoryCard 
                 routeName={'Products'}
-                item={item}
+                item={item} storeId={storeId}
             />
         );
     }
@@ -39,7 +40,7 @@ export function CategoriesCards(props) {
                 data={data}
                 renderItem={({ item }) => (
                     <Item
-                        item={item}
+                        item={item} 
                     />
                 )}
                 numColumns={4}

@@ -5,8 +5,9 @@ import { useNavigation } from '@react-navigation/native';
 export function CategoryCard(props) {
     const navigation = useNavigation();
     const item = props.item;
+    const storeId = props.storeId;
     const onPress = () => {
-        navigation.navigate(props.routeName, {item: item});
+        navigation.navigate(props.routeName, {item: item, storeId: storeId});
     };
 
     return (    

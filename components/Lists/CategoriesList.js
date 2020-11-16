@@ -36,7 +36,7 @@ export function CategoriesList(props) {
         }
 
         const onPress = () => {                
-            navigation.push('Products', {item: item});
+            navigation.push('Products', {item: item, storeId: props.storeId});
         }
 
         return(
@@ -53,7 +53,7 @@ export function CategoriesList(props) {
         var sublistTextStyle = styles.sublistText;
 
         const onPress = () => {
-            navigation.push('Products', { item: item });
+            navigation.push('Products', { item: item, storeId: props.storeId });
         }
 
         return (
@@ -66,34 +66,22 @@ export function CategoriesList(props) {
     }
 
     React.useEffect(() => {
-        http.post('getProductCategories', { 
-            withSubCategories: true }
+        http.post('getStoreProductCategories', { 
+            storeId: props.storeId }
         )
         .then(res => {
             if (!res.data)
                 return;
 
-            setList(res.data);
-
-            const data = res.data;
-            var categories = [];
-            var subCategories = [];
-
-            for (let k in data)
-            {
-                var cat = data[k];
-                var catId = cat.category_id;
-
-                if (!catId)
-                    categories.push(cat);
-                else if (catId == category)
-                    subCategories.push(cat);
-            }
-
+            // setList(res.data);
+            var data = res.data;
+            var categories = Object.values(data);
+            var subCategories = Object.values(data[category].subcategories);
             setCategories(categories);
             setSubCategories(subCategories);
 
-            // makeItems(res.data);
+
+  
         }).catch(error => {
             if (error.response) {
                 const msg = error.response.data.message;

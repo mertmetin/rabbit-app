@@ -26,6 +26,7 @@ class StoreController extends Controller
             if ($dist < 10) {
 
                 return [
+                    'id' => $store['id'],
                     'latitude' => $storeLat, 
                     'longitude' => $storeLng
                 ];
