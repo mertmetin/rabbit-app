@@ -24,7 +24,7 @@ export function PasswordResetForm(props) {
             return false;
         }
 
-        http.post('sendPasswordResetCode', {
+        http.post('users/password/recovery', {
             phone: phone,
         })
         .then(res => {

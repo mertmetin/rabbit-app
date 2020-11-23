@@ -17,7 +17,7 @@ export function UserActivationForm(props) {
     const navigation = useNavigation();
 
     const resendCode = () => {
-        http.post('resendCode', {
+        http.post(`users/${userId}/token/resend`, {
             user_id: userId,
             phone: phone
         })
@@ -46,8 +46,7 @@ export function UserActivationForm(props) {
             return false;
         }
         
-        http.post('activateUser', {
-            user_id: userId,
+        http.post(`users/${userId}/activate`, {
             token: token,
         })
         .then(res => {

@@ -26,7 +26,7 @@ export default function PromotionsScreen() {
 
 
     React.useEffect(() => {
-        http.post('getPromotions').then(res => {
+        http.get('promotions').then(res => {
             if (!res.data)
                 return;
 

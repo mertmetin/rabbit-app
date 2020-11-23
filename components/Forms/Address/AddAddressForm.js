@@ -57,8 +57,8 @@ export function AddAddressForm(props) {
             address.lat = geometry.location.lat;
             address.lng = geometry.location.lng;
 
-            http.post('addAddress', {
-                userId: userId,
+            http.post(`users/${userId}/addresses`, {
+                // userId: userId,
                 address: address,
             })
             .then(res => {
@@ -78,7 +78,7 @@ export function AddAddressForm(props) {
     }
 
     React.useEffect(() => {
-        http.post('getAddressTypes', {})
+        http.get('addresses/types', {})
         .then(res => {
             if (!res.data)
                 return;

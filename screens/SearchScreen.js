@@ -14,8 +14,6 @@ function SearchScreen(props) {
   var address = deliveryAddress[key];
   const [store, setStore] = React.useState();
 
-  console.log(address);
-
   useEffect(() => {
     http.post('getStore', { address: address }).then((response) => {
       if (response.data) {

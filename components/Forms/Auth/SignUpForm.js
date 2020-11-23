@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { validate } from 'validate.js/validate';
+import { SafeAreaView } from 'react-native';
 import { Container, Header, Content, Form, Item, Input, Label, Icon, View } from 'native-base';
 import { FloatingLabel } from '../../FloatingLabel';
 import { ActionButton } from '../../ActionButton';
@@ -30,7 +31,7 @@ export function SignUpForm(props) {
             return false;
         }
 
-        axios.http('register', {
+        http.post('users', {
             phone: phoneNumber,
             name: fullName,
             email: email,
@@ -41,17 +42,17 @@ export function SignUpForm(props) {
             const phone = phoneNumber;
             navigation.navigate(props.navigateTo, { user_id: user_id, phone: phone });
         }).catch(error => {
-            console.log(error.response.data);
+            console.log(error);
         })
     }
 
     return(
-        <View>
+        <SafeAreaView>
             <FloatingLabel label={'Phone Number'} type={'phone_number'} value={phoneNumber} onTextChange={setPhoneNumber} error={errors.phone} />
             <FloatingLabel label={'Password (min 4 chars)'} value={password} onTextChange={setPassword} secure={true} error={errors.password} />
             <FloatingLabel label={'Fullname'} value={fullName} onTextChange={setFullName} error={errors.fullName} />
             <FloatingLabel label={'Email'} value={email} onTextChange={setEmail} error={errors.email} />
             <ActionButton title={'Join now'} onPress={onPress} />
-        </View>
+        </SafeAreaView>
     )
 }

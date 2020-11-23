@@ -46,9 +46,10 @@ function UserAddressesList(props) {
 
 
         const removeAddress = () => {
-            http.post('deleteAddress', {
-                id: item.id,
-                userId: userId
+            const addressId = item.id;
+            http.delete(`users/${userId}/addresses/${addressId}`, {
+                // id: item.id,
+                // userId: userId
             }).then(
                 navigation.push('AddressScreen', { data: userId })
             ).catch(error => {
@@ -97,8 +98,8 @@ function UserAddressesList(props) {
     }
 
     React.useEffect(() => {
-        http.post('getAddresses', {
-            userId: userId
+        http.get(`users/${userId}/addresses`, {
+            // userId: userId
         })
         .then(res => {
             if (!res.data)

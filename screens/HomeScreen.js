@@ -39,7 +39,7 @@ function HomeScreen(props) {
     });
 
     const getUser = () => {
-      http.post('getUser').then((res) => {
+      http.get('user').then((res) => {
 
         setUser(res.data);
       }, {}).catch((error) => {

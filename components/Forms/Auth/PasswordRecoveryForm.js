@@ -29,7 +29,7 @@ export function PasswordRecoveryForm(props) {
             return false;
         }
 
-        http.post('resetPassword', {
+        http.patch(`users/${userId}/password/reset`, {
             user_id: userId,
             token: token,
             password: password
@@ -50,7 +50,7 @@ export function PasswordRecoveryForm(props) {
     }
 
     const resendCode = () => {
-        http.post('sendPasswordResetCode', {
+        http.post('users/password/recovery', {
             user_id: userId,
             phone: phone
         })
@@ -60,11 +60,11 @@ export function PasswordRecoveryForm(props) {
                 type: "success",
             });
         }).catch(error => {
-            const msg = error.response.data.message;
-            showMessage({
-                message: msg,
-                type: "danger"
-            });
+            // const msg = error.response.data.message;
+            // showMessage({
+            //     message: msg,
+            //     type: "danger"
+            // });
         })
     }
 

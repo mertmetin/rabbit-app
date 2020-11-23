@@ -17,7 +17,7 @@ function AccountScreen(props) {
     const navigation = useNavigation();
 
     const getUser = () => {
-        http.post('getUser').then((res) => {
+        http.get('user').then((res) => {
 
             setUser(res.data);
         }, {}).catch((error) => {
@@ -29,8 +29,6 @@ function AccountScreen(props) {
             Token.getToken().then((_token) => {
                 if (!_token)
                     return;
-
-                console.log(_token);
 
                 setLogin(true);
                 getUser();

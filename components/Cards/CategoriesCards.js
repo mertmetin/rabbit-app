@@ -11,7 +11,7 @@ export function CategoriesCards(props) {
     const storeId = props.storeId;
 
     useEffect(() => {
-        http.post('getStoreProductCategories', {storeId: storeId})
+        http.get(`/stores/${storeId}/categories`)
             .then(res => {
                 setData(Object.values(res.data));
             }).catch(error => { 

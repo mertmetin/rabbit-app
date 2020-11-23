@@ -27,7 +27,7 @@ export function ChangePasswordForm(props) {
             return false;
         }
 
-        http.post('changePassword', {
+        http.patch(`users/${userId}/password/change`, {
             userId: userId,
             oldPassword: oldPassword,
             password: password

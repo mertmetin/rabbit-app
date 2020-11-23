@@ -35,14 +35,17 @@ export function SignInForm(props) {
             phone: phone,
             password: password
         }
+        
 
         http.post('login', credentials)
         .then(res => {
             const _token = res.data;
+            console.log(res);
+
             // setClientToken(_token);
             Token.removeToken();
             Token.setToken(_token);
-            navigation.push('AccountScreen');
+            // navigation.push('AccountScreen');
         }).catch(error => {
             console.log(error);
             setErrors({ 'password': 'The phone number and password you entered don\'t match'});

@@ -27,10 +27,8 @@ export function ProductsCards(props) {
     } 
 
     React.useEffect(() => {
-        http.post('getStoreProducts', {
-            category: category,
-            storeId: storeId
-        }).then(res => {
+        http.get(`/stores/${storeId}/products?category=${category}`)
+        .then(res => {
             if (!res.data)
                 return;
             
