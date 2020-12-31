@@ -45,6 +45,8 @@ export function AddCardForm(props) {
             }
         })
         .then(res => {
+            navigation.navigate('CardsScreen');
+
             // const customerId = res.data;
 
             // http.post('payment/methods', {
