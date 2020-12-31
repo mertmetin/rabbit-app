@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { validate } from 'validate.js/validate';
 import { SafeAreaView } from 'react-native';
+import { showMessage, hideMessage } from "react-native-flash-message";
 import { Container, Header, Content, Form, Item, Input, Label, Icon, View } from 'native-base';
 import { FloatingLabel } from '../../FloatingLabel';
 import { ActionButton } from '../../ActionButton';
 import constraints from '../../../constants/Constraints';
 import http from '../../../helpers/Http';
+import axios from 'axios';
 
 export function SignUpForm(props) {
     const [phoneNumber, setPhoneNumber] = React.useState('');
@@ -38,11 +40,16 @@ export function SignUpForm(props) {
             password: password
         })
         .then(res => {
-            const user_id = res.data;
-            const phone = phoneNumber;
-            navigation.navigate(props.navigateTo, { user_id: user_id, phone: phone });
+            const data = res.data;
+            console.log(data);
+
+            navigation.navigate(props.navigateTo, { data: data, phone: phoneNumber });
         }).catch(error => {
-            console.log(error);
+            const msg = error.response.data.message;
+            showMessage({
+                message: msg,
+                type: "danger",
+            });
         })
     }
 

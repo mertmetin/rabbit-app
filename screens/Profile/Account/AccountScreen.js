@@ -36,22 +36,24 @@ function AccountScreen(props) {
     }, []);
 
     const logOut = () => {
-        Token.getToken().then((_token) => {
+        setLogin(false);
 
-            if (!_token)
-                return;
+        // Token.getToken().then((_token) => {
 
-            http.post('logout', { tokenId: _token.id })
-            .then(res => {
+        //     if (!_token)
+        //         return;
 
-                Token.removeToken();
-                setLogin(false);
-                navigation.push('AccountScreen');
+        //     http.post('logout', { tokenId: _token.id })
+        //     .then(res => {
 
-            }).catch(error => {
-                console.log(error);
-            });
-        })
+        //         Token.removeToken();
+        //         setLogin(false);
+        //         navigation.push('AccountScreen');
+
+        //     }).catch(error => {
+        //         console.log(error);
+        //     });
+        // })
     };
 
     const guestView = (

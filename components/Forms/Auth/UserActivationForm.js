@@ -10,15 +10,16 @@ import constraints from '../../../constants/Constraints';
 import http from '../../../helpers/Http';
 
 export function UserActivationForm(props) {
-    const userId = props.params.user_id;
+    const data = props.params.data;
     const phone = props.params.phone;
-    const [token, setToken] = React.useState('');
+    const user_id = data.id;
+    const [token, setToken] = React.useState(data.token);
     const [errors, setErrors] = React.useState([]);
     const navigation = useNavigation();
 
     const resendCode = () => {
-        http.post(`users/${userId}/token/resend`, {
-            user_id: userId,
+        http.post(`users/${user_id}/token/resend`, {
+            user_id: user_id,
             phone: phone
         })
         .then(res => {
@@ -46,7 +47,7 @@ export function UserActivationForm(props) {
             return false;
         }
         
-        http.post(`users/${userId}/activate`, {
+        http.patch(`users/${user_id}/activate`, {
             token: token,
         })
         .then(res => {
