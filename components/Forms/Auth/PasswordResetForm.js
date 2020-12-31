@@ -26,14 +26,8 @@ export function PasswordResetForm(props) {
 
         http.post('users/password/recovery', {
             phone: phone,
-        })
-        .then(res => {
-            const user_id = res.data;
-            const params = {
-                user_id: user_id,
-                phone: phone
-            }
-            navigation.navigate('PasswordRecoveryScreen', params);
+        }).then(result => { 
+            navigation.navigate('PasswordRecoveryScreen', result.data);
         }).catch(error => {
             const msg = error.response.data.message;
             setErrors({ 'phone': msg });

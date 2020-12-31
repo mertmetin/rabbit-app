@@ -28,6 +28,14 @@ export function PasswordRecoveryForm(props) {
             setErrors(validation)
             return false;
         }
+        if (token != props.params.token)
+        {
+            showMessage({
+                message: 'Wrong code entered',
+                type: "danger"
+            });
+            return;
+        }
 
         http.patch(`users/${userId}/password/reset`, {
             user_id: userId,
@@ -54,11 +62,12 @@ export function PasswordRecoveryForm(props) {
             user_id: userId,
             phone: phone
         })
-        .then(res => {
+        .then(result => {
             showMessage({
                 message: "Password reset code has been sent successfully.",
                 type: "success",
             });
+            props.params.token = result.data.token;
         }).catch(error => {
             // const msg = error.response.data.message;
             // showMessage({
