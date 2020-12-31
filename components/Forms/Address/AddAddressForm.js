@@ -40,6 +40,7 @@ export function AddAddressForm(props) {
             'apt_suite_floor': aptSuiteFloor,
             'business_or_building_name': businessOrBuildingName,
             'address_type': addressType,
+            'postal_code': 'K1S5J6'
         }
 
         const url = 'https://maps.googleapis.com/maps/api/place/details/json?' +

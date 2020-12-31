@@ -43,8 +43,8 @@ export default function CardsScreen({ navigation, route }) {
     }
     
     React.useEffect(() => {
-        http.post('getCards', {
-            userId: userId
+        http.get(`payment/methods?user_id=${userId}`, {
+            // user_id: userId
         })
         .then(res => {
             if (!res.data)

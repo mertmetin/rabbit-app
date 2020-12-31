@@ -12,15 +12,14 @@ import http from '../../../helpers/Http';
 
 export default function InfoScreen(props) {
     const user = props.route.params.data;
+    const user_id = user.id;
     const [name, setName] = React.useState(user.name);
     const [email, setEmail] = React.useState(user.email);
 
     const onPress = () => {
-        user.name = name;
-        user.email = email;
-
-        http.post('editUser', {
-            user: user
+        http.put(`users/${user_id}/`, {
+            name: name,
+            email: email
         })
         .then(res => {
             props.navigation.navigate('AccountScreen');
@@ -32,7 +31,6 @@ export default function InfoScreen(props) {
                 });
             })
         }
-                
 
     return (
         <ScrollView>

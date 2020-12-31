@@ -30,36 +30,48 @@ export function AddCardForm(props) {
             return false;
         }
 
-        http.post('registerCustomer', {
-            userId: userId
+        var exp_date = expiryDate.split('/');
+        var exp_month = exp_date[0];
+        var exp_year = exp_date[1];
+
+        http.post('payment/methods', {
+            user_id: userId,
+            type: 'card',
+            card: {
+                number: cardNumber,
+                cvc: cvc,
+                exp_month: exp_month,
+                exp_year: exp_year
+            }
         })
         .then(res => {
-            const customerId = res.data;
+            // const customerId = res.data;
 
-            http.post('addCard', {
-                customerId: customerId,
-                card_info: {
-                    cardNumber: cardNumber,
-                    cvc: cvc,
-                    expiryDate: expiryDate
-                }
-            })
-            .then(res => {
-                navigation.navigate('CardsScreen');
-            }).catch(error => {
-                const msg = error.response.data.message;
-                showMessage({
-                    message: msg,
-                    type: "danger"
-                });
-            })
+            // http.post('payment/methods', {
+            //     customerId: customerId,
+            //     card_info: {
+            //         cardNumber: cardNumber,
+            //         cvc: cvc,
+            //         expiryDate: expiryDate
+            //     }
+            // })
+            // .then(res => {
+            //     navigation.navigate('CardsScreen');
+            // }).catch(error => {
+            //     const msg = error.response.data.message;
+            //     showMessage({
+            //         message: msg,
+            //         type: "danger"
+            //     });
+            // })
         })
         .catch(error => {
-            const msg = error.response.data.message;
-            showMessage({
-                message: msg,
-                type: "danger"
-            });
+            console.log(error);
+            // const msg = error.response.data.message;
+            // showMessage({
+            //     message: msg,
+            //     type: "danger"
+            // });
         })
     }
 

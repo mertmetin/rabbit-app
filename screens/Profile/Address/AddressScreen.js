@@ -11,6 +11,7 @@ import http from '../../../helpers/Http';
 
 export default function AddressScreen({ navigation, route }) {
     const userId = route.params.data;
+
     const onPress = () => {
         navigation.navigate('AddAddressScreen', {data: userId});
     }

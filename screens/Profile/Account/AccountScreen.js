@@ -10,50 +10,27 @@ import { ActionButton } from '../../../components/ActionButton';
 import { useNavigation } from '@react-navigation/native';
 import Token from '../../../helpers/Token';
 import http from '../../../helpers/Http';
+import jwt_decode from "jwt-decode";
 
 function AccountScreen(props) {
     const [user, setUser] = React.useState({});
     const [isLoggedIn, setLogin] = React.useState(false);
     const navigation = useNavigation();
 
-    const getUser = () => {
-        http.get('user').then((res) => {
-
-            setUser(res.data);
-        }, {}).catch((error) => {
-            console.log(error);
-        })
-    }
-
     useEffect(() => {
             Token.getToken().then((_token) => {
                 if (!_token)
                     return;
 
+                var decoded = jwt_decode(_token);
+                setUser(decoded);
                 setLogin(true);
-                getUser();
             });
     }, []);
 
     const logOut = () => {
+        Token.removeToken();
         setLogin(false);
-
-        // Token.getToken().then((_token) => {
-
-        //     if (!_token)
-        //         return;
-
-        //     http.post('logout', { tokenId: _token.id })
-        //     .then(res => {
-
-        //         Token.removeToken();
-        //         setLogin(false);
-        //         navigation.push('AccountScreen');
-
-        //     }).catch(error => {
-        //         console.log(error);
-        //     });
-        // })
     };
 
     const guestView = (

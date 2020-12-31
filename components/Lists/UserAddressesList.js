@@ -44,10 +44,11 @@ function UserAddressesList(props) {
                 style={{ position: 'absolute', right: 0 }} />);
         }
 
-
         const removeAddress = () => {
             const addressId = item.id;
+            // console.log(addressId);
             http.delete(`users/${userId}/addresses/${addressId}`, {
+                // address_id: addressId
                 // id: item.id,
                 // userId: userId
             }).then(

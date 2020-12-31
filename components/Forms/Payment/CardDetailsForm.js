@@ -30,9 +30,11 @@ export function CardDetailsForm(props) {
         const expiryParts = expiryDate.split('/');
         card.exp_month = expiryParts[0];
         card.exp_year = expiryParts[1];
+        var payment_method_id = card.payment_method_id;
 
-        http.post('updateCard', {
-            paymentMethod: card
+        http.put(`payment/methods/${payment_method_id}`, {
+            exp_month: card.exp_month,
+            exp_year: card.exp_year
         })
         .then(res => {
             showMessage({
@@ -49,8 +51,9 @@ export function CardDetailsForm(props) {
     }
 
     const removeCard = () => {
-        http.post('deleteCard', {
-            paymentMethod: card
+        var payment_method_id = card.payment_method_id;
+        http.delete(`payment/methods/${payment_method_id}`, {
+            // paymentMethod: card
         })
         .then(res => {
             showMessage({

@@ -9,6 +9,7 @@ import { ActionButton } from '../../ActionButton';
 import constraints from '../../../constants/Constraints';
 import http from '../../../helpers/Http';
 import axios from 'axios';
+import Token from '../../../helpers/Token';
 
 export function SignUpForm(props) {
     const [phoneNumber, setPhoneNumber] = React.useState('');
@@ -41,11 +42,11 @@ export function SignUpForm(props) {
         })
         .then(res => {
             const data = res.data;
-            console.log(data);
-
             navigation.navigate(props.navigateTo, { data: data, phone: phoneNumber });
         }).catch(error => {
-            const msg = error.response.data.message;
+            // const msg = error.response.data.message;
+            const msg = error.message;
+            // console.log(error.message);
             showMessage({
                 message: msg,
                 type: "danger",
