@@ -1,29 +1,26 @@
-import { Ionicons } from '@expo/vector-icons';
-import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
-import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity } from 'react-native';
-import { RectButton, ScrollView } from 'react-native-gesture-handler';
-import axios from 'axios';
-import { showMessage, hideMessage } from "react-native-flash-message";
-import { FloatingLabel } from '../../../components/FloatingLabel';
-import { SignInForm } from '../../../components/Forms/Auth/SignInForm';
+import { Layout } from '@ui-kitten/components';
+import { Link } from '../../../components/Link';
+import { StyleSheet, SafeAreaView } from 'react-native';
+import { LoginContainer } from '../../../components/Containers/LoginContainer';
 
 export default function SignInScreen({ navigation }) {
     return (
-        <ScrollView contentContainerStyle={styles.container}>
-            <View>
-                <SignInForm navigateTo={'Home'} />
-            </View>
-        </ScrollView>
+        <SafeAreaView style={styles.container}>
+            <Layout level='1' style={styles.innerContainer}>
+                <LoginContainer />
+                <Link value={'Forgot password?'} link={'PasswordResetScreen'} />
+            </Layout>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
+        backgroundColor: '#FFF'
+    },
+    innerContainer: {
         padding: 20,
-        backgroundColor: 'rgb(254, 254, 254)',
-        display: 'flex',
-        justifyContent: 'space-between',
-        height: '100%'
     }
-})
+});

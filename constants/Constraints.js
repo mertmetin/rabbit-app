@@ -1,4 +1,3 @@
-
 const constraints =  {
     signin: {
         phone: {
@@ -109,11 +108,12 @@ const constraints =  {
             }
         },
         expiry_date: {
-            presence: true,
-            length: {
-                is: 5,
-                message: "^Invalid expiry date"
-            }
+            customValidator: "some options" 
+            // presence: true,
+            // length: {
+            //     is: 5,
+            //     message: "^Invalid expiry date"
+            // }
         }
     },
     credit_card_details: {

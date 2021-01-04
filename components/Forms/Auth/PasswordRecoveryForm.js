@@ -1,92 +1,77 @@
-import React, { Component } from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { validate } from 'validate.js/validate';
-import { showMessage, hideMessage } from "react-native-flash-message";
-import { Container, Header, Text, Content, Form, Item, Input, Label, Icon, View } from 'native-base';
-import { FloatingLabel } from '../../FloatingLabel';
-import { ActionButton } from '../../ActionButton';
-import { Link } from '../../Link';
-import constraints from '../../../constants/Constraints';
-import http from '../../../helpers/Http';
+import React from 'react';
+import { StyleSheet, TextInput, View, TouchableWithoutFeedback } from 'react-native';
+import { Formik } from 'formik';
+import { Layout, Input, Button, Text } from '@ui-kitten/components';
+import { Ionicons } from '@expo/vector-icons';
+import MaskedInput from "react-text-mask";
 
-export function PasswordRecoveryForm(props) {
-    const userId = props.params.user_id;
-    const phone = props.params.phone;
-    const [token, setToken] = React.useState('');
-    const [password, setPassword] = React.useState('');
-    const [errors, setErrors] = React.useState([]);
-    const navigation = useNavigation();
+export const PasswordRecoveryForm = props => {
+    const [secureTextEntry, setSecureTextEntry] = React.useState(true);
 
-    const onPress = () => {
-        const fields = {
-            token: token,
-            password: password
-        };
-        const validation = validate(fields, constraints.password_recovery);
+    const toggleSecureEntry = () => {
+        setSecureTextEntry(!secureTextEntry);
+    };
 
-        if (validation) {
-            setErrors(validation)
-            return false;
-        }
-        if (token != props.params.token)
-        {
-            showMessage({
-                message: 'Wrong code entered',
-                type: "danger"
-            });
-            return;
-        }
-
-        http.patch(`users/${userId}/password/reset`, {
-            user_id: userId,
-            token: token,
-            password: password
-        })
-        .then(res => {
-            showMessage({
-                message: "You password has been changed successfully.",
-                type: "success",
-            });
-            navigation.navigate('AccountScreen');
-        }).catch(error => {
-            const msg = error.response.data.message;
-            showMessage({
-                message: msg,
-                type: "danger"
-            });
-        })
-    }
-
-    const resendCode = () => {
-        http.post('users/password/recovery', {
-            user_id: userId,
-            phone: phone
-        })
-        .then(result => {
-            showMessage({
-                message: "Password reset code has been sent successfully.",
-                type: "success",
-            });
-            props.params.token = result.data.token;
-        }).catch(error => {
-            // const msg = error.response.data.message;
-            // showMessage({
-            //     message: msg,
-            //     type: "danger"
-            // });
-        })
-    }
+    const renderIcon = (props) => (
+        <TouchableWithoutFeedback onPress={toggleSecureEntry}>
+            <Ionicons size={24} {...props} name={secureTextEntry ? 'md-eye' : 'md-eye-off'} />
+        </TouchableWithoutFeedback>
+    );
 
     return (
-        <View>
-            <Text>Please type the reset code sent to your phone number.</Text>
-            <FloatingLabel label={'Token'} value={token} onTextChange={setToken} error={errors.token} />
-            <FloatingLabel label={'New Password (min 4 characters)'} secure={true} value={password} 
-                onTextChange={setPassword} error={errors.password} />
-            <ActionButton title={'Send'} onPress={onPress} />
-            <View style={{marginTop: 20}}>
-                <ActionButton title={'Resend code'} onPress={resendCode} />
+        <Formik
+            initialValues={{ token: '', password: '' }}
+            onSubmit={values => props.onPress(values)}
+            validationSchema={props.validationSchema}
+        >
+        {({ handleChange, handleBlur, handleSubmit, errors, values }) => (
+            <View style={styles.container}>
+                <Input
+                    style={styles.field}
+                    placeholder='9950'
+                    label='Token'
+                    value={values.token}
+                    textStyle={styles.textStyle}
+                    onChangeText={handleChange('token')}
+                    size='large'
+                />
+                {errors.token &&
+                    <Text style={{ fontSize: 12, color: 'red', alignSelf: 'flex-start', marginTop: 2 }}>{errors.token}</Text>
+                }
+                <Input
+                    style={styles.field}
+                    placeholder='Enter your new password'
+                    label='Password'
+                    value={values.password}
+                    textStyle={styles.textStyle}
+                    accessoryRight={renderIcon}
+                    secureTextEntry={secureTextEntry}
+                    onChangeText={handleChange('password')}
+                    size='large'
+                />
+                <Button onPress={handleSubmit} style={styles.button} >
+                    Reset
+                </Button>
+                <Button onPress={props.resendCode} style={styles.button} >
+                    Resend code
+                </Button>
             </View>
-        </View>
+        )}
+    </Formik>
     )
-}
+};
+
+const styles = StyleSheet.create({
+    textStyle: {
+        fontWeight: '600'
+    },
+    field: {
+        marginTop: 5,
+        marginBottom: 5
+    },
+    button: {
+        flexDirection: 'row',
+        marginTop: 20,
+        alignSelf: 'stretch'
+    }
+});

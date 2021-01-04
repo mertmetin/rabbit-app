@@ -18,6 +18,16 @@ export function AddCardForm(props) {
     const navigation = useNavigation();
 
     const onPress = () => {
+        var exp_date = expiryDate.split('/');
+        var exp_month = exp_date[0];
+        var exp_year = exp_date[1];
+
+        // var customValidator = () => {
+        //     console.log('asd');
+        // }
+
+        // validate.validators.customValidator();
+
         const fields = {
             card_number: cardNumber,
             cvc: cvc,
@@ -25,14 +35,11 @@ export function AddCardForm(props) {
         };
         const validation = validate(fields, constraints.credit_card);
 
+
         if (validation) {
             setErrors(validation)
             return false;
         }
-
-        var exp_date = expiryDate.split('/');
-        var exp_month = exp_date[0];
-        var exp_year = exp_date[1];
 
         http.post('payment/methods', {
             user_id: userId,
@@ -45,35 +52,10 @@ export function AddCardForm(props) {
             }
         })
         .then(res => {
-            navigation.navigate('CardsScreen');
-
-            // const customerId = res.data;
-
-            // http.post('payment/methods', {
-            //     customerId: customerId,
-            //     card_info: {
-            //         cardNumber: cardNumber,
-            //         cvc: cvc,
-            //         expiryDate: expiryDate
-            //     }
-            // })
-            // .then(res => {
-            //     navigation.navigate('CardsScreen');
-            // }).catch(error => {
-            //     const msg = error.response.data.message;
-            //     showMessage({
-            //         message: msg,
-            //         type: "danger"
-            //     });
-            // })
+            navigation.push('CardsScreen', { data: userId });
         })
         .catch(error => {
             console.log(error);
-            // const msg = error.response.data.message;
-            // showMessage({
-            //     message: msg,
-            //     type: "danger"
-            // });
         })
     }
 

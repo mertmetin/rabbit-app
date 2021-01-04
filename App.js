@@ -12,6 +12,10 @@ import FlashMessage from "react-native-flash-message";
 import { Provider } from 'react-redux'
 import store from './store'
 
+import * as eva from '@eva-design/eva';
+// import { EvaIconsPack } from '@ui-kitten/eva-icons';
+import { ApplicationProvider, IconRegistry, Layout, Text } from '@ui-kitten/components';
+
 const Stack = createStackNavigator();
 
 export default function App(props) {
@@ -61,17 +65,20 @@ export default function App(props) {
     return null;
   } else {
     return (
-      <Provider store={store}>
-        <View style={styles.container}>
-          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <NavigationContainer ref={containerRef} initialState={initialNavigationState}>
-            <Stack.Navigator>
-              <Stack.Screen name="Root" component={BottomTabNavigator} />
-            </Stack.Navigator>
-          </NavigationContainer>
-          <FlashMessage position="top" />
-        </View>
-      </Provider>
+      <ApplicationProvider {...eva} theme={eva.light}>
+       {/* <IconRegistry icons={EvaIconsPack} /> */}
+        <Provider store={store}>
+          <View style={styles.container}>
+            {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+            <NavigationContainer ref={containerRef} initialState={initialNavigationState}>
+              <Stack.Navigator>
+                <Stack.Screen name="Root" component={BottomTabNavigator} />
+              </Stack.Navigator>
+            </NavigationContainer>
+            <FlashMessage position="top" />
+          </View>
+        </Provider>
+      </ApplicationProvider>
     );
   }
 }

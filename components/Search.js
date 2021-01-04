@@ -1,69 +1,68 @@
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
 import * as React from 'react';
-import axios from 'axios';
 import { FloatingLabel } from './FloatingLabel'
 import { View, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
-import {
-    InstantSearch, connectSearchBox, connectHits, Hits, InfiniteHits, RefinementList
-} from 'react-instantsearch-native';
-import algoliasearch from 'algoliasearch/lite';
 import { ScrollView } from 'react-native-gesture-handler';
 import { CategoryCard } from '../components/CategoryCard';
+import http from '../helpers/Http';
 
 export function Search(props) { 
-    console.log(props);
-    const searchClient = algoliasearch(
-        'TJEJH855OJ',
-        '4c62c3aa3ade23a3d65355440835f0bf'
-    );
+    const [hits, setHits] = React.useState();
 
     const SearchBox = (props) => {
         return (
         <View>
             <FloatingLabel
-                placeholder="Search a product" value={props.currentRefinement} onTextChange={text => props.refine(text)}
+                placeholder="Search a product" value={props.currentRefinement}
+                    onTextChange={text => props.refine(text)}
             />
         </View>);
     }
 
-
     const Hits = (data) => {
-        const storeId = props.store.id;
+        // const storeId = props.store.id;
         const hits = data.hits;
         var items = [];
 
         for (let k in hits)
         {
             var hit = hits[k];
-
-            if (hit.store_id != storeId)
-                continue;
-
             var item = (
                 <CategoryCard key={hit.id} routeName={'ProductDetails'} item={hit} />
             );
             items.push(item);
+
         }
         
         return items;
     };
 
+    const store_id = 5;
+    const index = 'inventory';
 
-    const CustomHits = connectHits(Hits);
-    const ConnectedSearchBox = connectSearchBox(SearchBox);
+    const onTextChange = (text) => {
+        if (text.length < 3)
+        {
+            setHits([]);
+            return;
+        }
+
+        http.get(`search?store_id=${store_id}&index=${index}&q=${text}`)
+        .then((response) => {
+            var hits = Hits(response.data);
+            setHits(hits);
+        });
+    }
     
 
     return(
         <ScrollView style={styles.container}>
-            <InstantSearch
-                searchClient={searchClient}
-                indexName="store_products">
-                <ConnectedSearchBox autoFocus />
-                <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap'}}>
-                    {props.store && <CustomHits />}
-                </View>
-            </InstantSearch>
+            <FloatingLabel
+                placeholder="Search a product" value={props.currentRefinement}
+                onTextChange={onTextChange}
+            />
+            {hits}
         </ScrollView>
     )
 }
