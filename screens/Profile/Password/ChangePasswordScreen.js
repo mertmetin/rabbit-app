@@ -1,23 +1,28 @@
 import * as React from 'react';
-import { StyleSheet, ScrollView, View } from 'react-native';
-import { ChangePasswordForm } from '../../../components/Forms/Auth/ChangePasswordForm';
+import { Layout } from '@ui-kitten/components';
+import { Link } from '../../../components/Link';
+import { StyleSheet, SafeAreaView } from 'react-native';
+import { PasswordChangeContainer } 
+    from '../../../components/Containers/PasswordChangeContainer';
 
 export default function ChangePasswordScreen({ navigation, route }) {
     const userId = route.params.data;
 
     return (
-        <ScrollView style={styles.container}>
-            <View>  
-                <ChangePasswordForm userId={userId} />
-            </View>
-        </ScrollView>
+        <SafeAreaView style={styles.container}>
+            <Layout level='1' style={styles.innerContainer}>
+                <PasswordChangeContainer userId={userId} />
+            </Layout>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#FFF'
+    },
+    innerContainer: {
         padding: 20,
-        backgroundColor: '#fafafa',
     }
 });
