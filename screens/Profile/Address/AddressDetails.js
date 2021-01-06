@@ -3,13 +3,13 @@ import { StyleSheet, ScrollView, View } from 'react-native';
 import AddressDetailsForm from '../../../components/Forms/Address/AddressDetailsForm';
 
 export default function AddressDetails({ navigation, route }) {
-    const userId = route.params.userId;
-    const address = route.params.address;
+    // const userId = route.params.userId;
+    // const address = route.params.address;
 
     return (
         <ScrollView>
             <View style={styles.container}>
-                <AddressDetailsForm userId={userId} address={address} />
+                {/* <AddressDetailsForm userId={userId} address={address} /> */}
             </View>
         </ScrollView>
     )

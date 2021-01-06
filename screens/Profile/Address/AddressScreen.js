@@ -4,13 +4,15 @@ import React, { useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Picker, SafeAreaView } from 'react-native';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import { showMessage, hideMessage } from "react-native-flash-message";
-import { ActionButton } from '../../../components/ActionButton';
-import  UserAddressesList  from '../../../components/Lists/UserAddressesList';
+// import { ActionButton } from '../../../components/ActionButton';
+// import  UserAddressesList  from '../../../components/Lists/UserAddressesList';
+import {UserAddressContainer} from '../../../components/Containers/UserAddressContainer';
+import { AddUserAddressContainer } from '../../../components/Containers/AddUserAddressContainer';
 
 import http from '../../../helpers/Http';
 
 export default function AddressScreen({ navigation, route }) {
-    const userId = route.params.data;
+    const user_id = route.params.id;
 
     const onPress = () => {
         navigation.navigate('AddAddressScreen', {data: userId});
@@ -19,8 +21,10 @@ export default function AddressScreen({ navigation, route }) {
     return(
         <SafeAreaView>
             <View style={styles.container}>
-                <UserAddressesList userId={userId} />
-                <ActionButton title={'Add new'} onPress={onPress} />
+                <UserAddressContainer user_id={user_id} />
+                <AddUserAddressContainer />
+                {/* <UserAddressesList userId={userId} />
+                <ActionButton title={'Add new'} onPress={onPress} /> */}
             </View>
         </SafeAreaView>
     ); 
@@ -28,7 +32,7 @@ export default function AddressScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20,
+        // padding: 20,
         backgroundColor: '#f6f6f6'
     }
 });

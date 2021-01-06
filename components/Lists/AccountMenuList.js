@@ -24,6 +24,7 @@ const data = [
 
 export const AccountMenuList = (props) => {
     const user = props.user;
+    console.log(user);
     const navigation = useNavigation();
 
     const ForwardIcon = (props) => {
