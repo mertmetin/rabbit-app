@@ -22,7 +22,7 @@ const Stack = createStackNavigator();
 export default function ProfileNavigator({ navigation }) {
     return (
         <Stack.Navigator screenOptions={screenOptions}>
-            <Stack.Screen name="AccountScreen" component={AccountScreen} options={{ title: 'Account', headerLeft: null }} />
+            <Stack.Screen name="AccountScreen" component={AccountScreen} options={{ title: 'Profile', headerLeft: null }} />
             <Stack.Screen name="SignIn" component={SignInScreen} options={{ title: 'Sign in' }} />
             <Stack.Screen name="SignUp" component={SignUpScreen} options={{ title: 'Register' }} />
             <Stack.Screen name="PostSignUpScreen" component={PostSignUpScreen} options={{ title: 'Activate' }} />
