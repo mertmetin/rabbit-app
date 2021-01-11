@@ -7,7 +7,7 @@ import { Divider, List, Button, ListItem, Menu, MenuItem, Avatar } from '@ui-kit
 export const UserAddressList = (props) => {
     const data = props.data;
     const renderItemAccessory = (address_id) => {
-        return <Button onPress={() => props.onPress(address_id)} size='tiny'>
+        return <Button onPress={() => props.onPress(address_id)} size='tiny' appearance={'ghost'} >
             <Ionicons size={24} name='trash-outline' />
         </Button>
     };
@@ -26,12 +26,13 @@ export const UserAddressList = (props) => {
         address_type = address_type.charAt(0).toUpperCase() + address_type.slice(1);
 
         return <ListItem
+            key={index}
             title={
                 <React.Fragment>
                     <Ionicons size={20} {...props} name={icon} />
                     <Text style={{ fontSize: 20, fontWeight: '200', }}> | </Text>
                     <Text style={{ fontSize: 14, fontWeight: '600', }}>{address_type} </Text>
-                    <Text style={styles.textDisabled}>{item.main_text}</Text>
+                    <Text style={styles.textDisabled}>{item.address_line_1}</Text>
                 </React.Fragment>
             } 
             accessoryRight={() => renderItemAccessory(item.id)}
@@ -44,14 +45,12 @@ export const UserAddressList = (props) => {
             data={data}
             renderItem={renderItem}
             ItemSeparatorComponent={Divider}
+            scrollEnabled={false}
         />
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        maxHeight: 180,
-    },
     textDisabled: {
         color: '#919293'
     }

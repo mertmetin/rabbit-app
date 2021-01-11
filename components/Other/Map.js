@@ -56,7 +56,7 @@ function Map(props) {
 
 const styles = StyleSheet.create({
     map: {
-        height: 250
+        height: '100%'
     }
 });
 

@@ -12,11 +12,10 @@ export const UserAddressContainer = props => {
     const onPress = (address_id) => {
         http.delete(`users/${user_id}/addresses/${address_id}`)
         .then(
-            navigation.push('AddressScreen', { data: userId })
+            navigation.push('AddressScreen', { data: user_id })
         ).catch(error => {
-            const msg = error.response.data.message;
             showMessage({
-                message: msg,
+                message: error.message,
                 type: "success"
             });
         })
@@ -27,13 +26,15 @@ export const UserAddressContainer = props => {
         .then(res => {
             if (res.data)
                 setData(res.data);
+
         }).catch(error => {
             showMessage({
                 message: error.message,
                 type: "danger"
             });
         })
-    }, []);
+    });
+
 
     return (
         <UserAddressList data={data} onPress={onPress} />

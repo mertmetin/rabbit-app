@@ -1,38 +1,49 @@
-import { Ionicons } from '@expo/vector-icons';
-import * as WebBrowser from 'expo-web-browser';
 import React, { useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, Picker, SafeAreaView } from 'react-native';
-import { RectButton, ScrollView } from 'react-native-gesture-handler';
-import { showMessage, hideMessage } from "react-native-flash-message";
-// import { ActionButton } from '../../../components/ActionButton';
-// import  UserAddressesList  from '../../../components/Lists/UserAddressesList';
+import { Layout, Text } from '@ui-kitten/components';
+import { StyleSheet, SafeAreaView, ScrollView, View } from 'react-native';
 import {UserAddressContainer} from '../../../components/Containers/UserAddressContainer';
-import { AddUserAddressContainer } from '../../../components/Containers/AddUserAddressContainer';
-
-import http from '../../../helpers/Http';
+import { AddUserAddressList } from '../../../components/Lists/AddUserAddressList';
 
 export default function AddressScreen({ navigation, route }) {
     const user_id = route.params.id;
 
-    const onPress = () => {
-        navigation.navigate('AddAddressScreen', {data: userId});
+    const onPress = (data) => {
+        data.user_id = user_id;
+        navigation.navigate('AddAddressScreen', {data: data});
     }
 
     return(
         <SafeAreaView>
-            <View style={styles.container}>
-                <UserAddressContainer user_id={user_id} />
-                <AddUserAddressContainer />
-                {/* <UserAddressesList userId={userId} />
-                <ActionButton title={'Add new'} onPress={onPress} /> */}
-            </View>
+            {/* <ScrollView> */}
+            <Layout  style={styles.container}>
+                    <View style={[styles.box_shadow, {paddingBottom: 50 }]}>
+                        <UserAddressContainer user_id={user_id} />
+                    </View>
+                    <View style={{paddingBottom: 10, paddingLeft: 10}}>
+                        <Text style={styles.text} category='h6'>Add Address</Text>
+                    </View>
+                    <View style={[styles.box_shadow]}>
+                        <AddUserAddressList onPress={onPress} />
+                    </View>
+            </Layout>
+            {/* </ScrollView> */}
         </SafeAreaView>
     ); 
 }
 
 const styles = StyleSheet.create({
     container: {
-        // padding: 20,
-        backgroundColor: '#f6f6f6'
+        // flex: 1,
+        backgroundColor: '#F1F1F1'    
+    },
+    box_shadow: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+        elevation: 3
     }
 });

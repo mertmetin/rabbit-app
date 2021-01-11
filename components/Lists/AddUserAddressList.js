@@ -7,27 +7,29 @@ import { Divider, List, Button, ListItem, Menu, MenuItem, Avatar } from '@ui-kit
 const data = [
     {
         title: 'Add home address',
+        type: 'Home',
         icon: 'home-outline',
     },
     {
         title: 'Add work address',
+        type: 'Work',
         icon: 'business-outline',
     },
     {
         title: 'Add other address',
+        type: 'Other',
         icon: 'trail-sign-outline',
     }
 ];
 
 export const AddUserAddressList = (props) => {
-    const renderItemAccessory = (address_id) => {
-        return <Button onPress={() => props.onPress(address_id)} size='tiny'>
-            <Ionicons size={24} name='add' />
-        </Button>
-    };
+    const renderItemAccessory = (props) => (
+        <Ionicons color={'#3154fe'} style={{paddingRight: 15}} size={24} name='add' />
+    );
 
     const renderItem = ({ item, index }) => {
         return <ListItem
+            key={index}
             title={
                 <React.Fragment>
                     <Ionicons size={20} {...props} name={item.icon} />
@@ -35,11 +37,12 @@ export const AddUserAddressList = (props) => {
                     <Text>{item.title}</Text>
                 </React.Fragment>
             }
-            accessoryRight={() => renderItemAccessory(item.id)}
+            accessoryRight={renderItemAccessory}
+            onPress={() => {
+                props.onPress(item);
+            }}
         />
     };
-
-
 
     return (
         <List
@@ -47,14 +50,12 @@ export const AddUserAddressList = (props) => {
             data={data}
             renderItem={renderItem}
             ItemSeparatorComponent={Divider}
+            scrollEnabled={false}
         />
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        maxHeight: 180,
-    },
     textDisabled: {
         color: '#919293'
     }

@@ -1,23 +1,24 @@
 import * as React from 'react';
-import { StyleSheet, ScrollView, View } from 'react-native';
-import { AddAddressForm } from '../../../components/Forms/Address/AddAddressForm';
+import { Layout } from '@ui-kitten/components';
+import { StyleSheet, SafeAreaView } from 'react-native';
+// import { AddAddressForm } from '../../../components/Forms/Address/AddAddressForm';
+import { AddUserAddressContainer } from '../../../components/Containers/AddUserAddressContainer';
 
 export default function AddAddressScreen({ navigation, route }) {
-    const userId = route.params.data;
-    
+    const data = route.params.data;
+
     return (
-        <ScrollView style={styles.container}>
-            <View>
-                <AddAddressForm userId={userId} />
-            </View>
-        </ScrollView>
+        <SafeAreaView style={styles.container}>
+            <Layout level='1' style={styles.innerContainer}>
+                <AddUserAddressContainer data={data} />
+            </Layout>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
-        backgroundColor: 'rgb(254, 254, 254)',
+        backgroundColor: '#FFF'
     }
 });
