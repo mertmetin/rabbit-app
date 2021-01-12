@@ -19,6 +19,10 @@ function AccountScreen(props) {
                     return;
 
                 var decoded = jwt_decode(_token);
+
+                if (Date.now() >= decoded.exp * 1000) 
+                    return false;
+
                 setUser(decoded);
                 setLogin(true);
             });

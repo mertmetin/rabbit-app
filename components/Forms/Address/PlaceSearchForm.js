@@ -16,33 +16,37 @@ export const PlaceSearchForm = props => {
     );
 
     return (
-        <View style={styles.box_shadow}>
-            <Input
-                style={styles.field}
-                placeholder='Search Address'
-                value={searchText}
-                textStyle={styles.textStyle}
-                onChangeText={(e) => {
-                    setSearchText(e);
-                    props.onTextChange(e);
-                }}
-                accessoryLeft={SearchIcon}
-                size='large'
-            />
-            {/* <Divider /> */}
-            <ListItem
-                title={'Use current location'}
-                accessoryLeft={NavigateIcon}
-                onPress={props.onPress}
-            />
-        </View>
+        <Layout>
+            <View>
+                <Input
+                    style={styles.field}
+                    placeholder='Search Address'
+                    value={searchText}
+                    textStyle={styles.textStyle}
+                    onChangeText={(e) => {
+                        setSearchText(e);
+                        props.onTextChange(e);
+                    }}
+                    accessoryLeft={SearchIcon}
+                    size='large'
+                />
+                <Divider />
+                <ListItem
+                    style={styles.box_shadow}                    
+                    title={'Use current location'}
+                    accessoryLeft={NavigateIcon}
+                    onPress={props.onPress}
+                />
+            </View>
+        </Layout>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 10,
-        alignItems: 'center',
+        backgroundColor: '#F1F1F1'
+        // marginTop: 10,
+        // alignItems: 'center',
     },
     textStyle: {
         fontWeight: '600'
@@ -50,6 +54,7 @@ const styles = StyleSheet.create({
     field: {
         // marginTop: 5,
         // marginBottom: 5,
+        // elevation: 0,
         backgroundColor: '#fff',
         borderColor: '#fff'
     },

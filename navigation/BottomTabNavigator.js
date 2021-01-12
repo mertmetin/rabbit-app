@@ -42,7 +42,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         name="Home"
         component={HomeNavigator}
         options={({ route }) => ({
-          title: 'Order',
+          // title: 'Order',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-home" />,
           tabBarVisible: getTabBarVisibility(route)
         })}
@@ -51,7 +51,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         name="Search"
         component={SearchNavigator}
         options={{
-          title: 'Search',
+          // title: 'Search',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-search" />,
         }}
       />
@@ -59,7 +59,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         name="Cart"
         component={CartNavigator}
         options={{
-          title: 'Cart',
+          // title: 'Cart',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-cart" />,
         }
         }
@@ -68,7 +68,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         name="Profile"
         component={ProfileNavigator}
         options={{
-          title: 'Profile',
+          // title: 'Profile',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-person" />,
         }
       }
@@ -77,7 +77,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         name="Promotions"
         component={PromotionsNavigator}
         options={{
-          title: 'Promotions',
+          // title: 'Promotions',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-gift" />,
         }}
       />

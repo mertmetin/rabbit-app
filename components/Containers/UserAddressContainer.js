@@ -33,7 +33,7 @@ export const UserAddressContainer = props => {
                 type: "danger"
             });
         })
-    });
+    }, []);
 
 
     return (

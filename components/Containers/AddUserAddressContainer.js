@@ -46,7 +46,6 @@ export const AddUserAddressContainer = props => {
 
             if (item.types.includes('country'))
                 address.country_code = item.short_name;
-
         }
 
         return address;
@@ -84,8 +83,6 @@ export const AddUserAddressContainer = props => {
         http.post(`users/${user_id}/addresses`, {address: location})
         .then(result => {
             navigation.navigate('Home');
-            if (res.data)
-                setData(res.data);
         }).catch(error => {
             showMessage({
                 message: error.message,
