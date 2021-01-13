@@ -1,4 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import * as React from 'react';
 
 import TabBarIcon from '../components/TabBarIcon';
@@ -24,8 +25,18 @@ export default function BottomTabNavigator({ navigation, route }) {
     );
 
   const getTabBarVisibility = (route) => {
-    if (route.state && route.state.index > 0)
-      return false;
+    const routeName = getFocusedRouteNameFromRoute(route);
+    const showOnScreens = [
+      'Home',
+      'CartScreen', 
+      'AccountScreen', 
+      'PromotionsScreen'
+    ];
+
+    if (!routeName || showOnScreens.includes(routeName) )
+      return true;
+
+    return false;
   }
 
   return (
@@ -48,19 +59,20 @@ export default function BottomTabNavigator({ navigation, route }) {
       <BottomTab.Screen
         name="Search"
         component={SearchNavigator}
-        options={{
+        options={({ route }) => ({
           // title: 'Search',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-search" />,
-        }}
+          tabBarVisible: getTabBarVisibility(route)
+        })}
       />
       <BottomTab.Screen
         name="Cart"
         component={CartNavigator}
-        options={{
+        options={({ route }) => ({
           // title: 'Cart',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-cart" />,
-        }
-        }
+          tabBarVisible: getTabBarVisibility(route)
+        })}
       />
       <BottomTab.Screen
         name="Profile"
@@ -74,10 +86,11 @@ export default function BottomTabNavigator({ navigation, route }) {
       <BottomTab.Screen
         name="Promotions"
         component={PromotionsNavigator}
-        options={{
+        options={({ route }) => ({
           // title: 'Promotions',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-gift" />,
-        }}
+          tabBarVisible: getTabBarVisibility(route)
+        })}
       />
     </BottomTab.Navigator>
   );
