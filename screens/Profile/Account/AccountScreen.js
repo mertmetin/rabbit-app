@@ -35,7 +35,7 @@ function AccountScreen(props) {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Layout level='1'>
+            <Layout level='1' style={styles.container}>
                 {(isLoggedIn) ?
                     <AccountMenuList user={user} logOut={logOut} />
                     : <GuestMenuList />}
@@ -48,6 +48,9 @@ export default AccountScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFF'
+        backgroundColor: '#F1F1F1'
     },
+    innerContainer: {
+        flex: 1
+    }
 });

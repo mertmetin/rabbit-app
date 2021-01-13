@@ -34,8 +34,7 @@ export function SignInForm(props) {
         const credentials = {
             phone: phone,
             password: password
-        }
-        
+        }  
 
         http.post('login', credentials)
         .then(res => {

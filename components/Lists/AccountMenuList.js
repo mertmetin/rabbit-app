@@ -24,7 +24,6 @@ const data = [
 
 export const AccountMenuList = (props) => {
     const user = props.user;
-    console.log(user);
     const navigation = useNavigation();
 
     const ForwardIcon = (props) => {
@@ -135,8 +134,8 @@ export const AccountMenuList = (props) => {
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: 25,
-        paddingBottom: 25,
+        paddingTop: 10,
+        paddingBottom: 10,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,

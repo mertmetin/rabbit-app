@@ -24,9 +24,7 @@ export default function BottomTabNavigator({ navigation, route }) {
     );
 
   const getTabBarVisibility = (route) => {
-    const routeName = route.state ? route.state.routes[route.state.index].name : '';
-
-    if (routeName == 'ProductDetails') 
+    if (route.state && route.state.index > 0)
       return false;
   }
 
@@ -67,11 +65,11 @@ export default function BottomTabNavigator({ navigation, route }) {
       <BottomTab.Screen
         name="Profile"
         component={ProfileNavigator}
-        options={{
+        options={({ route }) => ({
           // title: 'Profile',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-person" />,
-        }
-      }
+          tabBarVisible: getTabBarVisibility(route)
+        })}
       />
       <BottomTab.Screen
         name="Promotions"
