@@ -15,7 +15,6 @@ const LoginValidationSchema = Yup.object().shape({
 });
 
 export const LoginContainer = props => {
-
     const navigation = useNavigation();
     const onPress = (data) => {
         var credentials = {

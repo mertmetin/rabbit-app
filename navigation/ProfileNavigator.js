@@ -25,7 +25,7 @@ export default function ProfileNavigator({ navigation }) {
             <Stack.Screen name="AccountScreen" component={AccountScreen} options={{ title: 'Profile', headerLeft: null }} />
             <Stack.Screen name="SignIn" component={SignInScreen} options={{ title: 'Sign in' }} />
             <Stack.Screen name="SignUp" component={SignUpScreen} options={{ title: 'Register' }} />
-            <Stack.Screen name="PostSignUpScreen" component={PostSignUpScreen} options={{ title: 'Activate' }} />
+            <Stack.Screen name="PostSignUpScreen" component={PostSignUpScreen} options={{ title: 'Activation' }} />
             <Stack.Screen name="PasswordResetScreen" component={PasswordResetScreen} options={{ title: 'Forgot Password' }} />
             <Stack.Screen name="PasswordRecoveryScreen" component={PasswordRecoveryScreen} options={{ title: 'Reset Password' }} />
             <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} options={{ title: 'Change Password' }} />

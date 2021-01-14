@@ -1,21 +1,42 @@
 import * as React from 'react';
-import { StyleSheet, Text, ScrollView, View, TextInput, Button, TouchableOpacity } from 'react-native';
-import { UserActivationForm } from '../../../components/Forms/Auth/UserActivationForm';
+import { Layout, Button } from '@ui-kitten/components';
+import { StyleSheet, SafeAreaView, View } from 'react-native';
+import { PostRegistrationContainer } from '../../../components/Containers/PostRegistrationContainer';
 
-export default function PostSignUpScreen({navigation, route}) {
+export default function PostSignUpScreen({ navigation, route }) {
+    const data = route.params.data;
+    const onPress = () => {
+        navigation.navigate('SignUp');
+    }
+
     return (
-        <ScrollView contentContainerStyle={styles.container}>
-            <View style={styles.subContainer}>
-                <UserActivationForm navigateTo={'AccountScreen'} params={route.params} />
-            </View>
-        </ScrollView>
+        <SafeAreaView>
+            <Layout level='1' style={styles.container}>
+                <View style={[styles.innerContainer, styles.box_shadow]}>
+                    <PostRegistrationContainer data={data} />
+                </View>
+            </Layout>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        // flex: 1,
+        backgroundColor: '#F1F1F1'
+    },
+    innerContainer: {
         padding: 20,
-        backgroundColor: 'rgb(254, 254, 254)'
+        backgroundColor: '#FFF',
+    },
+    box_shadow: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+        elevation: 3
     }
 });

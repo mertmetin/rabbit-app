@@ -1,82 +1,63 @@
-import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { validate } from 'validate.js/validate';
+import React from 'react';
+import { StyleSheet, TextInput, View, TouchableWithoutFeedback } from 'react-native';
+import { Formik } from 'formik';
+import { Layout, Input, Button, Text } from '@ui-kitten/components';
 import { Ionicons } from '@expo/vector-icons';
-import { FloatingLabel } from '../../FloatingLabel';
-import { ActionButton } from '../../ActionButton';
-import { showMessage, hideMessage } from "react-native-flash-message";
-import constraints from '../../../constants/Constraints';
-import http from '../../../helpers/Http';
 
-export function UserActivationForm(props) {
-    const data = props.params.data;
-    const phone = props.params.phone;
-    const user_id = data.id;
-    const [token, setToken] = React.useState(data.token);
-    const [errors, setErrors] = React.useState([]);
-    const navigation = useNavigation();
-
-    const resendCode = () => {
-        http.post(`users/${user_id}/token/resend`, {
-            user_id: user_id,
-            phone: phone
-        })
-        .then(res => {
-            showMessage({
-                message: "Activation code has been sent successfully.",
-                type: "success",
-            });
-        }).catch(error => {
-            const msg = error.response.data.message;
-            showMessage({
-                message: msg,
-                type: "danger"
-            });
-        })
-    }
-
-    const onPress = () => {
-        const fields = {
-            token: token
-        };
-        const validation = validate(fields, constraints.activation);
-
-        if (validation) {
-            setErrors(validation)
-            return false;
-        }
-        
-        http.patch(`users/${user_id}/activate`, {
-            token: token,
-        })
-        .then(res => {
-            showMessage({
-                message: "You're activated successfully.",
-                type: "success",
-            });
-            navigation.navigate(props.navigateTo);
-        }).catch(error => {
-            const msg = error.response.data.message;
-            setErrors({ 'token': msg });
-        })
-    }
+export const UserActivationForm = props => {
+    const AlertIcon = (props) => (
+        <Ionicons size={11} {...props} name='md-information-circle-outline' />
+    );
 
     return (
-        <View>
-            <Text style={styles.activationText}>Please type the activation code sent to your phone number.</Text>
-            <FloatingLabel label={'Token'} value={token} onTextChange={setToken} error={errors.token} />
-            <ActionButton title={'Activate'} onPress={onPress} />
-            <View style={{marginTop: 20}}>
-                <ActionButton title={'Resend code'} onPress={resendCode} />
-            </View>
-        </View>
+        <Formik
+            initialValues={{ token: ''}}
+            onSubmit={values => props.onPress(values)}
+            validationSchema={props.validationSchema}
+        >
+            {({ handleChange, handleBlur, handleSubmit, errors, values }) => (
+                <View style={styles.container}>
+                    <Input
+                        style={styles.field}
+                        placeholder='Enter token'
+                        label='Token'
+                        value={values.token}
+                        textStyle={styles.textStyle}
+                        caption={'Please type the activation code sent to your phone number'}
+                        onChangeText={handleChange('token')}
+                        size='large'
+                        captionIcon={AlertIcon}
+                    />
+                    {errors.token &&
+                        <Text style={{ fontSize: 12, color: 'red', alignSelf: 'flex-start' }}>{errors.token}</Text>
+                    }
+                    <Button onPress={handleSubmit} style={styles.button} >
+                        Activate
+                    </Button>
+                    <Button onPress={props.resendCode} style={styles.button} appearance='outline' >
+                        Resend Code
+                    </Button>
+                </View>
+            )}
+        </Formik>
     )
-}
+};
 
 const styles = StyleSheet.create({
-    activationText: {
-        fontWeight: 'bold',
-        textAlign: 'center'
+    container: {
+        marginTop: 10,
+        alignItems: 'center',
+    },
+    textStyle: {
+        fontWeight: '600'
+    },
+    field: {
+        marginTop: 5,
+        marginBottom: 5
+    },
+    button: {
+        flexDirection: 'row',
+        marginTop: 20,
+        alignSelf: 'stretch'
     }
 });
