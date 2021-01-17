@@ -38,7 +38,7 @@ export const AddCardContainer = props => {
             }
         })
         .then(result => {
-            navigation.push('CardsScreen', { data: user_id });
+            navigation.push('CardsScreen', { id: user_id });
         })
         .catch(error => {
             showMessage({
