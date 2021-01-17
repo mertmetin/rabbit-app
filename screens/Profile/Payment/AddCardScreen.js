@@ -11,7 +11,6 @@ export default function AddCardScreen({ navigation, route }) {
         <SafeAreaView>
             <Layout level='1' style={styles.container}>
                 <AddCardContainer user_id={user_id} />
-                {/* <UserCardsContainer user_id={user_id} /> */}
             </Layout>
         </SafeAreaView>
     )

@@ -14,56 +14,64 @@ import { connect } from 'react-redux'
 import { Ionicons } from '@expo/vector-icons';
 import DeliveryMap from '../components/Other/DeliveryMap';
 import AddressPickerButton from '../components/Buttons/AddressPickerButton';
+import { DeliveryAddressContainer } from '../components/Containers/DeliveryAddressContainer';
+import { Layout, Button } from '@ui-kitten/components';
+
 
 
 function HomeScreen(props) {
   // var [isLoggedIn, setLogin] = React.useState(false);
   // const navigation = useNavigation();
-  const [user, setUser] = React.useState({});
-  const [store, setStore] = React.useState();
+  // const [user, setUser] = React.useState({});
+  // const [store, setStore] = React.useState();
 
-  const deliveryAddress = props.state.deliveryAddress;
+  // const deliveryAddress = props.state.deliveryAddress;
 
-  var key = Object.keys(deliveryAddress)[0];
-  var address = deliveryAddress[key];
+  // var key = Object.keys(deliveryAddress)[0];
+  // var address = deliveryAddress[key];
 
-  useEffect(() => {
-    http.post('getStore', { address: address }).then((response) => {
-      if (response.data) {
-        var data = response.data;
+  // useEffect(() => {
+  //   http.post('getStore', { address: address }).then((response) => {
+  //     if (response.data) {
+  //       var data = response.data;
 
-        setStore(data);
-      } else {
-        setStore(false);
-      }
-    });
+  //       setStore(data);
+  //     } else {
+  //       setStore(false);
+  //     }
+  //   });
 
-    const getUser = () => {
-      http.get('user').then((res) => {
+  //   const getUser = () => {
+  //     http.get('user').then((res) => {
 
-        setUser(res.data);
-      }, {}).catch((error) => {
-        console.log(error);
-      })
-    }
+  //       setUser(res.data);
+  //     }, {}).catch((error) => {
+  //       console.log(error);
+  //     })
+  //   }
 
 
-    Token.getToken().then((_token) => {
-      if (!_token)
-        return;
+  //   Token.getToken().then((_token) => {
+  //     if (!_token)
+  //       return;
 
-      getUser();
-    });
+  //     getUser();
+  //   });
 
-  }, [address.id]);
+  // }, [address.id]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      {store ? <Map marker={{ latitude: parseFloat(address.lat), 
-          longitude: parseFloat(address.lng)}} destination={store} /> : <Text>asd</Text>}
-      <AddressPickerButton userId={user.id} address={address} />
-      {store && <CategoriesCards storeId={store.id} /> }
-    </SafeAreaView> 
+    <SafeAreaView>
+      <Layout level='1' style={styles.container}>
+        <DeliveryAddressContainer />
+      </Layout>
+    </SafeAreaView>
+    // <SafeAreaView style={styles.container}>
+    //   {store ? <Map marker={{ latitude: parseFloat(address.lat), 
+    //       longitude: parseFloat(address.lng)}} destination={store} /> : <Text>asd</Text>}
+    //   <AddressPickerButton userId={user.id} address={address} />
+    //   {store && <CategoriesCards storeId={store.id} /> }
+    // </SafeAreaView> 
   );
 }
 

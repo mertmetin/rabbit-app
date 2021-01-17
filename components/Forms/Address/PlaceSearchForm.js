@@ -32,6 +32,7 @@ export const PlaceSearchForm = props => {
                 />
                 <Divider />
                 <ListItem
+                    key={"use-current-location"}
                     style={styles.box_shadow}                    
                     title={'Use current location'}
                     accessoryLeft={NavigateIcon}

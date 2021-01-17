@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, View, Text, Dimensions } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
@@ -49,7 +48,6 @@ function Map(props) {
             scrollEnabled={false}>
             {mapMarkers}
             {mapViewDirections}
-
         </MapView>
     );
 }
