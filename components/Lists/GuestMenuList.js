@@ -66,6 +66,7 @@ export const GuestMenuList = (props) => {
         let list = item.section.data[0];
 
         return <List
+            scrollEnabled={false}
             style={styles.box_shadow}
             data={list.data}
             renderItem={list.renderItem}
@@ -76,6 +77,7 @@ export const GuestMenuList = (props) => {
     return (
         <View style={styles.container}>
             <SectionList
+                scrollEnabled={false}
                 sections={sections}
                 renderItem={renderList}
                 keyExtractor={(item, index) => index}
