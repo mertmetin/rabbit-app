@@ -43,6 +43,8 @@ export const AddCardForm = props => {
                         textStyle={styles.textStyle}
                         onChangeText={handleChange('card_no')}
                         size='large'
+                        numeric={true}
+                        maxLength={16}
                     />
                     {errors.card_no &&
                         <Text style={{ fontSize: 12, color: 'red', alignSelf: 'flex-start', marginTop: 2 }}>{errors.card_no}</Text>
@@ -57,6 +59,7 @@ export const AddCardForm = props => {
                         textStyle={styles.textStyle}
                         onChangeText={handleChange('exp_date')}
                         size='large'
+                        maxLength={5}
                     />
                     {errors.exp_date &&
                         <Text style={{ fontSize: 12, color: 'red', alignSelf: 'flex-start', marginTop: 2 }}>{errors.exp_date}</Text>
@@ -71,6 +74,8 @@ export const AddCardForm = props => {
                         textStyle={styles.textStyle}
                         onChangeText={handleChange('cvc')}
                         size='large'
+                        numeric={true}
+                        maxLength={3}
                     />
                     {errors.cvc &&
                         <Text style={{ fontSize: 12, color: 'red', alignSelf: 'flex-start', marginTop: 2 }}>{errors.cvc}</Text>

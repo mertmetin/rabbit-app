@@ -15,7 +15,7 @@ const AddCardSchema = Yup.object().shape({
         required('Expiry date required!'),
     cvc: Yup.string().
         test('len', 'Must be exactly 3 digits', (val) => { if (val) return val.toString().length === 3; }).
-    required('CVC required!')
+        required('CVC required!')
 });
 
 export const AddCardContainer = props => {

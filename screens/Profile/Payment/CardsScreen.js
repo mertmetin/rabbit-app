@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Layout } from '@ui-kitten/components';
 import { StyleSheet, SafeAreaView, View } from 'react-native';
 import { AddPaymentMethodList } from '../../../components/Lists/AddPaymentMethodList';
+import { UserCardsContainer } from '../../../components/Containers/UserCardsContainer';
 
 export default function CardsScreen({ navigation, route }) {
     const user_id = route.params.id;
@@ -61,29 +62,35 @@ export default function CardsScreen({ navigation, route }) {
     return(
         <SafeAreaView>
             <Layout level='1' style={styles.container}>
-                <View style={[styles.innerContainer, styles.box_shadow]}>
+                <View style={[styles.box_shadow, {paddingBottom: 20}]}>
+                    <UserCardsContainer user_id={user_id} />
+                </View>
+                <View style={styles.box_shadow}>
                     <AddPaymentMethodList onPress={onPress} />
                 </View>
             </Layout>
         </SafeAreaView>
-
-        // <ScrollView>
-        //     <View style={styles.container}>
-        //         {paymentMethods}
-        //         <ActionButton title={'Add Card'} onPress={onPress} />
-        //     </View>
-        // </ScrollView>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        // padding: 20
+        backgroundColor: '#F1F1F1'    
     },
     cardLabel: {
         fontSize: 16,
         fontFamily: 'sodo-sans-regular',
         borderBottomWidth: 1,
         borderBottomColor: '#CCCCCC'
+    },
+    box_shadow: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+        elevation: 3
     }
 });
