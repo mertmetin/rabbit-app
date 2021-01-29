@@ -7,7 +7,7 @@ import { Divider, List, Button, ListItem, Menu, MenuItem, Avatar } from '@ui-kit
 export const UserAddressList = (props) => {
     const data = props.data;
     const renderItemAccessory = (address_id) => {
-        return <Button onPress={() => props.onPress(address_id)} size='tiny' appearance={'ghost'} >
+        return <Button onPress={() => props.handleDelete(address_id)} size='tiny' appearance={'ghost'} >
             <Ionicons size={24} name='trash-outline' />
         </Button>
     };
@@ -36,6 +36,9 @@ export const UserAddressList = (props) => {
                 </React.Fragment>
             } 
             accessoryRight={() => renderItemAccessory(item.id)}
+            onPress={() => {
+                props.onPress(item);
+            }}
         />
     };
 

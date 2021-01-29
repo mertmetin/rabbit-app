@@ -10,7 +10,7 @@ export const UserAddressContainer = props => {
     const [count, setCount] = React.useState(0);
     const navigation = useNavigation();
 
-    const onPress = (address_id) => {
+    const handleDelete = (address_id) => {
         http.delete(`users/${user_id}/addresses/${address_id}`)
         .then(() => {
             setCount(count - 1);
@@ -20,6 +20,10 @@ export const UserAddressContainer = props => {
                 type: "danger"
             });
         })
+    }
+
+    const onPress = (address) => {
+        navigation.push('Home', { data: address});
     }
 
     useEffect(() => {
@@ -39,6 +43,10 @@ export const UserAddressContainer = props => {
     }, [count]);
 
     return (
-        <UserAddressList data={data} onPress={onPress} />
+        <UserAddressList 
+            data={data} 
+            onPress={onPress} 
+            onDelete={handleDelete}
+        />
     )
 }

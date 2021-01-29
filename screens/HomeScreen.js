@@ -21,7 +21,19 @@ import { Layout, Button } from '@ui-kitten/components';
 
 function HomeScreen(props) {
   // var [isLoggedIn, setLogin] = React.useState(false);
-  // const navigation = useNavigation();
+  const navigation = useNavigation();
+  // const [location, setLocation] = React.useState({})
+
+  console.log(props);
+
+
+  // useEffect(() => {
+  //   setLocation(props.location);
+  // });
+
+
+
+
   // const [user, setUser] = React.useState({});
   // const [store, setStore] = React.useState();
 
@@ -63,7 +75,7 @@ function HomeScreen(props) {
   return (
     <SafeAreaView>
       <Layout level='1' style={styles.container}>
-        <DeliveryAddressContainer />
+        <DeliveryAddressContainer deliveryAddress={props.location} />
       </Layout>
     </SafeAreaView>
     // <SafeAreaView style={styles.container}>
@@ -77,9 +89,10 @@ function HomeScreen(props) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, 
-    flexDirection: 'column', 
-    flexWrap: 'wrap',
+    // flex: 1, 
+    backgroundColor: '#F1F1F1'    
+    // flexDirection: 'column', 
+    // flexWrap: 'wrap',
   }
 });
 

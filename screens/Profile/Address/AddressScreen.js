@@ -14,7 +14,6 @@ export default function AddressScreen({ navigation, route }) {
 
     return(
         <SafeAreaView>
-            {/* <ScrollView> */}
             <Layout  style={styles.container}>
                     <View style={[styles.box_shadow, {paddingBottom: 50 }]}>
                         <UserAddressContainer user_id={user_id} />
@@ -26,7 +25,6 @@ export default function AddressScreen({ navigation, route }) {
                         <AddUserAddressList onPress={onPress} />
                     </View>
             </Layout>
-            {/* </ScrollView> */}
         </SafeAreaView>
     ); 
 }
