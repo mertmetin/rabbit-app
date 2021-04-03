@@ -4,10 +4,10 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { Divider, List, Button, ListItem, Menu, MenuItem, Avatar } from '@ui-kitten/components';
 
-export const UserAddressList = (props) => {
-    const data = props.data;
+export const UserAddressList = ({ data, handleDelete, onPress }) => {
+    // const data = props.data;
     const renderItemAccessory = (address_id) => {
-        return <Button onPress={() => props.handleDelete(address_id)} size='tiny' appearance={'ghost'} >
+        return <Button onPress={() => handleDelete(address_id)} size='tiny' appearance={'ghost'} >
             <Ionicons size={24} name='trash-outline' />
         </Button>
     };
@@ -29,7 +29,7 @@ export const UserAddressList = (props) => {
             key={index}
             title={
                 <React.Fragment>
-                    <Ionicons size={20} {...props} name={icon} />
+                    <Ionicons size={20} name={icon} />
                     <Text style={{ fontSize: 20, fontWeight: '200', }}> | </Text>
                     <Text style={{ fontSize: 14, fontWeight: '600', }}>{address_type} </Text>
                     <Text style={styles.textDisabled}>{item.address_line_1}</Text>
@@ -37,7 +37,7 @@ export const UserAddressList = (props) => {
             } 
             accessoryRight={() => renderItemAccessory(item.id)}
             onPress={() => {
-                props.onPress(item);
+                onPress(item);
             }}
         />
     };

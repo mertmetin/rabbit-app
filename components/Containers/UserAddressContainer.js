@@ -4,8 +4,7 @@ import http, { setClientToken } from '../../helpers/Http';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { UserAddressList } from '../Lists/UserAddressList';
 
-export const UserAddressContainer = props => {
-    const user_id = props.user_id;
+export const UserAddressContainer = ({ user_id }) => {
     const [data, setData] = React.useState([]);
     const [count, setCount] = React.useState(0);
     const navigation = useNavigation();
@@ -46,7 +45,7 @@ export const UserAddressContainer = props => {
         <UserAddressList 
             data={data} 
             onPress={onPress} 
-            onDelete={handleDelete}
+            handleDelete={handleDelete}
         />
     )
 }
