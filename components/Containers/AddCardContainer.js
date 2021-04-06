@@ -18,8 +18,7 @@ const AddCardSchema = Yup.object().shape({
         required('CVC required!')
 });
 
-export const AddCardContainer = props => {
-    const user_id = props.user_id;
+export const AddCardContainer = ({ user_id, setShouldFetch }) => {
     const navigation = useNavigation();
 
     const onPress = (data) => {
@@ -38,7 +37,8 @@ export const AddCardContainer = props => {
             }
         })
         .then(result => {
-            navigation.push('CardsScreen', { id: user_id });
+            navigation.navigate('CardsScreen', { id: user_id });
+            setShouldFetch(true);
         })
         .catch(error => {
             showMessage({
