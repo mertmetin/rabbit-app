@@ -4,19 +4,17 @@ import http, { setClientToken } from '../../helpers/Http';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { UserCardsList } from '../Lists/UserCardsList';
 
-export const UserCardsContainer = props => {
-    const user_id = props.user_id;
-    const [data, setData] = useState([]);
-    const [count, setCount] = useState(0);
+export const UserCardsContainer = ({ user_id, shouldFetch, setShouldFetch }) => {
+    const [creditCards, setCreditCards] = useState(false);
 
-    const onPress = (payment_method_id) => {
+    const deleteHandler = (payment_method_id) => {
         http.delete(`payment/methods/${payment_method_id}`)
         .then(res => {
             showMessage({
                 message: 'Credit card removed successfully.',
                 type: "success"
             });
-            setCount(count - 1);
+            setShouldFetch(true);
         }).catch(error => {
             showMessage({
                 message: 'Unable to remove the card.',
@@ -28,8 +26,8 @@ export const UserCardsContainer = props => {
     useEffect(() => {
         http.get(`payment/methods?user_id=${user_id}`)
         .then(result => {
-            setData(result.data)
-            setCount(result.data.length);
+            setCreditCards(result.data)
+            setShouldFetch(false);
         }).catch(error => {
             const msg = error.response.data.message;
             showMessage({
@@ -37,9 +35,10 @@ export const UserCardsContainer = props => {
                 type: "danger"
             });
         })
-    }, [count]);
+    }, [shouldFetch]);
 
     return (
-        <UserCardsList data={data} onPress={onPress} />
+        (creditCards ? <UserCardsList creditCards={creditCards} 
+                deleteHandler={deleteHandler} /> : <></>)
     )
 }

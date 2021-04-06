@@ -4,11 +4,9 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { Divider, List, Button, ListItem, Menu, MenuItem, Avatar } from '@ui-kitten/components';
 
-export const UserCardsList = (props) => {
-    const data = props.data;
-
+export const UserCardsList = ({ creditCards, deleteHandler }) => {
     const renderItemAccessory = (payment_method_id) => {
-        return <Button onPress={() => props.onPress(payment_method_id)} size='tiny' appearance={'ghost'} >
+        return <Button onPress={() => deleteHandler(payment_method_id)} size='tiny' appearance={'ghost'} >
             <Ionicons size={24} name='trash-outline' />
         </Button>
     };
@@ -38,7 +36,7 @@ export const UserCardsList = (props) => {
     return (
         <List
             style={styles.container}
-            data={data}
+            data={creditCards}
             renderItem={renderItem}
             ItemSeparatorComponent={Divider}
             scrollEnabled={false}
