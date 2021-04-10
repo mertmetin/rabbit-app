@@ -1,11 +1,13 @@
 import React from 'react';
-import { StyleSheet, TextInput, View, TouchableWithoutFeedback } from 'react-native';
-import { PasswordToggle } from '../../Buttons/PasswordToggle';
-import { Formik } from 'formik';
-import { Layout, Input, Button, Text } from '@ui-kitten/components';
-import { Ionicons } from '@expo/vector-icons';
+import { StyleSheet, View } from 'react-native';
 
-export const PasswordChangeForm = props => {
+import { Formik } from 'formik';
+import { Input, Button, Text } from '@ui-kitten/components';
+
+import { PasswordToggle } from '../../Buttons/PasswordToggle';
+import { FormValidationAlert } from '../../Alerts/FormValidationAlert';
+
+export const PasswordChangeForm = ({ validationSchema, submitHandler }) => {
     const [secureTextEntry, setSecureTextEntry] = React.useState(true);
     const [secureTextEntryConfirm, setSecureTextEntryConfirm] = React.useState(true);
 
@@ -14,15 +16,12 @@ export const PasswordChangeForm = props => {
     const passwordToggleConfirm = <PasswordToggle secureTextEntry={secureTextEntryConfirm} 
         setSecureTextEntry={setSecureTextEntryConfirm} />
 
-    const AlertIcon = (props) => (
-        <Ionicons size={11} {...props} name='md-information-circle-outline' />
-    );
-
     return (
         <Formik
             initialValues={{ oldPassword: '', password: '' }}
-            onSubmit={values => props.onPress(values)}
-            validationSchema={props.validationSchema}
+            onSubmit={values => submitHandler(values)}
+            validateOnChange={false}
+            validationSchema={validationSchema}
         >
             {({ handleChange, handleBlur, handleSubmit, errors, values }) => (
                 <View style={styles.container}>
@@ -37,9 +36,6 @@ export const PasswordChangeForm = props => {
                         onChangeText={handleChange('oldPassword')}
                         size='large'
                     />
-                    {errors.oldPassword &&
-                        <Text style={{ fontSize: 12, color: 'red', alignSelf: 'flex-start' }}>{errors.oldPassword}</Text>
-                    }
                     <Input
                         style={styles.field}
                         placeholder='Enter your new password'
@@ -48,7 +44,7 @@ export const PasswordChangeForm = props => {
                         textStyle={styles.textStyle}
                         caption='Password should be at least 4 characters'
                         accessoryRight={() => passwordToggleConfirm}
-                        captionIcon={AlertIcon}
+                        captionIcon={FormValidationAlert}
                         secureTextEntry={secureTextEntryConfirm}
                         onChangeText={handleChange('password')}
                         size='large'
