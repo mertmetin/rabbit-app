@@ -7,22 +7,17 @@ import { PasswordChangeForm } from '../Forms/Auth/PasswordChangeForm';
 import { showMessage, hideMessage } from "react-native-flash-message";
 
 const PasswordChangeValidationSchema = Yup.object().shape({
-    oldPassword: Yup
-        .string()
-        .min(4, ({ min }) => `Password must be at least ${min} characters`)
-        .required('Password is required'),
     password: Yup
         .string()
         .min(4, ({ min }) => `New password must be at least ${min} characters`)
         .required('Password is required')
 });
 
-export const PasswordChangeContainer = props => {
-    const user_id = props.userId;
+export const PasswordChangeContainer = ({ userId }) => {
     const navigation = useNavigation();
 
-    const onPress = (data) => {
-        http.patch(`users/${user_id}/password/change`, {
+    const submitHandler = (data) => {
+        http.patch(`users/${userId}/password/change`, {
             oldPassword: data.oldPassword,
             password: data.password
         })
@@ -44,7 +39,7 @@ export const PasswordChangeContainer = props => {
         <React.Fragment>
             <PasswordChangeForm 
                 validationSchema={PasswordChangeValidationSchema} 
-                onPress={onPress} 
+                submitHandler={submitHandler} 
             />
         </React.Fragment>
     );

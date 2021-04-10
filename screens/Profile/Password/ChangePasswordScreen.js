@@ -6,7 +6,7 @@ import { PasswordChangeContainer }
     from '../../../components/Containers/PasswordChangeContainer';
 
 export default function ChangePasswordScreen({ navigation, route }) {
-    const userId = route.params.data;
+    const userId = route.params.id;
 
     return (
         <SafeAreaView style={styles.container}>
