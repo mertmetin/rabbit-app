@@ -1,22 +1,24 @@
-import * as Yup from 'yup';
+import { string, required, min, object } from 'yup';
+import React from 'react';
+
 import Token from '../../helpers/Token';
-import React, { Component } from 'react';
 import { LoginForm } from '../Forms/Auth/LoginForm';
 import { useNavigation } from '@react-navigation/native';
-import http, { setClientToken } from '../../helpers/Http';
-import { showMessage, hideMessage } from "react-native-flash-message";
 
-const LoginValidationSchema = Yup.object().shape({
-    phone: Yup.string().required("Phone number is required!"),
-    password: Yup
-        .string()
+import http, { setClientToken } from '../../helpers/Http';
+import { showMessage } from "react-native-flash-message";
+
+const LoginValidationSchema = object().shape({
+    phone: string().required("Phone number is required!"),
+    password: string()
         .min(4, ({ min }) => `Password must be at least ${min} characters`)
         .required('Password is required')
 });
 
-export const LoginContainer = props => {
+export const LoginContainer = () => {
     const navigation = useNavigation();
-    const onPress = (data) => {
+
+    const submitHandler = (data) => {
         var credentials = {
             phone: data.phone,
             password: data.password
@@ -39,7 +41,7 @@ export const LoginContainer = props => {
 
     return (
         <React.Fragment>
-            <LoginForm onPress={onPress}
+            <LoginForm submitHandler={submitHandler}
                 validationSchema={LoginValidationSchema} />
         </React.Fragment>
     );
