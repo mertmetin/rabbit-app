@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import { Input, Button, Text } from '@ui-kitten/components';
 
 import { PasswordToggle } from '../../Buttons/PasswordToggle';
-import { FormValidationAlert } from '../../Alerts/FormValidationAlert';
+import { InformationIcon } from '../../Icons/InformationIcon';
 
 export const PasswordChangeForm = ({ validationSchema, submitHandler }) => {
     const [secureTextEntry, setSecureTextEntry] = React.useState(true);
@@ -44,7 +44,7 @@ export const PasswordChangeForm = ({ validationSchema, submitHandler }) => {
                         textStyle={styles.textStyle}
                         caption='Password should be at least 4 characters'
                         accessoryRight={() => passwordToggleConfirm}
-                        captionIcon={FormValidationAlert}
+                        captionIcon={InformationIcon}
                         secureTextEntry={secureTextEntryConfirm}
                         onChangeText={handleChange('password')}
                         size='large'

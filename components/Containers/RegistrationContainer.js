@@ -1,25 +1,25 @@
-import * as Yup from 'yup';
-import Token from '../../helpers/Token';
-import React, { Component } from 'react';
+import { string, required, min, email, object } from 'yup';
+import React from 'react';
+
 import { useNavigation } from '@react-navigation/native';
-import http, { setClientToken } from '../../helpers/Http';
+import http from '../../helpers/Http';
+
 import { RegistrationForm } from '../Forms/Auth/RegistrationForm';
 import { showMessage, hideMessage } from "react-native-flash-message";
 
-const RegistrationValidationSchema = Yup.object().shape({
-    name: Yup.string().required("Name is required!"),
-    phone: Yup.string().required("Phone number is required!"),
-    password: Yup
-        .string()
+const RegistrationValidationSchema = object().shape({
+    name: string().required("Name is required!"),
+    phone: string().required("Phone number is required!"),
+    password: string()
         .min(4, ({ min }) => `Password must be at least ${min} characters`)
         .required('Password is required'),
-    email: Yup.string().email()
+    email: string().email().required('Email is required')
 });
 
-export const RegistrationContainer = props => {
+export const RegistrationContainer = () => {
     const navigation = useNavigation();
-    const onPress = (data) => {
-        console.log(data);
+
+    const submitHandler = (data) => {
         http.post('users', {
             name: data.name,
             phone: data.phone,
@@ -39,7 +39,7 @@ export const RegistrationContainer = props => {
 
     return (
         <React.Fragment>
-            <RegistrationForm onPress={onPress}
+            <RegistrationForm submitHandler={submitHandler}
                 validationSchema={RegistrationValidationSchema} />
         </React.Fragment>
     );
