@@ -1,31 +1,28 @@
 import React from 'react';
-import { StyleSheet, TextInput, View, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+
 import { Formik } from 'formik';
-import { Layout, Input, Button, Text } from '@ui-kitten/components';
-import { Ionicons } from '@expo/vector-icons';
+import { Input, Button, Text } from '@ui-kitten/components';
 
-export const LoginForm = props => {
+import { PasswordToggle } from '../../Buttons/PasswordToggle'
+import { InformationIcon } from '../../Icons/InformationIcon';
+
+export const LoginForm = ( { validationSchema, submitHandler } ) => {
     const [secureTextEntry, setSecureTextEntry] = React.useState(true);
+    const passwordToggle = <PasswordToggle secureTextEntry={secureTextEntry} 
+        setSecureTextEntry={setSecureTextEntry} />
 
-    const toggleSecureEntry = () => {
-        setSecureTextEntry(!secureTextEntry);
-    };
-
-    const renderIcon = (props) => (
-        <TouchableWithoutFeedback onPress={toggleSecureEntry}>
-            <Ionicons size={24} {...props} name={secureTextEntry ? 'md-eye' : 'md-eye-off'} />
-        </TouchableWithoutFeedback>
-    );
-
-    const AlertIcon = (props) => (
-        <Ionicons size={11} {...props} name='md-information-circle-outline' />
-    );
+    const initialValues = {
+        phone: '',
+        password: ''
+    }
     
     return(
         <Formik
-            initialValues={{ phone: '', password: '' }}
-            onSubmit={values => props.onPress(values)}
-            validationSchema={props.validationSchema}
+            initialValues={initialValues}
+            onSubmit={values => submitHandler(values)}
+            validateOnChange={false}
+            validationSchema={validationSchema}
         >
             {({ handleChange, handleBlur, handleSubmit, errors, values }) => (
                 <View style={styles.container}>
@@ -48,8 +45,8 @@ export const LoginForm = props => {
                         value={values.password}
                         textStyle={styles.textStyle}
                         caption='Password should be at least 4 characters'
-                        accessoryRight={renderIcon}
-                        captionIcon={AlertIcon}
+                        accessoryRight={() => passwordToggle}
+                        captionIcon={InformationIcon}
                         secureTextEntry={secureTextEntry}
                         onChangeText={handleChange('password')}
                         size='large'
