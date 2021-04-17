@@ -1,19 +1,18 @@
-import * as Yup from 'yup';
-import Token from '../../helpers/Token';
+import { string, required, min, object } from 'yup';
+import Token from '../../../helpers/Token';
 import React, { Component } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import http, { setClientToken } from '../../helpers/Http';
-import { PasswordChangeForm } from '../Forms/Auth/PasswordChangeForm';
+import http, { setClientToken } from '../../../helpers/Http';
+import { PasswordChangeForm } from './PasswordChangeForm';
 import { showMessage, hideMessage } from "react-native-flash-message";
 
-const PasswordChangeValidationSchema = Yup.object().shape({
-    password: Yup
-        .string()
+const PasswordChangeValidationSchema = object().shape({
+    password: string()
         .min(4, ({ min }) => `New password must be at least ${min} characters`)
         .required('Password is required')
 });
 
-export const PasswordChangeContainer = ({ userId }) => {
+export const PasswordChange = ({ userId }) => {
     const navigation = useNavigation();
 
     const submitHandler = (data) => {
