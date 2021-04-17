@@ -2,9 +2,9 @@ import { string, required, min, email, object } from 'yup';
 import React from 'react';
 
 import { useNavigation } from '@react-navigation/native';
-import http from '../../helpers/Http';
+import http from '../../../helpers/Http';
 
-import { RegistrationForm } from '../Forms/Auth/RegistrationForm';
+import { RegistrationForm } from './RegistrationForm';
 import { showMessage, hideMessage } from "react-native-flash-message";
 
 const RegistrationValidationSchema = object().shape({
@@ -16,7 +16,7 @@ const RegistrationValidationSchema = object().shape({
     email: string().email().required('Email is required')
 });
 
-export const RegistrationContainer = () => {
+export const Registration = () => {
     const navigation = useNavigation();
 
     const submitHandler = (data) => {

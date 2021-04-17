@@ -1,11 +1,11 @@
 import { string, required, min, object } from 'yup';
 import React from 'react';
 
-import Token from '../../helpers/Token';
-import { LoginForm } from '../Forms/Auth/LoginForm';
+import Token from '../../../helpers/Token';
+import { LoginForm } from './LoginForm';
 import { useNavigation } from '@react-navigation/native';
 
-import http, { setClientToken } from '../../helpers/Http';
+import http, { setClientToken } from '../../../helpers/Http';
 import { showMessage } from "react-native-flash-message";
 
 const LoginValidationSchema = object().shape({
@@ -15,7 +15,7 @@ const LoginValidationSchema = object().shape({
         .required('Password is required')
 });
 
-export const LoginContainer = () => {
+export const Login = () => {
     const navigation = useNavigation();
 
     const submitHandler = (data) => {

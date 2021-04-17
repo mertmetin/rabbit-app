@@ -6,6 +6,9 @@ import { Layout, Input, Button, Text } from '@ui-kitten/components';
 
 import { PasswordToggle } from '../../Buttons/PasswordToggle'
 import { InformationIcon } from '../../Icons/InformationIcon';
+import { ErrorMessage } from '../../ErrorMessage';
+import { PhoneNumberInput } from '../../Input/PhoneNumberInput';
+
 
 export const RegistrationForm = ({ validationSchema, submitHandler }) => {
     const [secureTextEntry, setSecureTextEntry] = React.useState(true);
@@ -26,7 +29,7 @@ export const RegistrationForm = ({ validationSchema, submitHandler }) => {
             validateOnChange={false}
             validationSchema={validationSchema}
         >
-            {({ handleChange, handleBlur, handleSubmit, errors, values }) => (
+            {({ handleChange, handleBlur, handleSubmit, setFieldValue, errors, values }) => (
                 <View style={styles.container}>
                     <Input
                         style={styles.field}
@@ -38,21 +41,12 @@ export const RegistrationForm = ({ validationSchema, submitHandler }) => {
                         size='large'
                         autoCompleteType={'off'}
                     />
-                    {errors.name &&
-                        <Text style={{ fontSize: 12, color: 'red', alignSelf: 'flex-start' }}>{errors.name}</Text>
-                    }
-                    <Input
-                        style={styles.field}
-                        placeholder='(613) 327-8306'
-                        label='Phone Number'
-                        value={values.phone}
-                        textStyle={styles.textStyle}
-                        onChangeText={handleChange('phone')}
-                        size='large'
+                    {errors.name && <ErrorMessage msg={errors.name} />}
+                    <PhoneNumberInput 
+                        value={values.phone} 
+                        setFieldValue={setFieldValue} 
                     />
-                    {errors.phone &&
-                        <Text style={{ fontSize: 12, color: 'red', alignSelf: 'flex-start', marginTop: 2 }}>{errors.phone}</Text>
-                    }
+                    {errors.phone && <ErrorMessage msg={errors.phone} />}
                     <Input
                         style={styles.field}
                         placeholder='Enter your password'
@@ -66,9 +60,7 @@ export const RegistrationForm = ({ validationSchema, submitHandler }) => {
                         onChangeText={handleChange('password')}
                         size='large'
                     />
-                    {errors.password &&
-                        <Text style={{ fontSize: 12, color: 'red', alignSelf: 'flex-start' }}>{errors.password}</Text>
-                    }
+                    {errors.password && <ErrorMessage msg={errors.password} />}
                     <Input
                         style={styles.field}
                         placeholder='Enter your email'
@@ -79,9 +71,7 @@ export const RegistrationForm = ({ validationSchema, submitHandler }) => {
                         size='large'
                         autoCapitalize='none'
                     />
-                    {errors.email &&
-                        <Text style={{ fontSize: 12, color: 'red', alignSelf: 'flex-start' }}>{errors.email}</Text>
-                    }
+                    {errors.email && <ErrorMessage msg={errors.email} />}
                     <Button onPress={handleSubmit} style={styles.button} >
                         Register
                     </Button>
