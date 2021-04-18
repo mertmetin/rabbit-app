@@ -6,8 +6,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import BottomTabNavigator from './navigation/BottomTabNavigator';
-import useLinking from './navigation/useLinking';
+import BottomTabNavigator from '@/navigation/BottomTabNavigator';
+import useLinking from './src/navigation/useLinking';
 import FlashMessage from "react-native-flash-message";
 import { Provider } from 'react-redux'
 import store from './store'
