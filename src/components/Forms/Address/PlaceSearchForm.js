@@ -20,7 +20,7 @@ export const PlaceSearchForm = props => {
             <View>
                 <Input
                     style={styles.field}
-                    placeholder='Search Address'
+                    placeholder='Search Addresss'
                     value={searchText}
                     textStyle={styles.textStyle}
                     onChangeText={(e) => {
