@@ -1,27 +1,35 @@
 import React from 'react';
-import { StyleSheet, TextInput, View, TouchableWithoutFeedback } from 'react-native';
-import { Formik } from 'formik';
-import { Layout, Input, Button, Text, List, ListItem, Divider } from '@ui-kitten/components';
-import { Ionicons } from '@expo/vector-icons';
+import { StyleSheet } from 'react-native';
+import { Input, Text, List, ListItem, Divider } from '@ui-kitten/components';
 
-import { Search } from '@/icons';
+import { AutocompletePopper } from '@/components/AutocompletePopper';
+import { Search as SearchIcon } from '@/icons';
+import { Location as LocationIcon } from '@/icons';
 
-export const PlaceAutocompleteInput = ({ searchTerm, setSearchTerm, changeHandler }) => {
-    const SearchIcon = () => <Search size={24} />
+export const PlaceAutocompleteInput = ({ searchTerm, setSearchTerm, predictions, changeHandler, onAddressSelected }) => {
+    const SearchIcon = () => <SearchIcon size={24} />
+    const locationIcon = <LocationIcon size={24} />
 
     return (
-        <Input
-            style={styles.field}
-            placeholder='Search Address'
-            value={searchTerm}
-            textStyle={styles.textStyle}
-            onChangeText={(e) => {
-                setSearchTerm(e);
-                changeHandler(e);
-            }}
-            accessoryLeft={SearchIcon}
-            size='large'
-        />
+        <>
+            <Input
+                style={styles.field}
+                placeholder='Search Address'
+                value={searchTerm}
+                textStyle={styles.textStyle}
+                onChangeText={(e) => {
+                    setSearchTerm(e);
+                    changeHandler(e);
+                }}
+                accessoryLeft={SearchIcon}
+                size='large'
+            />
+            <AutocompletePopper 
+                data={predictions}
+                leftIcon={locationIcon} 
+                onItemSelected={onAddressSelected}  
+            />
+        </>
     );
 }
 

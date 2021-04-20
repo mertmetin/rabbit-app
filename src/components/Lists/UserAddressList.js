@@ -5,7 +5,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { Divider, List, Button, ListItem, Menu, MenuItem, Avatar } from '@ui-kitten/components';
 
 export const UserAddressList = ({ data, handleDelete, onPress }) => {
-    // const data = props.data;
     const renderItemAccessory = (address_id) => {
         return <Button onPress={() => handleDelete(address_id)} size='tiny' appearance={'ghost'} >
             <Ionicons size={24} name='trash-outline' />

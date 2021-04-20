@@ -1,8 +1,9 @@
 import axios from 'axios';
 import React from 'react';
+
 import { PlaceAutocompleteInput } from './PlaceAutocompleteInput';
 
-export const PlaceAutocomplete =  () => {
+export const PlaceAutocomplete = ({ onAddressSelected }) => {
     const [predictions, setPredictions] = React.useState([]);
     const [searchTerm, setSearchTerm] = React.useState('');
 
@@ -27,7 +28,9 @@ export const PlaceAutocomplete =  () => {
         <PlaceAutocompleteInput 
             searchTerm={searchTerm} 
             setSearchTerm={setSearchTerm} 
-            changeHandler={changeHandler} 
+            predictions={predictions} 
+            changeHandler={changeHandler}
+            onAddressSelected={onAddressSelected}
         />
     );
 }
