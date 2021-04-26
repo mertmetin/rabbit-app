@@ -25,11 +25,11 @@ export const UserAddressOptions = ({ submitHandler }) => {
     const renderItemAccessory = () => <AddIcon color={'#3154fe'} style={styles.icon} size={24} />
 
     const getAddressTitle = (item) => (
-            <>
-                {getAddressIconByType(item.type)}
-                <Text style={styles.titleBold}> | </Text>
-                <Text>{item.title}</Text>
-            </>
+        <>
+            {getAddressIconByType(item.type)}
+            <Text style={styles.titleBold}> | </Text>
+            <Text>{item.title}</Text>
+        </>
     );
 
     const renderItem = ({ item, index }) => (

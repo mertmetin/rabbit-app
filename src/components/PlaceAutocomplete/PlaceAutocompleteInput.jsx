@@ -1,34 +1,33 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { Input, Text, List, ListItem, Divider } from '@ui-kitten/components';
 
 import { AutocompletePopper } from '@/components/AutocompletePopper';
-import { Search as SearchIcon } from '@/icons';
-import { Location as LocationIcon } from '@/icons';
+import { Search, Location } from '@/icons';
 
-export const PlaceAutocompleteInput = ({ searchTerm, setSearchTerm, predictions, changeHandler, onAddressSelected }) => {
-    const SearchIcon = () => <SearchIcon size={24} />
-    const locationIcon = <LocationIcon size={24} />
+const SearchIcon = () => <Search size={24} />
+const LocationIcon = () => <Location size={24} />
 
+export const PlaceAutocompleteInput = ({ predictions, changeHandler, onAddressSelected }) => {
     return (
         <>
             <Input
                 style={styles.field}
                 placeholder='Search Address'
-                value={searchTerm}
                 textStyle={styles.textStyle}
-                onChangeText={(e) => {
-                    setSearchTerm(e);
-                    changeHandler(e);
-                }}
+                onChangeText={(text) => changeHandler(text)}
                 accessoryLeft={SearchIcon}
                 size='large'
             />
-            <AutocompletePopper 
-                data={predictions}
-                leftIcon={locationIcon} 
-                onItemSelected={onAddressSelected}  
-            />
+            <View style={styles.popperContainer}>
+                <Divider />
+                <AutocompletePopper 
+                    data={predictions}
+                    leftIcon={LocationIcon} 
+                    onItemSelected={onAddressSelected}  
+                />
+            </View>
         </>
     );
 }
@@ -41,4 +40,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderColor: '#fff'
     },
+    popperContainer: {
+        width: '100%',
+        position: 'absolute',
+        zIndex: 500,
+        top: 100
+    }
 });

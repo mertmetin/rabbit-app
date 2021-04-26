@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 import { Text, List, ListItem, Divider } from '@ui-kitten/components';
 
 export const AutocompletePopper = ({ data, leftIcon, onItemSelected }) => {
+    
     const renderItem = ({ item }) => (
         <ListItem
             title={() => <Text style={styles.textDisabled}>{item.description}</Text>}
@@ -11,11 +12,13 @@ export const AutocompletePopper = ({ data, leftIcon, onItemSelected }) => {
         />
     );
 
-    return <List
-        data={data}
-        ItemSeparatorComponent={Divider}
-        renderItem={renderItem}
-    />
+    return (
+        <List
+            data={data}
+            ItemSeparatorComponent={Divider}
+            renderItem={renderItem}
+        />
+    );
 }
 
 const styles = StyleSheet.create({

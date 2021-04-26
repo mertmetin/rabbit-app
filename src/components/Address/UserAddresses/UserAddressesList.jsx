@@ -4,18 +4,18 @@ import { useNavigation } from '@react-navigation/native';
 import { Divider, List, ListItem, Button, } from '@ui-kitten/components';
 
 import { Trash as TrashIcon } from '@/icons';
-import { getAddressIconByType } from '@/utils/address';
+// import { getAddressIconByType } from '@/utils/address';
 
 const getAddressTitle = (item) => {
-    var addressType = item.address_type.type;
-    const addressIcon = getAddressIconByType(addressType);
-    addressType = addressType.charAt(0).toUpperCase() + addressType.slice(1);
+    // var addressType = item.address_type.type;
+    // const addressIcon = getAddressIconByType(addressType);
+    // addressType = addressType.charAt(0).toUpperCase() + addressType.slice(1);
 
     return (
         <>
-            {addressIcon}
+            {/* {addressIcon} */}
             <Text style={{ fontSize: 20, fontWeight: '200', }}> | </Text>
-            <Text style={{ fontSize: 14, fontWeight: '600', }}>{addressType} </Text>
+            {/* <Text style={{ fontSize: 14, fontWeight: '600', }}>{addressType} </Text> */}
             <Text style={styles.textDisabled}>{item.address_line_1}</Text>
         </>
     );

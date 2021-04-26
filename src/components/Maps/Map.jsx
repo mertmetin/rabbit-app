@@ -11,18 +11,19 @@ const GOOGLE_MAPS_APIKEY = '***REMOVED***';
 
 export const Map = ({ initialRegion }) =>  {
 
-    console.log(initialRegion);
-
     return (
         <MapView
             scrollEnabled={false}
             provider={PROVIDER_GOOGLE} 
             style={styles.map}
             initialRegion={{
-                ...{initialRegion},
+                ...initialRegion,
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA,
-            }}>
+            }}
+            region={{...initialRegion}}
+            >
+            <MapView.Marker coordinate={{...initialRegion} }/>
         </MapView >
     )
 }
