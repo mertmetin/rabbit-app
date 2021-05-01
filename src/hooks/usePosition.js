@@ -1,12 +1,17 @@
 import { requestPermissionsAsync, getCurrentPositionAsync } from 'expo-location';
 
-export const usePosition = ({ setPosition }) => {
+const PERMISSION_GRANTED = 'granted';
 
+export const usePosition = () => {
     const getCurrentPosition = async () => {
         const { status } = await requestPermissionsAsync();
         const position = await getCurrentPositionAsync();
+        const isGranted = status !== PERMISSION_GRANTED;
 
-        setPosition(position);
+        if (isGranted) 
+            return;
+
+        return position;
     }
 
     return { getCurrentPosition };

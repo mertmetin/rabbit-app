@@ -1,12 +1,9 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Formik } from 'formik';
-import { Layout, Input, Button, Text, Card, IndexPath, Select, SelectItem } from '@ui-kitten/components';
+import { Input, Button } from '@ui-kitten/components';
 
 import { Modal } from '@/components/Modal';
-
-// import { Modal } from '../../Modals/Modal';
-
 import { ErrorMessage } from '@/components/ErrorMessage';
 
 export const AddressForm = ({ address, type, addAddress }) => {

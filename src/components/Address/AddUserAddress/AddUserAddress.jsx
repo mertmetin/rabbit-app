@@ -4,12 +4,12 @@ import http from '../../../helpers/Http';
 import { showMessage, hideMessage } from "react-native-flash-message";
 
 import { PlaceAutocomplete } from '@/components/PlaceAutocomplete';
-import { LocationFinder } from '@/components/LocationFinder';
+import { PositionFinder } from '@/components/PositionFinder';
 import { Map } from '@/components/Maps';
 import { Modal } from '@/components/Modal';
 import { AddressForm } from './AddressForm';
 
-import { Button } from '@ui-kitten/components';
+import { Button, Divider } from '@ui-kitten/components';
 import { StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -17,7 +17,6 @@ export const AddUserAddress = ({ data }) => {
     const navigation = useNavigation();
 
     const [ address, setAddress ] = useState(null);
-    const [ position, setPosition ] = useState({});
     const [ showConfirmModal, setShowConfirmModal ] = useState(false);
     const [ showAddressForm, setShowAddressForm ] = useState(false);
 
@@ -82,13 +81,10 @@ export const AddUserAddress = ({ data }) => {
         var user_id = data.user_id;
         location.user_id = user_id;
 
-        console.log(location);
-
         http.post(`users/${user_id}/addresses`, {address: location})
         .then(result => {
             navigation.navigate('Home');
         }).catch(error => {
-            console.log(error);
             showMessage({
                 message: error.message,
                 type: "danger"
@@ -96,14 +92,34 @@ export const AddUserAddress = ({ data }) => {
         })
     }
 
-    console.log(showAddressForm);
+    const onPositionFound = (position) => {
+        var coords = position.coords;
+        const url = 'https://maps.googleapis.com/maps/api/geocode/json?' +
+        'key=***REMOVED***&' +
+        '&latlng=' + coords.latitude + ',' + coords.longitude;
+
+        axios.get(url).then(result => {
+            var address = parseAddressComponents(result.data.results[0].address_components);
+            address.latitude = coords.latitude;
+            address.longitude = coords.longitude;
+            setAddress(address);
+        }).catch(error => {
+            showMessage({
+                message: error.message,
+                type: "danger"
+            });
+        })
+    }
 
     return (
         <>
             {!address ? 
                 <>
                     <PlaceAutocomplete onAddressSelected={onAddressSelected} />
-                    <LocationFinder setPosition={setPosition} /> 
+                    <Divider />
+                    <View style={styles.box_shadow}>  
+                        <PositionFinder onPositionFound={onPositionFound} /> 
+                    </View>
                 </> :
                 <>
                     <Map initialRegion={address} />
@@ -132,6 +148,16 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         shadowOpacity: 0.05,
         shadowRadius: 1.84,
+    },
+    box_shadow: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+        elevation: 1
     },
     btnAddressSelect: {
         margin: 20

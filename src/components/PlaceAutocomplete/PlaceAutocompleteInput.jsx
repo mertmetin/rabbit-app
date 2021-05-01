@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { View } from 'react-native';
-import { Input, Text, List, ListItem, Divider } from '@ui-kitten/components';
+import { Input } from '@ui-kitten/components';
 
 import { AutocompletePopper } from '@/components/AutocompletePopper';
 import { Search, Location } from '@/icons';
@@ -21,7 +21,6 @@ export const PlaceAutocompleteInput = ({ predictions, changeHandler, onAddressSe
                 size='large'
             />
             <View style={styles.popperContainer}>
-                <Divider />
                 <AutocompletePopper 
                     data={predictions}
                     leftIcon={LocationIcon} 

@@ -79,6 +79,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         component={ProfileNavigator}
         options={({ route }) => ({
           // title: 'Profile',
+          unmountOnBlur:true,
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-person" />,
           tabBarVisible: getTabBarVisibility(route)
         })}
