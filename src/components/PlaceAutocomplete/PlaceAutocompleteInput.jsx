@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { View } from 'react-native';
-import { Input } from '@ui-kitten/components';
+import { Input, Spinner } from '@ui-kitten/components';
 
 import { AutocompletePopper } from '@/components/AutocompletePopper';
 import { Search, Location } from '@/icons';
@@ -9,24 +9,28 @@ import { Search, Location } from '@/icons';
 const SearchIcon = () => <Search size={24} />
 const LocationIcon = () => <Location size={24} />
 
-export const PlaceAutocompleteInput = ({ predictions, changeHandler, onAddressSelected }) => {
+export const PlaceAutocompleteInput = ({ predictions, setSearchTerm, onAddressSelected, isSearching }) => {
+    const handleLeftIcon = () => isSearching ? <Spinner size={'small'} /> : <SearchIcon />;
+
     return (
         <>
             <Input
                 style={styles.field}
                 placeholder='Search Address'
                 textStyle={styles.textStyle}
-                onChangeText={(text) => changeHandler(text)}
-                accessoryLeft={SearchIcon}
+                onChangeText={(text) => setSearchTerm(text)}  
+                accessoryLeft={handleLeftIcon}
                 size='large'
             />
-            <View style={styles.popperContainer}>
-                <AutocompletePopper 
-                    data={predictions}
-                    leftIcon={LocationIcon} 
-                    onItemSelected={onAddressSelected}  
-                />
-            </View>
+            {predictions && 
+                <View style={styles.popperContainer}>
+                    <AutocompletePopper 
+                        data={predictions}
+                        leftIcon={LocationIcon} 
+                        onItemSelected={onAddressSelected}  
+                    />
+                </View>
+            }
         </>
     );
 }

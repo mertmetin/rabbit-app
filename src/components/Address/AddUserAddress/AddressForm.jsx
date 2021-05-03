@@ -1,12 +1,13 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Formik } from 'formik';
-import { Input, Button } from '@ui-kitten/components';
+import { Input, Button, Select, SelectItem, IndexPath } from '@ui-kitten/components';
 
 import { Modal } from '@/components/Modal';
 import { ErrorMessage } from '@/components/ErrorMessage';
+import { IconSelectBox } from './IconSelectBox';
 
-export const AddressForm = ({ address, type, addAddress }) => {
+export const AddressForm = ({ address, type, addAddress, onIconSelect }) => {
     const [values, setValues] = React.useState();
     const [visible, setVisible] = React.useState(false);
     const initialValues = {
@@ -15,7 +16,6 @@ export const AddressForm = ({ address, type, addAddress }) => {
         label: type.charAt(0).toUpperCase() + type.slice(1), 
         notes: ''
     };
-
     const submitHandler = () => addAddress(values);
 
     return (
@@ -26,7 +26,7 @@ export const AddressForm = ({ address, type, addAddress }) => {
                 setValues({values, ...address});
             }}
         >
-            {({ handleChange, handleBlur, handleSubmit, errors, values }) => (
+            {({ handleChange, handleSubmit, errors, values }) => (
                 <View style={styles.container}>
                     {visible && <Modal 
                             visible={visible} 
@@ -36,14 +36,22 @@ export const AddressForm = ({ address, type, addAddress }) => {
                             description={values.address_line_1} 
                         /> 
                     }
-                    <Input
-                        style={styles.field}
-                        placeholder='Label (e.g. Home, Work)'
-                        value={values.label}
-                        textStyle={styles.textStyle}
-                        onChangeText={handleChange('label')}
-                        size='large'
-                    />
+                    <View style={{flexDirection: 'row'}}>
+                        <IconSelectBox 
+                            style={{ width: '30%', paddingRight: 5 }} 
+                            size='large'
+                            addressType={type} 
+                            onSelect={onIconSelect} 
+                        />
+                        <Input
+                            style={{ width: '70%' }}
+                            placeholder='Label (e.g. Home, Work)'
+                            value={values.label}
+                            textStyle={styles.textStyle}
+                            onChangeText={handleChange('label')}
+                            size='large'
+                        />
+                    </View>
                     {errors.title && <ErrorMessage msg={errors.title} /> }
                     <Input
                         style={styles.field}

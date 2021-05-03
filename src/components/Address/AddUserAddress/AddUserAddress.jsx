@@ -7,6 +7,8 @@ import { PlaceAutocomplete } from '@/components/PlaceAutocomplete';
 import { PositionFinder } from '@/components/PositionFinder';
 import { Map } from '@/components/Maps';
 import { Modal } from '@/components/Modal';
+import { getAddressIconByType } from '@/utils/address';
+
 import { AddressForm } from './AddressForm';
 
 import { Button, Divider } from '@ui-kitten/components';
@@ -16,9 +18,12 @@ import { useNavigation } from '@react-navigation/native';
 export const AddUserAddress = ({ data }) => {
     const navigation = useNavigation();
 
-    const [ address, setAddress ] = useState(null);
-    const [ showConfirmModal, setShowConfirmModal ] = useState(false);
-    const [ showAddressForm, setShowAddressForm ] = useState(false);
+    const [address, setAddress] = useState(null);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [showAddressForm, setShowAddressForm] = useState(false);
+
+    const addressIcon = getAddressIconByType(data['type']);
+    const [selectedIcon, setSelectedIcon] = useState(addressIcon);
 
     const parseAddressComponents = (address_components) => {
         var address = {};
@@ -80,6 +85,9 @@ export const AddUserAddress = ({ data }) => {
     const addAddress = (location) => {
         var user_id = data.user_id;
         location.user_id = user_id;
+        location.icon = selectedIcon.key;
+
+        console.log(location);
 
         http.post(`users/${user_id}/addresses`, {address: location})
         .then(result => {
@@ -93,12 +101,14 @@ export const AddUserAddress = ({ data }) => {
     }
 
     const onPositionFound = (position) => {
-        var coords = position.coords;
+        const coords = position.coords;
         const url = 'https://maps.googleapis.com/maps/api/geocode/json?' +
         'key=***REMOVED***&' +
         '&latlng=' + coords.latitude + ',' + coords.longitude;
 
         axios.get(url).then(result => {
+            if (result.data.error_message)
+                return;
             var address = parseAddressComponents(result.data.results[0].address_components);
             address.latitude = coords.latitude;
             address.longitude = coords.longitude;
@@ -111,6 +121,8 @@ export const AddUserAddress = ({ data }) => {
         })
     }
 
+    const onIconSelect = (icon) => setSelectedIcon(icon);
+
     return (
         <>
             {!address ? 
@@ -122,13 +134,13 @@ export const AddUserAddress = ({ data }) => {
                     </View>
                 </> :
                 <>
-                    <Map initialRegion={address} />
+                    <Map initialRegion={address} markerIcon={selectedIcon} />
                     {showConfirmModal && 
                         <Modal visible={showConfirmModal} setVisible={setShowConfirmModal} handleSubmit={handleSubmit}
                             title={'Your order will be delivered to the pinned location on the map. Please confirm your pinned location.'} />
                     }
                     <View style={styles.container}>
-                        {showAddressForm ? <AddressForm address={address} type={data.type} addAddress={addAddress} /> : 
+                        {showAddressForm ? <AddressForm address={address} type={data.type} addAddress={addAddress} onIconSelect={onIconSelect} /> : 
                             <Button onPress={() => setShowConfirmModal(true)} style={styles.btnAddressSelect}>Use this address</Button>
                         }
                     </View>          
