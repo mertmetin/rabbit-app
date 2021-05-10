@@ -14,8 +14,8 @@ const getAddressTitle = (item) => (
 );
 
 export const UserAddressesList = ({ data, submitHandler, deleteHandler }) => {
-    const renderItemAccessory = (address_id) => (
-        <Button onPress={() => deleteHandler(address_id)} size={'tiny'} appearance={'ghost'} >
+    const renderItemAccessory = (addressId) => (
+        <Button onPress={() => deleteHandler(addressId)} size={'tiny'} appearance={'ghost'} >
             <TrashIcon size={24} />
         </Button>
     );

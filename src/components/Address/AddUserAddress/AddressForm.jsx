@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Formik } from 'formik';
 import { Input, Button, Select, SelectItem, IndexPath } from '@ui-kitten/components';
@@ -8,8 +8,8 @@ import { ErrorMessage } from '@/components/ErrorMessage';
 import { IconSelectBox } from './IconSelectBox';
 
 export const AddressForm = ({ address, type, addAddress, onIconSelect }) => {
-    const [values, setValues] = React.useState();
-    const [visible, setVisible] = React.useState(false);
+    const [values, setValues] = useState();
+    const [visible, setVisible] = useState(false);
     const initialValues = {
         address_line_1: address.address_line_1, 
         address_line_2: address.address_line_2,  
