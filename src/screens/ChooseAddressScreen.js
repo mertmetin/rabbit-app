@@ -3,11 +3,12 @@ import { Layout, Text } from '@ui-kitten/components';
 import { StyleSheet, SafeAreaView, ScrollView, View } from 'react-native';
 import { UserAddressContainer } from '../components/Containers/UserAddressContainer';
 import { AddUserAddressList } from '../components/Lists/AddUserAddressList';
+import { UserAddressOptions } from '@/components/Address/UserAddressOptions';
 
 export default function ChooseAddressScreen({ navigation, route }) {
     const user_id = route.params.id;
 
-    const onPress = (data) => {
+    const submitHandler = (data) => {
         data.user_id = user_id;
         navigation.navigate('AddAddressScreen', { data: data });
     }
@@ -16,13 +17,13 @@ export default function ChooseAddressScreen({ navigation, route }) {
         <SafeAreaView>
             <Layout style={styles.container}>
                 <View style={[styles.box_shadow, { paddingBottom: 50 }]}>
-                    <UserAddressContainer user_id={user_id} />
+                    {/* <UserAddressContainer user_id={user_id} /> */}
                 </View>
                 <View style={{ paddingBottom: 10, paddingLeft: 10 }}>
                     <Text style={styles.text} category='h6'>Add Address</Text>
                 </View>
                 <View style={[styles.box_shadow]}>
-                    <AddUserAddressList onPress={onPress} />
+                    {/* <UserAddressOptions onPress={onPress} /> */}
                 </View>
             </Layout>
         </SafeAreaView>

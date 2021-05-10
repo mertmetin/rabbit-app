@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { Layout } from '@ui-kitten/components';
 import { StyleSheet, SafeAreaView } from 'react-native';
-// import { AddAddressForm } from '../../../components/Forms/Address/AddAddressForm';
-import { AddUserAddressContainer } from '../../../components/Containers/AddUserAddressContainer';
+import { AddUserAddress } from '@/components/Address/AddUserAddress';
 
 export default function AddAddressScreen({ navigation, route }) {
     const data = route.params.data;
@@ -10,7 +9,7 @@ export default function AddAddressScreen({ navigation, route }) {
     return (
         <SafeAreaView style={styles.container}>
             <Layout level='1' style={styles.innerContainer}>
-                <AddUserAddressContainer data={data} />
+                <AddUserAddress data={data} />
             </Layout>
         </SafeAreaView>
     );

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
-import AddressDetailsForm from '../../../components/Forms/Address/AddressDetailsForm';
 
 export default function AddressDetails({ navigation, route }) {
     // const userId = route.params.userId;
