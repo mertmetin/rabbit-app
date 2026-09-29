@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "rabbit",
+    "name": "Rabbit",
     "slug": "rabbit",
     "platforms": [
       "ios",
@@ -27,8 +27,8 @@
         {
           "image": "./assets/images/splash.png",
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
-          "imageWidth": 200
+          "backgroundColor": "#00754a",
+          "imageWidth": 260
         }
       ],
       "expo-status-bar",
@@ -40,6 +40,12 @@
           "enableGooglePay": true
         }
       ]
-    ]
+    ],
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#00754a"
+      }
+    }
   }
 }

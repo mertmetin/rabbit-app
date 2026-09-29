@@ -1,24 +1,28 @@
 import * as React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { theme, formatPrice } from '../../theme';
 import { useCart } from '../../hooks/useCart';
+import { useBump } from '../../hooks/useBump';
 
 // Header pill with the basket total; opens the cart. Hidden while empty.
 export function CartButton() {
     const navigation = useNavigation();
     const { total, count } = useCart();
+    const scale = useBump(total);
     if (count === 0)
         return null;
 
     return (
+        <Animated.View style={{ transform: [{ scale }] }}>
         <Pressable style={styles.pill} onPress={() => navigation.navigate('Root', { screen: 'Cart' })}>
             <View style={styles.iconBox}>
                 <Ionicons name="basket" size={18} color={theme.primary} />
             </View>
             <Text style={styles.total}>{formatPrice(total)}</Text>
         </Pressable>
+        </Animated.View>
     );
 }
 

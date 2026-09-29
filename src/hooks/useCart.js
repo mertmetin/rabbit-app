@@ -1,4 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
+import { Platform } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import { showMessage } from 'react-native-flash-message';
 
 // Cart state plus actions. Adding more than the store has in stock is blocked.
@@ -13,9 +15,14 @@ export function useCart() {
         const inStock = product.quantity;
         if (inStock !== undefined && quantityOf(product.id) >= inStock) {
             showMessage({ message: `Only ${inStock} left in stock.`, type: 'warning' });
+            if (Platform.OS !== 'web')
+                Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
             return;
         }
         dispatch({ type: 'INCREASE_ITEM_QUANTITY', payload: product });
+        // A light tap so adding to the basket feels physical.
+        if (Platform.OS !== 'web')
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     };
 
     return {

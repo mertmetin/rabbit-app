@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { createBottomTabNavigator, BottomTabBar } from '@react-navigation/bottom-tabs';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
@@ -10,6 +10,7 @@ import ProfileNavigator from './ProfileNavigator';
 import PromotionsNavigator from './PromotionsNavigator';
 import { MinOrderBar } from '../components/Cart/MinOrderBar';
 import { useCart } from '../hooks/useCart';
+import { useBump } from '../hooks/useBump';
 import { theme } from '../theme';
 
 const BottomTab = createBottomTabNavigator();
@@ -28,16 +29,17 @@ const icon = (name) => ({ focused }) => (
 // The raised round basket in the middle of the tab bar.
 function CartTabButton({ onPress }) {
     const { count } = useCart();
+    const scale = useBump(count);
     return (
         <Pressable onPress={onPress} style={styles.cartButtonWrap}>
-            <View style={styles.cartButton}>
+            <Animated.View style={[styles.cartButton, { transform: [{ scale }] }]}>
                 <Ionicons name="basket" size={30} color={theme.accent} />
                 {count > 0 && (
                     <View style={styles.badge}>
                         <Text style={styles.badgeText}>{count}</Text>
                     </View>
                 )}
-            </View>
+            </Animated.View>
         </Pressable>
     );
 }
