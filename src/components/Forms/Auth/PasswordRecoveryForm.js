@@ -13,7 +13,7 @@ export const PasswordRecoveryForm = props => {
 
     const renderIcon = (props) => (
         <TouchableWithoutFeedback onPress={toggleSecureEntry}>
-            <Ionicons size={24} {...props} name={secureTextEntry ? 'md-eye' : 'md-eye-off'} />
+            <Ionicons size={24} {...props} name={secureTextEntry ? 'eye' : 'eye-off'} />
         </TouchableWithoutFeedback>
     );
 

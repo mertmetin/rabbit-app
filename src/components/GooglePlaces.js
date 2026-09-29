@@ -67,7 +67,7 @@ export function GooglePlaces(props) {
     const errMsg = (
         <View style={{ flexDirection: 'row', paddingTop: 20, paddingBottom: 20, fontSize: 12, marginTop: -30 }}>
             <Ionicons
-                name='md-close'
+                name='close'
                 size={18}
                 style={{ marginBottom: -5 }}
                 color={Colors.errorText}

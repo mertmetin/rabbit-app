@@ -14,7 +14,7 @@ export default function ProfileScreen({navigation}) {
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
             <View style={viewStyle.containerStyle}>
                 <OptionButton
-                    icon="md-person"
+                    icon="person"
                     label="Login"
                     onPress={() => navigation.navigate('Login')}
                 />
@@ -22,19 +22,19 @@ export default function ProfileScreen({navigation}) {
 
             <View style={viewStyle.containerStyle}>
                 <OptionButton
-                    icon="md-navigate"
+                    icon="navigate"
                     label="Addresses"
                     onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}
                 />
 
                 <OptionButton
-                    icon="md-heart"
+                    icon="heart"
                     label="Favorite Products"
                     onPress={() => WebBrowser.openBrowserAsync('https://forums.expo.io')}
                     isLastOption
                 />
                 <OptionButton
-                    icon="md-help"
+                    icon="help"
                     label="Support"
                     onPress={() => WebBrowser.openBrowserAsync('https://forums.expo.io')}
                     isLastOption
@@ -43,7 +43,7 @@ export default function ProfileScreen({navigation}) {
 
             <View style={viewStyle.containerStyle}>
                 <OptionButton
-                    icon="md-help"
+                    icon="help"
                     label="Version"
                     onPress={() => WebBrowser.openBrowserAsync('https://reactnavigation.org')}
                 />

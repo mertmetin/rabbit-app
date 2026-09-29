@@ -1,70 +1,50 @@
 import React, { Component } from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, View, Text, SectionList, SafeAreaView, FlatList } from 'react-native';
-import { showMessage, hideMessage } from "react-native-flash-message";
-import { CategoryCard } from '../CategoryCard';
+import { StyleSheet, Text, SectionList, FlatList, ActivityIndicator } from 'react-native';
 import { ProductCard } from '../ProductCard';
-import http from '../../helpers/Http';
 
-export function ProductsCards(props) {
-    const category = props.category;
-    const storeId = props.storeId;
-    const [sections, setSections] = React.useState([]);
+// Product grid for one category: a section per subcategory, 3 products a row.
+// `sections` is the API response: [{ id, title, data: [product, ...] }].
+export function ProductsCards({ sections, listRef }) {
+    if (sections === null)
+        return <ActivityIndicator style={styles.message} />;
 
-    const renderList = ({ item }) => {
-        return (
-            <FlatList
-                data={item}
-                keyExtractor={item => item.id}
-                renderItem={({ item }) => <ProductCard
-                    routeName={'ProductDetails'}
-                    item={item}
-                />}
-                numColumns={3}
-                style={{marginBottom: 20}} 
-            />
-        );
-    } 
+    if (sections.length === 0)
+        return <Text style={styles.message}>Nothing here right now. Check back soon.</Text>;
 
-    React.useEffect(() => {
-        http.get(`/stores/${storeId}/products?category=${category}`)
-        .then(res => {
-            if (!res.data)
-                return;
-            
-            const data = res.data;
-            const sections = (
-                <SectionList
-                    sections={data}
-                    keyExtractor={(item, index) => (item + index).toString() }
-                    renderItem={renderList}
-                    renderSectionHeader={({ section: { title } }) => (
-                        <Text style={styles.header}>{title}</Text>
-                    )}
-                />
-            );
-            setSections(sections);
-        }).catch(error => {
-            if (error.response) {
-                const msg = error.response.data.message;
-                showMessage({
-                    message: msg,
-                    type: "danger"  
-                });
-            }
-        })
-    }, [storeId, category]);      
+    // Each section renders one "item": the whole grid of its products.
+    const gridSections = sections.map(section => ({ ...section, data: [section.data] }));
 
     return (
-        <SafeAreaView style={styles.container}>
-            {sections}
-        </SafeAreaView>
-    )
+        <SectionList
+            ref={listRef}
+            sections={gridSections}
+            keyExtractor={(item, index) => String(index)}
+            contentContainerStyle={styles.container}
+            stickySectionHeadersEnabled={false}
+            renderItem={({ item }) => (
+                <FlatList
+                    data={item}
+                    keyExtractor={product => String(product.id)}
+                    renderItem={({ item: product }) => <ProductCard routeName={'ProductDetails'} item={product} />}
+                    numColumns={3}
+                    scrollEnabled={false}
+                    style={{ marginBottom: 20 }}
+                />
+            )}
+            renderSectionHeader={({ section: { title } }) => (
+                <Text style={styles.header}>{title}</Text>
+            )}
+        />
+    );
 }
 
 const styles = StyleSheet.create({
     container: {
-        margin: 20 
+        padding: 20
+    },
+    message: {
+        padding: 24,
+        textAlign: 'center'
     },
     item: {
         backgroundColor: "#f9c2ff",

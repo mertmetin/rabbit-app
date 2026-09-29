@@ -8,7 +8,7 @@ export function EmptyCart(props) {
         <View style={styles.container}>
             <View style={styles.iconContainer}>
                 <Ionicons
-                    name={'md-cart'}
+                    name={'cart'}
                     size={120}
                     style={styles.icon}
                 />

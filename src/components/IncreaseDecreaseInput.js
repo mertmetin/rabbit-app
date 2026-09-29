@@ -29,7 +29,7 @@ export function IncreaseDecreaseInput(props)
         <View style={[props.style, styles.container]}>
             <TouchableOpacity style={[styles.icon, styles.iconLeft]} onPress={decrease}>
                 <Ionicons
-                    name={'ios-remove'}
+                    name={'remove'}
                     size={30}
                     // style={{ paddingRight: 15 }}
                 />
@@ -37,7 +37,7 @@ export function IncreaseDecreaseInput(props)
             <Text style={styles.text}>{num}</Text>
             <TouchableOpacity style={[styles.icon, styles.iconRight]} onPress={increase}>
                 <Ionicons
-                    name={'ios-add'}
+                    name={'add'}
                     size={30}
                     // style={{ paddingLeft: 15 }}
                 />

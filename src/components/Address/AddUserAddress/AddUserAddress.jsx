@@ -1,178 +1,112 @@
-import axios from 'axios';
-import { GOOGLE_MAPS_API_KEY } from '@/config';
 import React, { useState } from 'react';
-import http from '../../../helpers/Http';
-import { showMessage, hideMessage } from "react-native-flash-message";
-
-import { PlaceAutocomplete } from '@/components/PlaceAutocomplete';
-import { PositionFinder } from '@/components/PositionFinder';
-import { Map } from '@/components/Maps';
-import { Modal } from '@/components/Modal';
-import { getAddressIconByType } from '@/utils/address';
-
-import { AddressForm } from './AddressForm';
-
-import { Button, Divider } from '@ui-kitten/components';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import * as Location from 'expo-location';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import { Button, Input, Text } from '@ui-kitten/components';
+import { showMessage } from 'react-native-flash-message';
+import http from '../../../helpers/Http';
+import { goHome } from '../../../helpers/Navigation';
 
-export const AddUserAddress = ({ data }) => {
-    const navigation = useNavigation();
+const POSTAL_CODE = /^[A-Za-z]\d[A-Za-z] ?\d[A-Za-z]\d$/;
 
-    const [address, setAddress] = useState(null);
-    const [showConfirmModal, setShowConfirmModal] = useState(false);
-    const [showAddressForm, setShowAddressForm] = useState(false);
-
-    const addressIcon = getAddressIconByType(data['type']);
-    const [selectedIcon, setSelectedIcon] = useState(addressIcon);
-
-    const parseAddressComponents = (address_components) => {
-        var address = {};
-
-        for (var item of address_components)
-        {
-            if (item.types.includes('street_number'))
-                address.address_line_1 = item.short_name;
-
-            if (item.types.includes('route'))
-                address.address_line_1 += ' ' + item.short_name;
-
-            if (item.types.includes('subpremise'))
-                address.address_line_2 =  item.short_name;
-
-            if (item.types.includes('administrative_area_level_1'))
-                address.zone_code = item.short_name;
-
-            if (item.types.includes('postal_code'))
-                address.postal_code = item.long_name;
-
-            if (item.types.includes('locality'))
-                address.city = item.short_name;
-
-            if (item.types.includes('country'))
-                address.country_code = item.short_name;
-        }
-
-        return address;
-    }
-
-    const onAddressSelected = (item) => {
-        const url = 'https://maps.googleapis.com/maps/api/place/details/json?' +
-            'key=' + GOOGLE_MAPS_API_KEY + '&' +
-            '&input=bar' +
-            '&placeid=' + item.place_id;
-    
-        axios.get(url).then(result => {
-            var data = result.data;
-            var result = data.result;
-            var address_components = result.address_components;
-            var geometry = result.geometry;
-            var location = geometry.location;
-            var address = parseAddressComponents(address_components);
-            address.latitude = location.lat;
-            address.longitude = location.lng;
-            setAddress(address);
-        }).catch(error => {
-            const msg = error.response.data.message;
-            showMessage({
-                message: msg,
-                type: "danger"
-            });
-        })
-    }
-
-    const handleSubmit = () => setShowAddressForm(true);
-
-    const addAddress = (location) => {
-        var user_id = data.user_id;
-        location.user_id = user_id;
-        location.icon = selectedIcon.key;
-
-        console.log(location);
-
-        http.post(`users/${user_id}/addresses`, {address: location})
-        .then(result => {
-            navigation.navigate('Home');
-        }).catch(error => {
-            showMessage({
-                message: error.message,
-                type: "danger"
-            });
-        })
-    }
-
-    const onPositionFound = (position) => {
-        const coords = position.coords;
-        const url = 'https://maps.googleapis.com/maps/api/geocode/json?' +
-        'key=' + GOOGLE_MAPS_API_KEY + '&' +
-        '&latlng=' + coords.latitude + ',' + coords.longitude;
-
-        axios.get(url).then(result => {
-            if (result.data.error_message)
-                return;
-            var address = parseAddressComponents(result.data.results[0].address_components);
-            address.latitude = coords.latitude;
-            address.longitude = coords.longitude;
-            setAddress(address);
-        }).catch(error => {
-            showMessage({
-                message: error.message,
-                type: "danger"
-            });
-        })
-    }
-
-    const onIconSelect = (icon) => setSelectedIcon(icon);
-
-    return (
-        <>
-            {!address ? 
-                <>
-                    <PlaceAutocomplete onAddressSelected={onAddressSelected} />
-                    <Divider />
-                    <View style={styles.box_shadow}>  
-                        <PositionFinder onPositionFound={onPositionFound} /> 
-                    </View>
-                </> :
-                <>
-                    <Map initialRegion={address} markerIcon={selectedIcon} />
-                    {showConfirmModal && 
-                        <Modal visible={showConfirmModal} setVisible={setShowConfirmModal} handleSubmit={handleSubmit}
-                            title={'Your order will be delivered to the pinned location on the map. Please confirm your pinned location.'} />
-                    }
-                    <View style={styles.container}>
-                        {showAddressForm ? <AddressForm address={address} type={data.type} addAddress={addAddress} onIconSelect={onIconSelect} /> : 
-                            <Button onPress={() => setShowConfirmModal(true)} style={styles.btnAddressSelect}>Use this address</Button>
-                        }
-                    </View>          
-
-                </>
-            }
-        </>
-    )
+// Turns a typed address into map coordinates with the phone's own geocoder
+// (Apple Maps on iOS), so no Google key is needed.
+async function locate(address) {
+    const query = [address.address_line_1, address.city, address.zone_code, address.postal_code, 'Canada']
+        .filter(Boolean).join(', ');
+    const results = await Location.geocodeAsync(query);
+    return results[0] || null;
 }
 
+// New delivery address: typed in, located on the map, saved to the account,
+// then used as the delivery address.
+export const AddUserAddress = ({ data }) => {
+    const navigation = useNavigation();
+    const dispatch = useDispatch();
+    const type = data.type || 'home';
+    const [saving, setSaving] = useState(false);
+    const [form, setForm] = useState({
+        label: type.charAt(0).toUpperCase() + type.slice(1),
+        address_line_1: '',
+        address_line_2: '',
+        city: 'Ottawa',
+        zone_code: 'ON',
+        postal_code: '',
+        notes: '',
+    });
+
+    const set = (field) => (value) => setForm({ ...form, [field]: value });
+
+    const save = async () => {
+        if (!form.address_line_1.trim() || !form.city.trim())
+            return showMessage({ message: 'Enter a street address and city.', type: 'warning' });
+        if (form.postal_code && !POSTAL_CODE.test(form.postal_code.trim()))
+            return showMessage({ message: 'That postal code looks wrong (e.g. K1P 1J1).', type: 'warning' });
+
+        setSaving(true);
+        try {
+            const point = await locate(form);
+            if (!point) {
+                showMessage({ message: "We couldn't find that address on the map.", type: 'warning' });
+                return;
+            }
+
+            const address = { ...form, address_type: type, latitude: point.latitude, longitude: point.longitude };
+            const res = await http.post(`users/${data.user_id}/addresses`, { address });
+
+            dispatch({ type: 'SET_DELIVERY_ADDRESS', payload: res.data });
+            showMessage({ message: 'Address saved.', type: 'success' });
+            goHome(navigation);
+        } catch (error) {
+            showMessage({ message: error.message, type: 'danger' });
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    return (
+        <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps='handled'>
+            <Input label='Label' value={form.label} onChangeText={set('label')} style={styles.field} />
+            <Input label='Street address' placeholder='110 Laurier Ave W' value={form.address_line_1}
+                onChangeText={set('address_line_1')} style={styles.field} autoFocus />
+            <Input label='Apt / Suite / Floor' value={form.address_line_2} onChangeText={set('address_line_2')} style={styles.field} />
+            <View style={styles.row}>
+                <Input label='City' value={form.city} onChangeText={set('city')} style={[styles.field, styles.half]} />
+                <Input label='Postal code' placeholder='K1P 1J1' value={form.postal_code} autoCapitalize='characters'
+                    onChangeText={set('postal_code')} style={[styles.field, styles.half]} />
+            </View>
+            <Input label='Delivery notes' placeholder='Buzzer, entrance, etc.' value={form.notes}
+                onChangeText={set('notes')} style={styles.field} multiline />
+            <Button onPress={save} disabled={saving} style={styles.button}>
+                {saving ? 'Saving…' : 'Save address'}
+            </Button>
+            <Text appearance='hint' category='c1' style={styles.hint}>
+                We use this address to find the store that delivers to you.
+            </Text>
+        </ScrollView>
+    );
+}
 
 const styles = StyleSheet.create({
     container: {
-        position: 'absolute', 
-        bottom: 0, 
-        width: '100%', 
-        backgroundColor: '#fff',
-        shadowOpacity: 0.05,
-        shadowRadius: 1.84,
+        padding: 20
     },
-    box_shadow: {
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 3,
-        },
-        shadowOpacity: 0.22,
-        shadowRadius: 2.22,
-        elevation: 1
+    field: {
+        marginBottom: 14
     },
-    btnAddressSelect: {
-        margin: 20
+    row: {
+        flexDirection: 'row',
+        gap: 10
     },
+    half: {
+        flex: 1
+    },
+    button: {
+        marginTop: 6
+    },
+    hint: {
+        marginTop: 10,
+        textAlign: 'center'
+    }
 });

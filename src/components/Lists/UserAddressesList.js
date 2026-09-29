@@ -30,16 +30,16 @@ function UserAddressesList(props) {
         var icon = '';
 
         if (addressType == 'home')
-            icon = 'md-home';
+            icon = 'home';
         else if (addressType == 'work')
-            icon = 'md-business';
+            icon = 'business';
         else if (addressType == 'other')
-            icon = 'md-navigate';
+            icon = 'navigate';
 
         if (props.state.deliveryAddress[item.id])
         {
             checkMarkIcon = (<Ionicons
-                name={'ios-checkmark-circle'}
+                name={'checkmark-circle'}
                 size={24}
                 style={{ position: 'absolute', right: 0 }} />);
         }

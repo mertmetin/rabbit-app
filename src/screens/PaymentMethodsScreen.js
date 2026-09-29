@@ -14,7 +14,7 @@ export default function PaymentMethodsScreen({ navigation, route }) {
         <ScrollView>
             <View style={viewStyle.containerStyle}>
                 <OptionButton
-                    icon="md-add"
+                    icon="add"
                     label="Add Card"
                     onPress={() => navigation.navigate('AddCardScreen', {userId: userId})}
                 />

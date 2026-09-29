@@ -7,11 +7,9 @@ import http from '../../helpers/Http';
 
 export function CategoriesList(props) {
     const category = props.category;
-    const [list, setList] = React.useState([]);
-    const [subList, setSubList] = React.useState([]);
     const [selected, setSelected] = React.useState(new Map());
     const [categories, setCategories] = React.useState([]);
-    const [subCategories, setSubCategories] = React.useState([]);
+    const subCategories = props.subCategories || [];
     const navigation = useNavigation();
 
     const onSelect = React.useCallback(
@@ -66,32 +64,10 @@ export function CategoriesList(props) {
     }
 
     React.useEffect(() => {
-        http.post('getStoreProductCategories', { 
-            storeId: props.storeId }
-        )
-        .then(res => {
-            if (!res.data)
-                return;
-
-            // setList(res.data);
-            var data = res.data;
-            var categories = Object.values(data);
-            var subCategories = Object.values(data[category].subcategories);
-            setCategories(categories);
-            setSubCategories(subCategories);
-
-
-  
-        }).catch(error => {
-            if (error.response) {
-                const msg = error.response.data.message;
-                showMessage({
-                    message: msg,
-                    type: "danger"
-                });
-            }
-        })
-    }, []);
+        http.get(`stores/${props.storeId}/categories`)
+            .then(res => setCategories(res.data))
+            .catch(error => showMessage({ message: error.message, type: "danger" }));
+    }, [props.storeId]);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -106,22 +82,20 @@ export function CategoriesList(props) {
                     />
                 )}
                 keyExtractor={item => item.id.toString()}
-                horizontal={true}   
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
                 extraData={selected}
             />
-            <FlatList
-                style={styles.subList}
-                data={subCategories}
-                renderItem={({ item, onSelect }) => (
-                    <SubItem
-                        item={item}
-                        selected={!!selected.get(item.id)}
-                        onSelect={onSelect}
-                    />
-                )}
-                keyExtractor={item => item.id.toString()}
-                horizontal={true}
-            />
+            {subCategories.length > 1 && (
+                <FlatList
+                    style={styles.subList}
+                    data={subCategories}
+                    renderItem={({ item, index }) => <SubItem item={item} index={index} />}
+                    keyExtractor={item => item.id.toString()}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                />
+            )}
         </SafeAreaView>
     )
 }

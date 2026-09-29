@@ -20,7 +20,7 @@ export function OptionButton(props) {
                 </View>
                 <View>
                     <Ionicons
-                        name={'ios-arrow-forward'}
+                        name={'arrow-forward'}
                         size={24}
                         color={"#8b8c8d"}
                         // style={{ paddingRight: 15 }}

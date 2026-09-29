@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { Divider, List, ListItem } from '@ui-kitten/components';
 
 import { Add as AddIcon } from '@/icons';
@@ -24,12 +24,13 @@ const data = [
 export const UserAddressOptions = ({ submitHandler }) => {
     const renderItemAccessory = () => <AddIcon color={'#3154fe'} style={styles.icon} size={24} />
 
-    const getAddressTitle = (item) => (
-        <>
+    // ListItem passes style props to its title, so it must be a real View.
+    const getAddressTitle = (item) => (props) => (
+        <View style={[props?.style, styles.title]}>
             {getAddressIconByType(item.type)}
             <Text style={styles.titleBold}> | </Text>
             <Text>{item.title}</Text>
-        </>
+        </View>
     );
 
     const renderItem = ({ item, index }) => (
@@ -58,6 +59,10 @@ const styles = StyleSheet.create({
     },
     icon: {
         paddingRight: 15
+    },
+    title: {
+        flexDirection: 'row',
+        alignItems: 'center'
     },
     titleBold: {
         fontSize: 20, 

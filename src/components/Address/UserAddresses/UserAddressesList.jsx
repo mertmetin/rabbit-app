@@ -1,16 +1,17 @@
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { Divider, List, ListItem, Button, } from '@ui-kitten/components';
 
 import { Trash as TrashIcon } from '@/icons';
 import { getAddressIconByType } from '@/utils/address';
 
-const getAddressTitle = (item) => (
-    <>
+// ListItem passes style props to its title, so it must be a real View.
+const getAddressTitle = (item) => (props) => (
+    <View style={[props?.style, { flexDirection: 'row', alignItems: 'center' }]}>
         {(getAddressIconByType(item.icon))}
         <Text style={{ fontSize: 20, fontWeight: '200', }}> | </Text>
-        <Text style={styles.textDisabled}>{item.address_line_1}</Text>
-    </>
+        <Text style={styles.textDisabled}>{item.label ? `${item.label} · ` : ''}{item.address_line_1}</Text>
+    </View>
 );
 
 export const UserAddressesList = ({ data, submitHandler, deleteHandler }) => {

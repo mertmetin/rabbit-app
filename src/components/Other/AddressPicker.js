@@ -19,7 +19,7 @@ export function AddressPicker(props) {
                     <Text style={styles.optionText}>{label}</Text>
                 </View>
                 <View style={styles.optionIconContainer}>
-                    <Ionicons name={'ios-arrow-forward'} size={22} color="rgba(0,0,0,0.35)" />
+                    <Ionicons name={'arrow-forward'} size={22} color="rgba(0,0,0,0.35)" />
                 </View>
             </View>
         </RectButton>

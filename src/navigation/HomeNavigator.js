@@ -3,14 +3,15 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '../screens/HomeScreen';
 import ProductsScreen from '../screens/ProductsScreen';
 import ProductDetailsScreen from '../screens/ProductDetailsScreen';
-import ChooseAddressScreen from '../screens/ChooseAddressScreen';
+import AddressScreen from '../screens/Profile/Address/AddressScreen';
+import AddAddressScreen from '../screens/Profile/Address/AddAddressScreen';
 import { TransitionSpecs, HeaderStyleInterpolators } from '@react-navigation/stack';
 import { View, Text, Button, Image, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const Stack = createStackNavigator();
 
-export default function HomeNavigator({ navigation }) {
+export default function HomeNavigator() {
     const MyTransition = {
         gestureDirection: 'vertical',
         transitionSpec: {
@@ -27,19 +28,17 @@ export default function HomeNavigator({ navigation }) {
                 title: 'Order', headerLeft: null }} />
             <Stack.Screen name="Products" component={ProductsScreen} options={{ title: 'Products' }} />
             <Stack.Screen name="ProductDetails" component={ProductDetailsScreen} options={{ title: 'Product Details' }} />
-            <Stack.Screen name="ChooseAddress" component={ChooseAddressScreen} options={{
-                title: 'Addresses', headerLeft: () => (
-                    <TouchableOpacity onPress={() => {
-                        navigation.push('Home');
-                    }}style={{paddingLeft: 10}}>
+            <Stack.Screen name="AddAddressScreen" component={AddAddressScreen} options={{ title: 'Add Address' }} />
+            <Stack.Screen name="ChooseAddress" component={AddressScreen} options={({ navigation }) => ({
+                title: 'Delivery address', headerLeft: () => (
+                    <TouchableOpacity onPress={() => navigation.goBack()} style={{paddingLeft: 10}}>
                         <Ionicons
                             name={'close'}
                             size={24}
                         />
                     </TouchableOpacity>
   
-                    // </Button>
-                ) }} />
+                ) })} />
         </Stack.Navigator>
     );
 }

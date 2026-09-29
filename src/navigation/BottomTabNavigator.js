@@ -45,7 +45,7 @@ export default function BottomTabNavigator() {
         component={HomeNavigator}
         options={({ route }) => ({
           // title: 'Order',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-home" />,
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="home" />,
           tabBarStyle: getTabBarVisibility(route) ? undefined : { display: 'none' }
         })}
       />
@@ -54,7 +54,7 @@ export default function BottomTabNavigator() {
         component={SearchNavigator}
         options={({ route }) => ({
           // title: 'Search',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-search" />,
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="search" />,
           tabBarStyle: getTabBarVisibility(route) ? undefined : { display: 'none' }
         })}
       />
@@ -63,7 +63,7 @@ export default function BottomTabNavigator() {
         component={CartNavigator}
         options={({ route }) => ({
           // title: 'Cart',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-cart" />,
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="cart" />,
           tabBarStyle: getTabBarVisibility(route) ? undefined : { display: 'none' }
         })}
       />
@@ -73,7 +73,7 @@ export default function BottomTabNavigator() {
         options={({ route }) => ({
           // title: 'Profile',
           popToTopOnBlur: true,
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-person" />,
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="person" />,
           tabBarStyle: getTabBarVisibility(route) ? undefined : { display: 'none' }
         })}
       />
@@ -82,7 +82,7 @@ export default function BottomTabNavigator() {
         component={PromotionsNavigator}
         options={({ route }) => ({
           // title: 'Promotions',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-gift" />,
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="gift" />,
           tabBarStyle: getTabBarVisibility(route) ? undefined : { display: 'none' }
         })}
       />

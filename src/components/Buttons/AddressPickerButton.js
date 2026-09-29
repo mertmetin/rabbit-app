@@ -10,7 +10,7 @@ function AddressPickerButton(props) {
     var btnChooseAddress = (
         <View style={styles.innerContainer}>
             <Text style={styles.textChooseDelivery}>Choose Delivery Address</Text>
-            <Ionicons name={'ios-arrow-forward'} size={22} color="rgba(0,0,0,0.35)" />
+            <Ionicons name={'arrow-forward'} size={22} color="rgba(0,0,0,0.35)" />
         </View> 
     );
 
@@ -19,11 +19,11 @@ function AddressPickerButton(props) {
         const addressType = address.address_type.type;
 
         if (addressType == 'home')
-            icon = 'md-home';
+            icon = 'home';
         else if (addressType == 'work')
-            icon = 'md-business';
+            icon = 'business';
         else if (addressType == 'other')
-            icon = 'md-navigate';
+            icon = 'navigate';
         
         const textAddressType = addressType.charAt(0).toUpperCase() + addressType.slice(1);
 
@@ -37,7 +37,7 @@ function AddressPickerButton(props) {
                     <Text>{address.main_text}</Text>
                 </View>
                 <View>
-                    <Ionicons name={'ios-arrow-down'} size={22} color="rgba(0,0,0,0.35)" />
+                    <Ionicons name={'arrow-down'} size={22} color="rgba(0,0,0,0.35)" />
                 </View>
             </View>
         );
