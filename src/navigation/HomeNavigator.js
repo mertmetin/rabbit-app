@@ -8,6 +8,7 @@ import AddAddressScreen from '../screens/Profile/Address/AddAddressScreen';
 import { TransitionSpecs, HeaderStyleInterpolators } from '@react-navigation/stack';
 import { View, Text, Button, Image, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { screenOptions } from './screenOptions';
 
 const Stack = createStackNavigator();
 
@@ -41,17 +42,4 @@ export default function HomeNavigator() {
                 ) })} />
         </Stack.Navigator>
     );
-}
-
-const screenOptions = {
-    headerShown: true,
-    headerStyle: {
-        backgroundColor: '#fff',
-    },
-    headerTintColor: '#18191A',
-    headerTitleStyle: {
-        fontWeight: 'bold',
-        fontFamily: 'sodo-sans-bold',
-        fontSize: 16
-    }
 }

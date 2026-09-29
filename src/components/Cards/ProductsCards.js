@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, SectionList, FlatList, ActivityIndicator } from 'react-native';
-import { ProductCard } from '../ProductCard';
+import { StyleSheet, Text, SectionList, ActivityIndicator } from 'react-native';
+import { ProductGrid } from '../Product/ProductGrid';
+import { theme } from '../../theme';
 
 // Product grid for one category: a section per subcategory, 3 products a row.
+// `sections` is the API response: [{ id, title, data: [product, ...] }].
+// Product grid for one category: a section per subcategory.
 // `sections` is the API response: [{ id, title, data: [product, ...] }].
 export function ProductsCards({ sections, listRef }) {
     if (sections === null)
@@ -21,16 +24,7 @@ export function ProductsCards({ sections, listRef }) {
             keyExtractor={(item, index) => String(index)}
             contentContainerStyle={styles.container}
             stickySectionHeadersEnabled={false}
-            renderItem={({ item }) => (
-                <FlatList
-                    data={item}
-                    keyExtractor={product => String(product.id)}
-                    renderItem={({ item: product }) => <ProductCard routeName={'ProductDetails'} item={product} />}
-                    numColumns={3}
-                    scrollEnabled={false}
-                    style={{ marginBottom: 20 }}
-                />
-            )}
+            renderItem={({ item }) => <ProductGrid products={item} />}
             renderSectionHeader={({ section: { title } }) => (
                 <Text style={styles.header}>{title}</Text>
             )}
@@ -40,23 +34,19 @@ export function ProductsCards({ sections, listRef }) {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20
+        paddingTop: 16,
+        paddingBottom: 24,
+        backgroundColor: theme.white
     },
     message: {
         padding: 24,
         textAlign: 'center'
     },
-    item: {
-        backgroundColor: "#f9c2ff",
-        padding: 20,
-        marginVertical: 8
-    },
     header: {
-        fontSize: 20,
-        fontFamily: 'sodo-sans-semibold',
-        marginBottom: 15
-    },
-    title: {
-        fontSize: 24
+        paddingHorizontal: 16,
+        marginBottom: 14,
+        fontSize: 18,
+        color: theme.text,
+        fontFamily: theme.font.bold
     }
-})
+});

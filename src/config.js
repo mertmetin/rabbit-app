@@ -2,4 +2,7 @@
 export const GOOGLE_MAPS_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY || '';
 
 // Shown on the map when the device location isn't available (downtown Ottawa).
+// Orders below this total (in dollars) can't be placed.
+export const MIN_ORDER = 20;
+
 export const DEFAULT_LOCATION = { latitude: 45.4215, longitude: -75.6972 };

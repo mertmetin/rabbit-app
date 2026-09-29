@@ -1,75 +1,110 @@
-import { Ionicons } from '@expo/vector-icons';
-import Colors from '../constants/Colors';
 import * as React from 'react';
-import { FloatingLabel } from './FloatingLabel'
-import { View, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import { CategoryCard } from '../components/CategoryCard';
-import http from '../helpers/Http';
+import { ActivityIndicator, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
+import http from '../helpers/Http';
+import { theme } from '../theme';
+import { ProductGrid } from './Product/ProductGrid';
 
-export function Search(props) { 
-    const [hits, setHits] = React.useState();
+const DEBOUNCE_MS = 250;
 
-    const SearchBox = (props) => {
-        return (
-        <View>
-            <FloatingLabel
-                placeholder="Search a product" value={props.currentRefinement}
-                    onTextChange={text => props.refine(text)}
-            />
-        </View>);
-    }
-
-    const Hits = (data) => {
-        // const storeId = props.store.id;
-        const hits = data.hits;
-        var items = [];
-
-        for (let k in hits)
-        {
-            var hit = hits[k];
-            var item = (
-                <CategoryCard key={hit.id} routeName={'ProductDetails'} item={hit} />
-            );
-            items.push(item);
-
-        }
-        
-        return items;
-    };
-
+// Search box over the chosen store's shelves; shows popular items until you type.
+export function Search() {
     const store = useSelector((state) => state.store.store);
+    const [query, setQuery] = React.useState('');
+    const [hits, setHits] = React.useState(null);
+    const [popular, setPopular] = React.useState([]);
 
-    const onTextChange = (text) => {
-        if (text.length < 2 || !store)
-        {
-            setHits([]);
+    React.useEffect(() => {
+        if (!store)
+            return;
+        http.get(`stores/${store.id}/popular`).then((res) => setPopular(res.data)).catch(() => setPopular([]));
+    }, [store]);
+
+    React.useEffect(() => {
+        const q = query.trim();
+        if (q.length < 2 || !store) {
+            setHits(null);
             return;
         }
+        const timer = setTimeout(() => {
+            http.get('search', { params: { store_id: store.id, q } })
+                .then((res) => setHits(res.data.hits))
+                .catch(() => setHits([]));
+        }, DEBOUNCE_MS);
+        return () => clearTimeout(timer);
+    }, [query, store]);
 
-        http.get('search', { params: { store_id: store.id, q: text } })
-        .then((response) => {
-            var hits = Hits(response.data);
-            setHits(hits);
-        })
-        .catch(() => setHits([]));
-    }
-    
+    if (!store)
+        return <Text style={styles.message}>Choose a delivery address on the Home tab to search a store.</Text>;
 
-    return(
-        <ScrollView style={styles.container}>
-            <FloatingLabel
-                placeholder="Search a product" value={props.currentRefinement}
-                onTextChange={onTextChange}
-            />
-            {hits}
-        </ScrollView>
-    )
+    const searching = query.trim().length >= 2;
+
+    return (
+        <View>
+            <View style={styles.bar}>
+                <Ionicons name="search" size={22} color={theme.primary} />
+                <TextInput
+                    style={styles.input}
+                    placeholder={`Search ${store.name}`}
+                    placeholderTextColor={theme.muted}
+                    value={query}
+                    onChangeText={setQuery}
+                    autoCorrect={false}
+                    returnKeyType="search"
+                    clearButtonMode="while-editing"
+                />
+            </View>
+
+            {searching ? (
+                hits === null
+                    ? <ActivityIndicator style={styles.message} />
+                    : hits.length === 0
+                        ? <Text style={styles.message}>No products match "{query.trim()}".</Text>
+                        : <View style={styles.section}><ProductGrid products={hits} /></View>
+            ) : (
+                popular.length > 0 && (
+                    <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>Popular right now</Text>
+                        <ProductGrid products={popular} />
+                    </View>
+                )
+            )}
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        padding: 20
-    }
+    bar: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 10,
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        backgroundColor: theme.white,
+        borderBottomWidth: 1,
+        borderBottomColor: theme.border,
+    },
+    input: {
+        flex: 1,
+        fontSize: 16,
+        fontFamily: theme.font.regular,
+        color: theme.text,
+    },
+    section: {
+        paddingTop: 18,
+        backgroundColor: theme.white,
+    },
+    sectionTitle: {
+        paddingHorizontal: 16,
+        marginBottom: 14,
+        color: theme.text,
+        fontFamily: theme.font.bold,
+        fontSize: 17,
+    },
+    message: {
+        padding: 24,
+        textAlign: 'center',
+        color: theme.muted,
+    },
 });

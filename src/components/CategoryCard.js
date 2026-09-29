@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { View, Image, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { theme } from '../theme';
 
 export function CategoryCard(props) {
     const navigation = useNavigation();
@@ -13,7 +14,7 @@ export function CategoryCard(props) {
     return (    
         <View style={styles.container}>
             <TouchableOpacity onPress={onPress} style={{ alignItems: 'center' }} activeOpacity={.7}>
-                <View style={{backgroundColor: '#fff', borderRadius: 5}}>  
+                <View>
                     <Image style={styles.img} source={{ uri: item.image }} />
                 </View>
                 <Text style={styles.text}>{item.title}</Text>
@@ -25,29 +26,23 @@ export function CategoryCard(props) {
 const styles = StyleSheet.create({
     container: {
         width: '25%',
-        padding: 5,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-
-        elevation: 5,
-        // boxShadow: 0px 4px 42px rgba(0, 0, 0, 0.25);
+        paddingHorizontal: 4,
+        paddingVertical: 8,
     },
     img: {
-        width: 56,
-        height: 56,
-        resizeMode: 'contain',
-        margin: 5
-    },  
+        width: 64,
+        height: 64,
+        borderRadius: 14,
+        borderWidth: 1,
+        borderColor: theme.border,
+        resizeMode: 'cover',
+    },
     text: {
-        fontSize: 13,
+        fontSize: 12,
+        lineHeight: 15,
         textAlign: 'center',
         marginTop: 6,
-        color: '#22292F',
-        fontFamily: 'sodo-sans-regular'
+        color: theme.text,
+        fontFamily: theme.font.semibold
     }
 });

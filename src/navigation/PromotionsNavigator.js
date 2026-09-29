@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import PromotionsScreen from '../screens/Promotions/PromotionsScreen';
 import PromotionDetailsScreen from '../screens/Promotions/PromotionDetailsScreen';
+import { screenOptions } from './screenOptions';
 
 const Stack = createStackNavigator();
 
@@ -12,17 +13,4 @@ export default function PromotionsNavigator({ navigation }) {
             <Stack.Screen name="PromotionDetailsScreen" component={PromotionDetailsScreen} options={{ title: 'Promotion Details' }} />
         </Stack.Navigator>
     );
-}
-
-const screenOptions = {
-    headerShown: true,
-    headerStyle: {
-        backgroundColor: '#fff',
-    },
-    headerTintColor: '#18191A',
-    headerTitleStyle: {
-        fontWeight: 'bold',
-        fontFamily: 'sodo-sans-bold',
-        fontSize: 16
-    }
 }

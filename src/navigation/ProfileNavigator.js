@@ -16,6 +16,7 @@ import InfoScreen from '../screens/Profile/Account/InfoScreen';
 import CardsScreen from '../screens/Profile/Payment/CardsScreen';
 import CardDetailsScreen from '../screens/Profile/Payment/CardDetailsScreen';
 import AddCardScreen from '../screens/Profile/Payment/AddCardScreen';
+import { screenOptions } from './screenOptions';
 
 const Stack = createStackNavigator();
 
@@ -38,17 +39,4 @@ export default function ProfileNavigator({ navigation }) {
             <Stack.Screen name="InfoScreen" component={InfoScreen} options={{ title: 'Personal info' }} />
         </Stack.Navigator>
     );
-}
-
-const screenOptions = {
-    headerShown: true,
-    headerStyle: {
-        backgroundColor: '#fff',
-    },
-    headerTintColor: '#18191A',
-    headerTitleStyle: {
-        fontWeight: 'bold',
-        fontFamily: 'sodo-sans-bold',
-        fontSize: 16
-    }
 }
