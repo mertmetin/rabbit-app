@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { get } from 'react-native/Libraries/Utilities/PixelRatio';
 
 const getToken = async () => {
     try {
