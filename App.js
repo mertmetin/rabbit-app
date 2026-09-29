@@ -10,6 +10,7 @@ import BottomTabNavigator from './src/navigation/BottomTabNavigator';
 import FlashMessage from "react-native-flash-message";
 import { Provider } from 'react-redux'
 import store from './store'
+import { StripeProvider } from '@stripe/stripe-react-native';
 
 import * as eva from '@eva-design/eva';
 // import { EvaIconsPack } from '@ui-kitten/eva-icons';
@@ -60,6 +61,7 @@ export default function App(props) {
     return (
       <ApplicationProvider {...eva} theme={eva.light}>
        {/* <IconRegistry icons={EvaIconsPack} /> */}
+        <StripeProvider publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY} urlScheme="rabbit">
         <Provider store={store}>
           <View style={styles.container}>
             {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
@@ -71,6 +73,7 @@ export default function App(props) {
             <FlashMessage position="top" />
           </View>
         </Provider>
+        </StripeProvider>
       </ApplicationProvider>
     );
   }

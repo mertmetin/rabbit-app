@@ -6,17 +6,18 @@ import { UserAddressOptions } from '@/components/Address/UserAddressOptions';
 
 export default function AddressScreen({ navigation, route }) {
     const user_id = route.params.id;
+    const returnTo = route.params.returnTo;
 
     const submitHandler = (data) => {
         data.user_id = user_id;
-        navigation.navigate('AddAddressScreen', {data: data});
+        navigation.navigate('AddAddressScreen', {data: { ...data, returnTo }});
     }
 
     return(
         <SafeAreaView>
             <Layout  style={styles.container}>
                     <View style={[styles.box_shadow, {paddingBottom: 50 }]}>
-                        <UserAddresses user_id={user_id} />
+                        <UserAddresses user_id={user_id} returnTo={returnTo} />
                     </View>
                     <View style={{paddingBottom: 10, paddingLeft: 10}}>
                         <Text style={styles.text} category='h6'>Add Address</Text>

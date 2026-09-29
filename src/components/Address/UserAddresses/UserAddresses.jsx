@@ -6,7 +6,7 @@ import http from '../../../helpers/Http';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { UserAddressesList } from './UserAddressesList';
 
-export const UserAddresses = ({ user_id }) => {
+export const UserAddresses = ({ user_id, returnTo }) => {
     const [data, setData] = React.useState([]);
     const [count, setCount] = React.useState(0);
     const navigation = useNavigation();
@@ -27,7 +27,7 @@ export const UserAddresses = ({ user_id }) => {
     // Choosing an address makes it the delivery address and returns home.
     const submitHandler = (address) => {
         dispatch({ type: 'SET_DELIVERY_ADDRESS', payload: address });
-        goHome(navigation);
+        returnTo ? navigation.navigate(returnTo) : goHome(navigation);
     };
 
     useEffect(() => {

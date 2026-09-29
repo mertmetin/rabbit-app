@@ -57,7 +57,7 @@ export const AddUserAddress = ({ data }) => {
 
             dispatch({ type: 'SET_DELIVERY_ADDRESS', payload: res.data });
             showMessage({ message: 'Address saved.', type: 'success' });
-            goHome(navigation);
+            data.returnTo ? navigation.navigate(data.returnTo) : goHome(navigation);
         } catch (error) {
             showMessage({ message: error.message, type: 'danger' });
         } finally {

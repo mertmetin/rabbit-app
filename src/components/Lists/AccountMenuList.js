@@ -17,7 +17,7 @@ export const AccountMenuList = ({ user, logOut }) => {
     const go = (route) => () => navigation.navigate(route, { ...user, data: user });
 
     const tiles = [
-        { title: 'Previous Orders', icon: 'receipt', onPress: comingSoon('Order history') },
+        { title: 'Previous Orders', icon: 'receipt', onPress: go('OrdersScreen') },
         { title: 'Favorites', icon: 'heart', onPress: comingSoon('Favorites') },
         { title: 'Help', icon: 'chatbubbles', onPress: comingSoon('Support chat') },
     ];

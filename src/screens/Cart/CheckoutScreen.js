@@ -1,0 +1,269 @@
+import * as React from 'react';
+import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useSelector } from 'react-redux';
+import { Ionicons } from '@expo/vector-icons';
+import { useStripe } from '@stripe/stripe-react-native';
+import { showMessage } from 'react-native-flash-message';
+import http from '../../helpers/Http';
+import { getCurrentUser } from '../../helpers/Auth';
+import { useCart } from '../../hooks/useCart';
+import { theme, formatPrice, splitTitle } from '../../theme';
+
+const DELIVERY_ESTIMATE = '20–35 min';
+
+function Section({ title, children }) {
+    return (
+        <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{title}</Text>
+            <View style={styles.card}>{children}</View>
+        </View>
+    );
+}
+
+function Checkbox({ label, value, onChange }) {
+    return (
+        <Pressable style={styles.checkRow} onPress={() => onChange(!value)} hitSlop={6}>
+            <Ionicons name={value ? 'checkbox' : 'square-outline'} size={24} color={theme.primary} />
+            <Text style={styles.checkLabel}>{label}</Text>
+        </Pressable>
+    );
+}
+
+function SummaryRow({ label, value, strong, accent }) {
+    return (
+        <View style={[styles.summaryRow, strong && styles.summaryRowStrong]}>
+            <Text style={[styles.summaryLabel, strong && styles.summaryStrong]}>{label}</Text>
+            <Text style={[styles.summaryValue, strong && styles.summaryStrong, accent && { color: theme.primary }]}>{value}</Text>
+        </View>
+    );
+}
+
+// Review and pay: address and ETA, notes, payment, basket and totals.
+// Totals come from the server; payment happens in Stripe's sheet.
+export default function CheckoutScreen({ navigation }) {
+    const cart = useCart();
+    const address = useSelector((state) => state.deliveryAddress.address);
+    const store = useSelector((state) => state.store.store);
+    const { initPaymentSheet, presentPaymentSheet } = useStripe();
+
+    const [notes, setNotes] = React.useState('');
+    const [contactless, setContactless] = React.useState(false);
+    const [noBell, setNoBell] = React.useState(false);
+    const [showItems, setShowItems] = React.useState(false);
+    const [quote, setQuote] = React.useState(null);
+    const [placing, setPlacing] = React.useState(false);
+
+    const lines = Object.values(cart.items);
+    const items = lines.map((p) => ({ product_id: p.id, quantity: cart.quantityOf(p.id) }));
+    const itemsKey = JSON.stringify(items);
+    const savedAddress = address && address.id ? address : null;
+
+    React.useEffect(() => {
+        if (!savedAddress || !store || items.length === 0)
+            return;
+        http.post('orders/quote', { store_id: store.id, address_id: savedAddress.id, items })
+            .then((res) => setQuote(res.data))
+            .catch((error) => {
+                setQuote(null);
+                showMessage({ message: error.message, type: 'danger' });
+            });
+    }, [savedAddress?.id, store?.id, itemsKey]);
+
+    const chooseAddress = async () => {
+        const user = await getCurrentUser();
+        navigation.navigate('AddressScreen', { id: user?.id, returnTo: 'Checkout' });
+    };
+
+    const placeOrder = async () => {
+        if (!savedAddress)
+            return chooseAddress();
+        setPlacing(true);
+        let orderId = null;
+        try {
+            const user = await getCurrentUser();
+            const res = await http.post('orders', {
+                store_id: store.id, address_id: savedAddress.id, items,
+                notes: notes.trim() || undefined, contactless, no_bell: noBell,
+            });
+            const { order, payment } = res.data;
+            orderId = order.id;
+
+            const init = await initPaymentSheet({
+                merchantDisplayName: 'Rabbit',
+                customerId: payment.customer_id,
+                customerEphemeralKeySecret: payment.ephemeral_key,
+                paymentIntentClientSecret: payment.client_secret,
+                defaultBillingDetails: { name: user?.name, email: user?.email },
+                appearance: { colors: { primary: theme.primary } },
+                returnURL: 'rabbit://stripe-redirect',
+            });
+            if (init.error)
+                throw new Error(init.error.message);
+
+            const { error } = await presentPaymentSheet();
+            if (error) {
+                // Closing the sheet (or a declined card) releases the reserved stock.
+                await http.post(`orders/${orderId}/cancel`).catch(() => {});
+                if (error.code !== 'Canceled')
+                    showMessage({ message: error.message, type: 'danger' });
+                return;
+            }
+
+            const confirmed = await http.post(`orders/${orderId}/confirm`);
+            cart.clear();
+            navigation.replace('OrderPlaced', { order: confirmed.data });
+        } catch (error) {
+            showMessage({ message: error.message, type: 'danger' });
+        } finally {
+            setPlacing(false);
+        }
+    };
+
+    return (
+        <View style={styles.screen}>
+            <View style={styles.banner}>
+                <Pressable style={styles.bannerAddress} onPress={chooseAddress}>
+                    {savedAddress ? (
+                        <Text numberOfLines={1} style={styles.bannerText}>
+                            <Text style={styles.bannerLabel}>{savedAddress.label || 'Home'}, </Text>
+                            {savedAddress.address_line_1}
+                        </Text>
+                    ) : (
+                        <Text style={[styles.bannerText, styles.bannerLabel]}>Choose a delivery address ›</Text>
+                    )}
+                </Pressable>
+                <View style={styles.bannerEta}>
+                    <Ionicons name="time" size={20} color={theme.primary} />
+                    <View>
+                        <Text style={styles.etaLabel}>Delivery</Text>
+                        <Text style={styles.etaValue}>{DELIVERY_ESTIMATE}</Text>
+                    </View>
+                </View>
+            </View>
+
+            <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+                <Section title="Order note">
+                    <TextInput
+                        style={styles.noteInput}
+                        placeholder="Anything the driver should know?"
+                        placeholderTextColor={theme.muted}
+                        value={notes}
+                        onChangeText={setNotes}
+                        multiline
+                        maxLength={500}
+                    />
+                    <View style={styles.checks}>
+                        <Checkbox label="Contactless delivery" value={contactless} onChange={setContactless} />
+                        <Checkbox label="Don't ring the bell" value={noBell} onChange={setNoBell} />
+                    </View>
+                </Section>
+
+                <Section title="Payment method">
+                    <View style={styles.paymentRow}>
+                        <View style={styles.paymentIcon}>
+                            <Ionicons name="card" size={22} color={theme.primary} />
+                        </View>
+                        <View style={{ flex: 1 }}>
+                            <Text style={styles.paymentTitle}>Card or Apple Pay</Text>
+                            <Text style={styles.paymentHint}>You'll choose when you place the order. Cards are saved securely by Stripe.</Text>
+                        </View>
+                    </View>
+                </Section>
+
+                <Section title="Basket summary">
+                    <Pressable style={styles.productsRow} onPress={() => setShowItems(!showItems)}>
+                        <Text style={styles.productsTitle}>Products ({cart.count})</Text>
+                        <View style={styles.thumbs}>
+                            {lines.slice(0, 3).map((p) => (
+                                <Image key={p.id} source={{ uri: p.image }} style={styles.thumb} />
+                            ))}
+                        </View>
+                        <Ionicons name={showItems ? 'chevron-up' : 'chevron-down'} size={20} color={theme.primary} />
+                    </Pressable>
+                    {showItems && lines.map((p) => (
+                        <View key={p.id} style={styles.itemRow}>
+                            <Text style={styles.itemName} numberOfLines={1}>
+                                {cart.quantityOf(p.id)} × {splitTitle(p.title).name}
+                            </Text>
+                            <Text style={styles.itemPrice}>{formatPrice(p.price * cart.quantityOf(p.id))}</Text>
+                        </View>
+                    ))}
+                </Section>
+
+                <Section title="Payment summary">
+                    {quote ? (
+                        <>
+                            <SummaryRow label="Products" value={formatPrice(quote.subtotal)} />
+                            <SummaryRow label="Delivery" value={quote.delivery_fee ? formatPrice(quote.delivery_fee) : 'Free'} accent={!quote.delivery_fee} />
+                            <SummaryRow label="Tax (HST)" value={formatPrice(quote.tax)} />
+                            <SummaryRow label="Total" value={formatPrice(quote.total)} strong />
+                        </>
+                    ) : savedAddress ? (
+                        <ActivityIndicator style={{ padding: 16 }} />
+                    ) : (
+                        <Text style={styles.paymentHint}>Choose a delivery address to see your total.</Text>
+                    )}
+                </Section>
+
+                <Text style={styles.terms}>By placing your order you agree to Rabbit's terms of service.</Text>
+            </ScrollView>
+
+            <View style={styles.footer}>
+                <View style={styles.checkout}>
+                    <Pressable style={[styles.placeButton, (placing || (savedAddress && !quote)) && styles.disabled]}
+                        disabled={placing || (savedAddress && !quote)} onPress={placeOrder}>
+                        {placing
+                            ? <ActivityIndicator color={theme.white} />
+                            : <Text style={styles.placeText}>{savedAddress ? 'Place order' : 'Add address'}</Text>}
+                    </Pressable>
+                    <View style={styles.totalBox}>
+                        <Text style={styles.total}>{formatPrice(quote ? quote.total : cart.total)}</Text>
+                    </View>
+                </View>
+            </View>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    screen: { flex: 1, backgroundColor: theme.background },
+    banner: { flexDirection: 'row', backgroundColor: theme.white, borderBottomWidth: 1, borderBottomColor: theme.border },
+    bannerAddress: { flex: 1, justifyContent: 'center', paddingHorizontal: 16, paddingVertical: 14 },
+    bannerText: { color: theme.text, fontFamily: theme.font.regular, fontSize: 14 },
+    bannerLabel: { color: theme.primary, fontFamily: theme.font.bold, fontSize: 15 },
+    bannerEta: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 14, backgroundColor: theme.accent, borderTopLeftRadius: 14 },
+    etaLabel: { color: theme.primaryDark, fontFamily: theme.font.semibold, fontSize: 12 },
+    etaValue: { color: theme.primary, fontFamily: theme.font.bold, fontSize: 17 },
+    content: { padding: 16, paddingBottom: 32 },
+    section: { marginBottom: 18 },
+    sectionTitle: { marginBottom: 10, color: theme.text, fontFamily: theme.font.bold, fontSize: 17 },
+    card: { backgroundColor: theme.white, borderRadius: 16, padding: 14 },
+    noteInput: { minHeight: 56, borderWidth: 1, borderColor: theme.border, borderRadius: 10, padding: 12, fontFamily: theme.font.regular, fontSize: 15, color: theme.text },
+    checks: { flexDirection: 'row', flexWrap: 'wrap', gap: 16, marginTop: 12 },
+    checkRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+    checkLabel: { color: theme.text, fontFamily: theme.font.regular, fontSize: 14 },
+    paymentRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+    paymentIcon: { width: 44, height: 44, borderRadius: 10, backgroundColor: theme.primarySoft, alignItems: 'center', justifyContent: 'center' },
+    paymentTitle: { color: theme.text, fontFamily: theme.font.semibold, fontSize: 15 },
+    paymentHint: { marginTop: 2, color: theme.muted, fontFamily: theme.font.regular, fontSize: 13 },
+    productsRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+    productsTitle: { flex: 1, color: theme.text, fontFamily: theme.font.semibold, fontSize: 16 },
+    thumbs: { flexDirection: 'row' },
+    thumb: { width: 30, height: 30, borderRadius: 15, marginLeft: -8, borderWidth: 2, borderColor: theme.white },
+    itemRow: { flexDirection: 'row', justifyContent: 'space-between', gap: 12, paddingTop: 10 },
+    itemName: { flex: 1, color: theme.text, fontFamily: theme.font.regular, fontSize: 14 },
+    itemPrice: { color: theme.text, fontFamily: theme.font.semibold, fontSize: 14 },
+    summaryRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: theme.border },
+    summaryRowStrong: { borderBottomWidth: 0, marginTop: 4, marginHorizontal: -14, marginBottom: -14, paddingHorizontal: 14, paddingVertical: 14, backgroundColor: theme.primarySoft, borderBottomLeftRadius: 16, borderBottomRightRadius: 16 },
+    summaryLabel: { color: theme.text, fontFamily: theme.font.regular, fontSize: 15 },
+    summaryValue: { color: theme.text, fontFamily: theme.font.semibold, fontSize: 15 },
+    summaryStrong: { color: theme.primary, fontFamily: theme.font.bold, fontSize: 17 },
+    terms: { marginTop: 4, textAlign: 'center', color: theme.muted, fontFamily: theme.font.regular, fontSize: 12 },
+    footer: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 34, backgroundColor: theme.white, borderTopWidth: 1, borderTopColor: theme.border },
+    checkout: { flexDirection: 'row', borderRadius: 14, overflow: 'hidden', borderWidth: 1, borderColor: theme.border },
+    placeButton: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingVertical: 16, backgroundColor: theme.primary },
+    disabled: { opacity: 0.5 },
+    placeText: { color: theme.white, fontFamily: theme.font.bold, fontSize: 17 },
+    totalBox: { paddingHorizontal: 20, justifyContent: 'center', backgroundColor: theme.white },
+    total: { color: theme.primary, fontFamily: theme.font.bold, fontSize: 20 },
+});

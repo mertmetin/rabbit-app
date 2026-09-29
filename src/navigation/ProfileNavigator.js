@@ -12,6 +12,7 @@ import AddressScreen from '../screens/Profile/Address/AddressScreen';
 import AddAddressScreen from '../screens/Profile/Address/AddAddressScreen';
 import AddressDetails from '../screens/Profile/Address/AddressDetails';
 import AccountScreen from '../screens/Profile/Account/AccountScreen';
+import OrdersScreen from '../screens/Profile/Orders/OrdersScreen';
 import InfoScreen from '../screens/Profile/Account/InfoScreen';
 import CardsScreen from '../screens/Profile/Payment/CardsScreen';
 import CardDetailsScreen from '../screens/Profile/Payment/CardDetailsScreen';
@@ -36,6 +37,7 @@ export default function ProfileNavigator({ navigation }) {
             <Stack.Screen name="AddressScreen" component={AddressScreen} options={{ title: 'Addresses' }} />
             <Stack.Screen name="AddressDetails" component={AddressDetails} options={{ title: 'Address Details' }} />
             <Stack.Screen name="AddAddressScreen" component={AddAddressScreen} options={{ title: 'Add Address' }} />
+            <Stack.Screen name="OrdersScreen" component={OrdersScreen} options={{ title: 'Previous orders' }} />
             <Stack.Screen name="InfoScreen" component={InfoScreen} options={{ title: 'Personal info' }} />
         </Stack.Navigator>
     );
