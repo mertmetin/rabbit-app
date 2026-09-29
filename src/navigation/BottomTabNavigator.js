@@ -46,9 +46,11 @@ function CartTabButton({ onPress }) {
 function TabBarWithProgress(props) {
     const focused = props.state.routes[props.state.index];
     const hidden = tabBarStyleFor(focused).display === 'none';
+    // The basket screen shows its own minimum-order note.
+    const showProgress = !hidden && focused.name !== 'Cart';
     return (
         <View>
-            {!hidden && <MinOrderBar />}
+            {showProgress && <MinOrderBar />}
             <BottomTabBar {...props} />
         </View>
     );

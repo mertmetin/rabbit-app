@@ -1,153 +1,170 @@
 import React from 'react';
-import { StyleSheet, ScrollView, SectionList, View, Text} from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import { Divider, List, ListItem, Menu, MenuItem, Avatar } from '@ui-kitten/components';
+import Constants from 'expo-constants';
+import { showMessage } from 'react-native-flash-message';
+import { theme } from '../../theme';
 
-const data = [
-    {
-        id: 'addresses',
-        title: 'Addresses',
-        icon: 'location-outline',
-        route: 'AddressScreen'
-    },
-    {
-        id: 'payment-methods',
-        title: 'Payment Methods',
-        icon: 'card-outline',
-        route: 'CardsScreen'
-    },
-    {
-        id: 'change-password',
-        title: 'Change Password',
-        icon: 'lock-closed-outline',
-        route: 'ChangePasswordScreen'
-    },
-    {
-        id: 'logout',
-        title: 'Logout',
-        icon: 'exit-outline',
-    }
-]
+const comingSoon = (what) => () => showMessage({ message: `${what} is coming soon.`, type: 'info' });
 
-export const AccountMenuList = (props) => {
-    const user = props.user;
+const initials = (name = '') =>
+    name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0].toUpperCase()).join('') || '?';
+
+// Signed-in profile: greeting card, shortcut tiles, settings menu, logout.
+export const AccountMenuList = ({ user, logOut }) => {
     const navigation = useNavigation();
+    const go = (route) => () => navigation.navigate(route, { ...user, data: user });
 
-    var userMenuData = [
-        {
-            id: 'name',
-            title: user.name,
-            icon: 'person-outline',
-        },
-        {
-            id: 'email',
-            title: user.email,
-            icon: 'mail-outline',
-        },
-        {
-            id: 'phone',
-            title: user.phone,
-            icon: 'phone-portrait-outline',
-        }
-    ]; 
-    
-    var versionData = [
-        {
-            id: 'version',
-            title: 'Version: 1.0'
-        }
+    const tiles = [
+        { title: 'Previous Orders', icon: 'receipt', onPress: comingSoon('Order history') },
+        { title: 'Favorites', icon: 'heart', onPress: comingSoon('Favorites') },
+        { title: 'Help', icon: 'chatbubbles', onPress: comingSoon('Support chat') },
     ];
 
-    const ForwardIcon = (props) => {
-        return <Ionicons size={24} name='chevron-forward' />
-    };
-
-    const renderItemIcon = (icon) => {
-        return <Ionicons size={24} name={icon} />
-    };
-
-    const renderItem = ({ item, index }) => (
-        <ListItem
-            disabled={true} 
-            key={index}
-            title={item.title}
-            accessoryLeft={() => {return renderItemIcon(item.icon)}}
-        />
-    );
-
-    const renderItemOption = ({ item, index }) => (
-        <ListItem
-            key={index}
-            title={item.title}
-            accessoryLeft={() => { return renderItemIcon(item.icon) }}
-            accessoryRight={ForwardIcon}
-            onPress={() => {
-                item.id == 'logout' ? props.logOut() : navigation.navigate(item.route, user);
-            }}
-        />
-    );
-
-    const renderItemPlain = ({item, index}) => (
-        <ListItem
-            key={"version"}
-            disabled
-            title={'Version: 1.0'}
-            children={
-                <View style={{ paddingLeft: 10, paddingRight: 10, flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
-                    <Text style={{ fontWeight: '500' }}>Version</Text>
-                    <Text style={{ fontWeight: '500', color: '#919293' }}>1.0</Text>
-                </View>
-            }
-        />
-    );
-
-    var sections = [
-        { title: 'User', data: [{ title: 'User', key: 'user', data: userMenuData, renderItem: renderItem}]},
-        { title: 'OptionsMenu', data: [{ title: 'User Options', key: 'user-options', data: data, renderItem: renderItemOption }]},
-        { title: 'Version', data: [{ title: 'Version ', key: 'version', data: versionData, renderItem: renderItemPlain }] }
+    const menu = [
+        { title: 'Addresses', icon: 'location', onPress: go('AddressScreen') },
+        { title: 'Payment Methods', icon: 'card', onPress: go('CardsScreen') },
+        { title: 'Personal Info', icon: 'person-circle', onPress: go('InfoScreen') },
+        { title: 'Change Password', icon: 'lock-closed', onPress: go('ChangePasswordScreen') },
     ];
-
-    const renderList = (item) => {
-        let list = item.section.data[0];
-
-        return <List
-            style={styles.box_shadow}
-            data={list.data}
-            renderItem={list.renderItem}
-            keyExtractor={(item) => item.id}
-        />
-    }
 
     return (
-        <View style={styles.container}>
-            <SectionList 
-                sections={sections}
-                renderItem={renderList}
-                keyExtractor={(item, index) => index}
-            />
-        </View>
+        <ScrollView contentContainerStyle={styles.container}>
+            <View style={[styles.card, styles.greeting]}>
+                <View style={styles.avatar}>
+                    <Text style={styles.avatarText}>{initials(user.name)}</Text>
+                </View>
+                <View style={styles.greetingText}>
+                    <Text style={styles.hello}>Hello 👋</Text>
+                    <Text style={styles.name} numberOfLines={1}>{user.name}</Text>
+                </View>
+                <Pressable onPress={go('InfoScreen')} hitSlop={10}>
+                    <Ionicons name="create-outline" size={26} color={theme.primary} />
+                </Pressable>
+            </View>
+
+            <View style={styles.tiles}>
+                {tiles.map((tile) => (
+                    <Pressable key={tile.title} style={[styles.card, styles.tile]} onPress={tile.onPress}>
+                        <View style={styles.tileIcon}>
+                            <Ionicons name={tile.icon} size={28} color={theme.primary} />
+                        </View>
+                        <Text style={styles.tileText}>{tile.title}</Text>
+                    </Pressable>
+                ))}
+            </View>
+
+            <View style={styles.card}>
+                {menu.map((item, i) => (
+                    <Pressable key={item.title} onPress={item.onPress}
+                        style={[styles.row, i < menu.length - 1 && styles.rowDivider]}>
+                        <Ionicons name={item.icon} size={22} color={theme.primary} />
+                        <Text style={styles.rowText}>{item.title}</Text>
+                        <Ionicons name="chevron-forward" size={20} color={theme.primary} />
+                    </Pressable>
+                ))}
+            </View>
+
+            <Pressable style={[styles.card, styles.row]} onPress={logOut}>
+                <Ionicons name="log-out" size={22} color={theme.primary} />
+                <Text style={styles.rowText}>Logout</Text>
+            </Pressable>
+
+            <Text style={styles.version}>Version {Constants.expoConfig?.version ?? '1.0.0'}</Text>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        padding: 16,
+        gap: 14,
+        backgroundColor: theme.background,
     },
-    box_shadow: {
-        marginTop: 10,
-        marginBottom: 10,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity: 0.22,
-        shadowRadius: 2.22,
-        elevation: 3
+    card: {
+        backgroundColor: theme.white,
+        borderRadius: 16,
     },
-    text: {
-        fontSize: 14.5,
-        fontWeight: '500'
-    }
+    greeting: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 16,
+        gap: 14,
+    },
+    avatar: {
+        width: 56,
+        height: 56,
+        borderRadius: 14,
+        backgroundColor: theme.primarySoft,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    avatarText: {
+        color: theme.primary,
+        fontFamily: theme.font.bold,
+        fontSize: 20,
+    },
+    greetingText: {
+        flex: 1,
+    },
+    hello: {
+        color: theme.text,
+        fontFamily: theme.font.bold,
+        fontSize: 18,
+    },
+    name: {
+        marginTop: 2,
+        color: theme.muted,
+        fontFamily: theme.font.regular,
+        fontSize: 15,
+    },
+    tiles: {
+        flexDirection: 'row',
+        gap: 10,
+    },
+    tile: {
+        flex: 1,
+        alignItems: 'center',
+        paddingVertical: 18,
+        gap: 10,
+    },
+    tileIcon: {
+        width: 52,
+        height: 52,
+        borderRadius: 26,
+        backgroundColor: theme.primarySoft,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    tileText: {
+        color: theme.text,
+        fontFamily: theme.font.semibold,
+        fontSize: 13,
+        textAlign: 'center',
+    },
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 14,
+        paddingVertical: 16,
+        paddingHorizontal: 16,
+    },
+    rowDivider: {
+        borderBottomWidth: 1,
+        borderBottomColor: theme.border,
+    },
+    rowText: {
+        flex: 1,
+        color: theme.text,
+        fontFamily: theme.font.semibold,
+        fontSize: 16,
+    },
+    version: {
+        marginTop: 6,
+        textAlign: 'center',
+        color: theme.muted,
+        fontFamily: theme.font.regular,
+        fontSize: 13,
+    },
 });

@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { GuestMenuList } from '../../../components/Lists/GuestMenuList';
 import { AccountMenuList } from '../../../components/Lists/AccountMenuList';
+import { theme } from '../../../theme';
 
 function AccountScreen(props) {
     const [user, setUser] = React.useState({});
@@ -48,7 +49,7 @@ export default AccountScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F1F1F1'
+        backgroundColor: theme.background
     },
     innerContainer: {
         flex: 1

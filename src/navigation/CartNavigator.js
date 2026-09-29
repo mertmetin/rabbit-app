@@ -8,7 +8,7 @@ const Stack = createStackNavigator();
 export default function HomeNavigator({ navigation }) {
     return (
         <Stack.Navigator screenOptions={{ ...screenOptions, headerRight: () => null }}>
-            <Stack.Screen name="Cart" component={CartScreen} options={{ title: 'Cart' }} />
+            <Stack.Screen name="Cart" component={CartScreen} options={{ title: 'Basket' }} />
         </Stack.Navigator>
     );
 }
