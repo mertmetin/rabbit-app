@@ -8,7 +8,7 @@ import { showMessage, hideMessage } from "react-native-flash-message";
 
 const PasswordChangeValidationSchema = object().shape({
     password: string()
-        .min(4, ({ min }) => `New password must be at least ${min} characters`)
+        .min(8, ({ min }) => `New password must be at least ${min} characters`)
         .required('Password is required')
 });
 

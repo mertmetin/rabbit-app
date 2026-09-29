@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 
 export function ProductDetailsCard(props) {
     const item = props.item;
-    const image = { uri: 'http://localhost:8000/storage/' + item.image };
+    const image = { uri: item.image };
     const [itemCount, setItemCount] = React.useState(props.quantity);
     const showIncreaseDecreaseInput = (itemCount == 0) ? { display: 'none' } : { display: 'flex' };
     const showAddToCartButton = (itemCount) ? { display: 'none' } : { display: 'flex' };

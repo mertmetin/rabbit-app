@@ -16,7 +16,7 @@ export function ProductCard(props) {
             <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
                 <View style={styles.imgContainer}>
                     <View style={{ backgroundColor: '#fff', borderRadius: 5, alignItems: 'center' }}>
-                        <Image style={styles.img} source={{ url: 'http://localhost:8000/storage/' + item.image }} />
+                        <Image style={styles.img} source={{ uri: item.image }} />
                     </View>
                 </View>
                 <View style={{ alignItems: 'flex-start', marginTop: 10, marginLeft: 2.5 }}>

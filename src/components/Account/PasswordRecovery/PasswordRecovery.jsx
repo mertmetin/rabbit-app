@@ -8,7 +8,7 @@ import { PasswordRecoveryForm } from './PasswordRecoveryForm';
 
 const PasswordRecoverySchema = object().shape({
     token: string().min(4).required("Token is required!"),
-    password: string().min(4).required("Password is required!")
+    password: string().min(8, "Password must be at least 8 characters").required("Password is required!")
 });
 
 export const PasswordRecovery = props => {

@@ -23,7 +23,7 @@ export function CategoriesCards(props) {
                     });
                 }
             })
-    }, []);
+    }, [storeId]);
 
     function Item({ item }) {
         return (
@@ -44,7 +44,8 @@ export function CategoriesCards(props) {
                     />
                 )}
                 numColumns={4}
-                keyExtractor={item => item.id}
+                scrollEnabled={false}
+                keyExtractor={item => String(item.id)}
                 extraData={selected}
                 style={{padding:10}}
                 // contentContainerStyle={{alignItems: 'center'}}
@@ -55,6 +56,6 @@ export function CategoriesCards(props) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        backgroundColor: '#fff'
     }
 });

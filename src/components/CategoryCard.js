@@ -14,7 +14,7 @@ export function CategoryCard(props) {
         <View style={styles.container}>
             <TouchableOpacity onPress={onPress} style={{ alignItems: 'center' }} activeOpacity={.7}>
                 <View style={{backgroundColor: '#fff', borderRadius: 5}}>  
-                    <Image style={styles.img} source={{ uri: 'http://localhost:8000/storage/' + item.image }} />
+                    <Image style={styles.img} source={{ uri: item.image }} />
                 </View>
                 <Text style={styles.text}>{item.title}</Text>
             </TouchableOpacity>
@@ -24,9 +24,7 @@ export function CategoryCard(props) {
 
 const styles = StyleSheet.create({
     container: {
-        // height: 75,
-        // width: '33%',
-        flexBasis: '25%',
+        width: '25%',
         padding: 5,
         shadowColor: "#000",
         shadowOffset: {
@@ -40,15 +38,15 @@ const styles = StyleSheet.create({
         // boxShadow: 0px 4px 42px rgba(0, 0, 0, 0.25);
     },
     img: {
-        width: 70,
-        height: 70,
-        resizeMode: 'cover',
+        width: 56,
+        height: 56,
+        resizeMode: 'contain',
         margin: 5
     },  
     text: {
-        fontSize: 16,
+        fontSize: 13,
         textAlign: 'center',
-        marginTop: 10,
+        marginTop: 6,
         color: '#22292F',
         fontFamily: 'sodo-sans-regular'
     }

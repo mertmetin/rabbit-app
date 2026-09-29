@@ -53,7 +53,7 @@ export function ProductsCards(props) {
                 });
             }
         })
-    }, []);      
+    }, [storeId, category]);      
 
     return (
         <SafeAreaView style={styles.container}>

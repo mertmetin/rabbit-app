@@ -18,7 +18,7 @@ export function Card(props) {
         <View style={styles.container}>
             <TouchableOpacity onPress={onPress} >
                 <View>
-                    <Image style={styles.img} source={{ uri: 'http://localhost:8000/storage/' + img }} />
+                    <Image style={styles.img} source={{ uri: img }} />
                 </View>
                 <View style={{ padding: 10 }}>
                     <Text>{title}</Text>

@@ -1,123 +1,149 @@
 import React, { useState, useEffect } from 'react';
 import * as Location from 'expo-location';
 import { useNavigation } from '@react-navigation/native';
-import http, { setClientToken } from '../../helpers/Http';
-import  Map from '../Other/Map';
-import MapDirections from '../Maps/MapDirections';
-import GoogleMaps from '../Other/GoogleMaps';
-import { View} from 'react-native';
-import {showMessage, hideMessage } from "react-native-flash-message";
-import {NoServiceCard} from '../Cards/NoServiceCard';
-import { StyleSheet } from 'react-native';
-import { ListItem } from '@ui-kitten/components';
+import { useDispatch, useSelector } from 'react-redux';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { ListItem, Button, Text } from '@ui-kitten/components';
 import { Ionicons } from '@expo/vector-icons';
+import { showMessage } from 'react-native-flash-message';
+import http from '../../helpers/Http';
+import { getCurrentUser } from '../../helpers/Auth';
+import { DEFAULT_LOCATION } from '@/config';
+import { Map } from '../Maps';
+import { NoServiceCard } from '../Cards/NoServiceCard';
+import { CategoriesCards } from '../Cards/CategoriesCards';
 
-export const DeliveryAddressContainer = props => {
-    const [location, setLocation] = useState(props.deliveryAddress);
-    const [cards, setCards] = useState(null);
-    const [map, setMap] = useState(null);
-    const [errorMsg, setErrorMsg] = useState(null);
-    const deliveryAddress = props.deliveryAddress;
-    const navigation = useNavigation();
-    var user_id = 1;
+const LOCATION_TIMEOUT_MS = 8000;
 
-    const renderItemAccessory = (payment_method_id) => (
-        <Ionicons size={24} name='chevron-forward' />
-    );
+// Device location, or downtown Ottawa if it's unavailable or not allowed.
+async function currentLocation() {
+    const fallback = { ...DEFAULT_LOCATION, label: 'Downtown Ottawa' };
+    try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted')
+            return fallback;
 
-    const fetchLocation = () => {
-        (async () => {
+        const position = await Promise.race([
+            Location.getCurrentPositionAsync({}),
+            new Promise((resolve) => setTimeout(() => resolve(null), LOCATION_TIMEOUT_MS)),
+        ]);
+        if (!position)
+            return fallback;
 
-            let { status } = await Location.requestPermissionsAsync();
-            if (status !== 'granted') {
-                setErrorMsg('Permission to access location was denied');
-                return;
-            }
-
-            let location = await Location.getCurrentPositionAsync({});
-            let coords = location.coords;
-            let region = await Location.
-                reverseGeocodeAsync({ longitude: coords.longitude, latitude: coords.latitude });
-
-            setLocation({ latitude: coords.latitude, longitude: coords.longitude, city: region[0]['city']});
-        })();
+        return { latitude: position.coords.latitude, longitude: position.coords.longitude, label: 'Current location' };
+    } catch {
+        return fallback;
     }
+}
+
+// Home screen body: where we deliver to, the store serving it, and its aisles.
+export const DeliveryAddressContainer = () => {
+    const navigation = useNavigation();
+    const dispatch = useDispatch();
+    const address = useSelector((state) => state.deliveryAddress.address);
+    const { store, checked } = useSelector((state) => state.store);
+    const [place, setPlace] = useState(null);
+    const [error, setError] = useState(null);
+    const [attempt, setAttempt] = useState(0);
 
     useEffect(() => {
-       
+        let cancelled = false;
+        dispatch({ type: 'RESET_STORE' });
+        setError(null);
 
-        // if (!location) {
-        //     fetchLocation();
-        //     return;
-        // }
+        (async () => {
+            const found = address
+                ? { latitude: Number(address.latitude), longitude: Number(address.longitude), label: address.label || address.address_line_1 }
+                : await currentLocation();
+            if (cancelled)
+                return;
+            setPlace(found);
 
-        // var city = location.city;
+            try {
+                const res = await http.get('stores/closest', { params: { lat: found.latitude, lng: found.longitude } });
+                if (!cancelled)
+                    dispatch({ type: 'SET_STORE', payload: res.data });
+            } catch (err) {
+                if (!cancelled)
+                    setError(err.message);
+            }
+        })();
 
-        // http.get('cities')
-        // .then(result => {
-        //     var data = result.data;
+        return () => { cancelled = true; };
+    }, [address, attempt]);
 
-        //     if (data.includes(city)) {
-        //         var lat = location.latitude;
-        //         var lng = location.longitude;
-        //         http.get(`stores/closest?lat=${lat}&lng=${lng}`)
-        //             .then(result => {
-        //                 var data = result.data;
-        //                 setMap(<Map marker={coords} />)
-        //             })
-        //             .catch()
-        //     } else {
-        //         // setMap(<Map marker={location} />)
-        //         setCards(<View style={[styles.box_shadow, { padding: 10 }]}><NoServiceCard /></View>)
-        //     }
-        // }).catch(error => {
-        //     showMessage({
-        //         message: error.message,
-        //         type: "danger"
-        //     });
-        // })
+    const chooseAddress = async () => {
+        const user = await getCurrentUser();
+        if (user) {
+            navigation.navigate('ChooseAddress', { id: user.id });
+            return;
+        }
+        showMessage({ message: 'Sign in to save delivery addresses.', type: 'info' });
+        navigation.navigate('Profile');
+    };
 
-    });
+    const browseDowntown = () =>
+        dispatch({ type: 'SET_DELIVERY_ADDRESS', payload: { ...DEFAULT_LOCATION, label: 'Downtown Ottawa' } });
 
-    const origin = { latitude: 45.424721, longitude: -75.695000 };
-    const destination = { latitude: 45.4153548, longitude: -75.6708025 };
+    let body;
+    if (error) {
+        body = (
+            <View style={styles.message}>
+                <Text>Can't reach Rabbit right now.</Text>
+                <Text appearance='hint' style={styles.hint}>{error}</Text>
+                <Button size='small' onPress={() => setAttempt(attempt + 1)}>Try again</Button>
+            </View>
+        );
+    } else if (!checked) {
+        body = <ActivityIndicator style={styles.message} />;
+    } else if (store) {
+        body = <CategoriesCards storeId={store.id} />;
+    } else {
+        body = (
+            <View style={[styles.box_shadow, styles.noService]}>
+                <NoServiceCard />
+                <Button appearance='ghost' onPress={browseDowntown}>Browse downtown Ottawa instead</Button>
+            </View>
+        );
+    }
 
     return (
         <View>
-            <View>
-                <View style={[styles.box_shadow, {zIndex: 100}]}>
-                    <ListItem
-                        key={"btn-choose-delivery-address"}
-                        title={'Choose a delivery address'}
-                        accessoryRight={renderItemAccessory}
-                    // accessoryLeft={NavigateIcon}
-                        onPress={() => {
-                            navigation.navigate('ChooseAddress', {id: user_id});
-                        }}
-                    />
-                </View>
-                <View style={{ height: 300 }}>
-                    <MapDirections origin={origin} destination={destination} />
-
-                    {/* <GoogleMaps /> */}
-                    {/* { location && <Map marker={location} /> } */}
-                    {/* {map} */}
-                </View>
+            <View style={[styles.box_shadow, { zIndex: 100 }]}>
+                <ListItem
+                    title={place ? `Deliver to: ${place.label}` : 'Finding your location…'}
+                    description={store ? `From ${store.name} · ${store.distance_km} km away` : undefined}
+                    accessoryRight={() => <Ionicons size={24} name='chevron-forward' />}
+                    onPress={chooseAddress}
+                />
             </View>
-            <View>
-                {cards}
+            <View style={styles.map}>
+                {place && <Map initialRegion={{ latitude: place.latitude, longitude: place.longitude }} />}
             </View>
+            {body}
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
+    map: {
+        height: 200
+    },
+    message: {
+        padding: 24,
+        alignItems: 'center',
+        gap: 8
+    },
+    hint: {
+        textAlign: 'center'
+    },
+    noService: {
+        padding: 10,
+        backgroundColor: '#fff'
+    },
     box_shadow: {
-        shadowColor: "#000",
-        shadowOffset: {
-        width: 0,
-            height: 1,
-        },
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.22,
         shadowRadius: 2.22,
         elevation: 3

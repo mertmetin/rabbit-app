@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { GOOGLE_MAPS_API_KEY } from '@/config';
 import React, { useState, useEffect } from 'react';
 import { PlaceAutocompleteInput } from './PlaceAutocompleteInput';
 
@@ -14,7 +15,7 @@ export const PlaceAutocomplete = ({ onAddressSelected }) => {
 
     const getAutocompleteSuggestions = () => {
         const url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json?' +
-            'key=***REMOVED***&' +
+            'key=' + GOOGLE_MAPS_API_KEY + '&' +
             '&input=' + searchTerm + 
             '&inputtype=textquery' +
             '&fields=formatted_address,name,rating,opening_hours'; 

@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { GOOGLE_MAPS_API_KEY } from '@/config';
 import Colors from '../constants/Colors';
 import * as React from 'react';
 import axios from 'axios';
@@ -42,7 +43,7 @@ export function GooglePlaces(props) {
     const onTextChange = (data) => {
         setValue(data);
         const url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json?' +
-            'key=***REMOVED***&' + 
+            'key=' + GOOGLE_MAPS_API_KEY + '&' + 
             '&input=' + data +
             '&inputtype=textquery' + 
             '&fields=formatted_address,name,rating,opening_hours';  

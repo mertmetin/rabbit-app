@@ -6,6 +6,7 @@ import { View, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-nativ
 import { ScrollView } from 'react-native-gesture-handler';
 import { CategoryCard } from '../components/CategoryCard';
 import http from '../helpers/Http';
+import { useSelector } from 'react-redux';
 
 export function Search(props) { 
     const [hits, setHits] = React.useState();
@@ -38,21 +39,21 @@ export function Search(props) {
         return items;
     };
 
-    const store_id = 5;
-    const index = 'inventory';
+    const store = useSelector((state) => state.store.store);
 
     const onTextChange = (text) => {
-        if (text.length < 3)
+        if (text.length < 2 || !store)
         {
             setHits([]);
             return;
         }
 
-        http.get(`search?store_id=${store_id}&index=${index}&q=${text}`)
+        http.get('search', { params: { store_id: store.id, q: text } })
         .then((response) => {
             var hits = Hits(response.data);
             setHits(hits);
-        });
+        })
+        .catch(() => setHits([]));
     }
     
 

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { GOOGLE_MAPS_API_KEY } from '@/config';
 import React, { useState } from 'react';
 import http from '../../../helpers/Http';
 import { showMessage, hideMessage } from "react-native-flash-message";
@@ -57,7 +58,7 @@ export const AddUserAddress = ({ data }) => {
 
     const onAddressSelected = (item) => {
         const url = 'https://maps.googleapis.com/maps/api/place/details/json?' +
-            'key=***REMOVED***&' +
+            'key=' + GOOGLE_MAPS_API_KEY + '&' +
             '&input=bar' +
             '&placeid=' + item.place_id;
     
@@ -103,7 +104,7 @@ export const AddUserAddress = ({ data }) => {
     const onPositionFound = (position) => {
         const coords = position.coords;
         const url = 'https://maps.googleapis.com/maps/api/geocode/json?' +
-        'key=***REMOVED***&' +
+        'key=' + GOOGLE_MAPS_API_KEY + '&' +
         '&latlng=' + coords.latitude + ',' + coords.longitude;
 
         axios.get(url).then(result => {

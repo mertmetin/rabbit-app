@@ -11,7 +11,7 @@ const validationSchema = object().shape({
     name: string().required("Name is required!"),
     phone: string().required("Phone number is required!"),
     password: string()
-        .min(4, ({ min }) => `Password must be at least ${min} characters`)
+        .min(8, ({ min }) => `Password must be at least ${min} characters`)
         .required('Password is required'),
     email: string().email().required('Email is required')
 });

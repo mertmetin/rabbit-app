@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { GOOGLE_MAPS_API_KEY } from '@/config';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, View, Text, Dimensions } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
@@ -32,7 +33,7 @@ function Map(props) {
             <MapViewDirections
                 origin={marker}
                 destination={destination}
-                apikey={'***REMOVED***'}
+                apikey={GOOGLE_MAPS_API_KEY}
                 strokeWidth={3}
                 strokeColor="#00754a"
                 onReady={result => { }}

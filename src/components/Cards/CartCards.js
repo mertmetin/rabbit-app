@@ -13,7 +13,7 @@ export function CartCards(props) {
 
     function Item({ item }) {
         var itemId = item.id;
-        const img = { uri: 'http://localhost:8000/storage/' + item.image };
+        const img = { uri: item.image };
 
         const onPress = () => {
             navigation.navigate('ProductDetails', {item: item});

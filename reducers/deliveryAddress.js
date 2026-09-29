@@ -1,21 +1,14 @@
+// The saved address the user chose to deliver to (null = use device location).
 const initialState = {
-    address: {}
+    address: null
 }
 
 const deliveryAddress = (state = initialState, action) => {
-    let item;
-    let itemId;
-
     switch (action.type) {
         case 'SET_DELIVERY_ADDRESS':
-            state = [];
-            item = action.payload;
-            state[item.id] = item;
-
-            return { ...state };
+            return { address: action.payload };
         case 'REMOVE_DELIVERY_ADDRESS':
-        
-            return { ...state };
+            return initialState;
     }
 
     return state;
