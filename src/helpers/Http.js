@@ -1,10 +1,9 @@
 import axios from 'axios';
 import Token from './Token';
-import { API_URL } from 'react-native-dotenv'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const config = { 
-    baseURL: API_URL, 
+    baseURL: process.env.EXPO_PUBLIC_API_URL, 
     timeout: 60000,
     withCredentials: true
 }

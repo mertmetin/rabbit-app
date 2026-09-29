@@ -14,15 +14,7 @@ import Colors from '../constants/Colors';
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'Home';
 
-export default function BottomTabNavigator({ navigation, route }) {
-  // Set the header title on the parent stack navigator depending on the
-  // currently active tab. Learn more in the documentation:
-  // https://reactnavigation.org/docs/en/screen-options-resolution.html
-    navigation.setOptions({ 
-      // headerTitle: getHeaderTitle(route) 
-         headerShown: false
-      }
-    );
+export default function BottomTabNavigator() {
 
   const getTabBarVisibility = (route) => {
     const routeName = getFocusedRouteNameFromRoute(route);
@@ -40,9 +32,10 @@ export default function BottomTabNavigator({ navigation, route }) {
   }
 
   return (
-    <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME} tabBarOptions={{
-      activeTintColor: Colors.tabIconSelected,
-      labelStyle: {
+    <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME} screenOptions={{
+      headerShown: false,
+      tabBarActiveTintColor: Colors.tabIconSelected,
+      tabBarLabelStyle: {
         fontSize: 12,
         fontFamily: 'sodo-sans-semibold',
       }
@@ -53,7 +46,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         options={({ route }) => ({
           // title: 'Order',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-home" />,
-          tabBarVisible: getTabBarVisibility(route)
+          tabBarStyle: getTabBarVisibility(route) ? undefined : { display: 'none' }
         })}
       />
       <BottomTab.Screen
@@ -62,7 +55,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         options={({ route }) => ({
           // title: 'Search',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-search" />,
-          tabBarVisible: getTabBarVisibility(route)
+          tabBarStyle: getTabBarVisibility(route) ? undefined : { display: 'none' }
         })}
       />
       <BottomTab.Screen
@@ -71,7 +64,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         options={({ route }) => ({
           // title: 'Cart',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-cart" />,
-          tabBarVisible: getTabBarVisibility(route)
+          tabBarStyle: getTabBarVisibility(route) ? undefined : { display: 'none' }
         })}
       />
       <BottomTab.Screen
@@ -79,9 +72,9 @@ export default function BottomTabNavigator({ navigation, route }) {
         component={ProfileNavigator}
         options={({ route }) => ({
           // title: 'Profile',
-          unmountOnBlur:true,
+          popToTopOnBlur: true,
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-person" />,
-          tabBarVisible: getTabBarVisibility(route)
+          tabBarStyle: getTabBarVisibility(route) ? undefined : { display: 'none' }
         })}
       />
       <BottomTab.Screen
@@ -90,24 +83,9 @@ export default function BottomTabNavigator({ navigation, route }) {
         options={({ route }) => ({
           // title: 'Promotions',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-gift" />,
-          tabBarVisible: getTabBarVisibility(route)
+          tabBarStyle: getTabBarVisibility(route) ? undefined : { display: 'none' }
         })}
       />
     </BottomTab.Navigator>
   );
-}
-
-function getHeaderTitle(route) {
-  const routeName = route.state?.routes[route.state.index]?.name ?? INITIAL_ROUTE_NAME;
-
-  switch (routeName) {
-    case 'Home':
-      return 'How to get started';
-    case 'Search':
-      return 'Search';
-    case 'Profile':
-      return 'Profile';
-    case 'Gift':
-      return 'Links to learn more';
-  }
 }

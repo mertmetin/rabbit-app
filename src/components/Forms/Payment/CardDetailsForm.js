@@ -1,8 +1,8 @@
+import { View } from 'react-native';
 import React, { Component } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { validate } from 'validate.js/validate';
 import { showMessage, hideMessage } from "react-native-flash-message";
-import { Container, Header, Text, Content, Form, Item, Input, Label, Icon, View } from 'native-base';
 import { FloatingLabel } from '../../FloatingLabel';
 import { ActionButton } from '../../ActionButton';
 import { GooglePlaces } from '../../GooglePlaces';

@@ -3,7 +3,6 @@ import { StyleSheet, TextInput, View, TouchableWithoutFeedback } from 'react-nat
 import { Formik } from 'formik';
 import { Layout, Input, Button, Text } from '@ui-kitten/components';
 import { Ionicons } from '@expo/vector-icons';
-import MaskedInput from "react-text-mask";
 
 export const PasswordResetForm = props => {
     return(

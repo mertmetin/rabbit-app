@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity } from 'react-native';
-import { Container, Header, Content, Form, Item, Input, Label, Icon } from 'native-base';
+import { StyleSheet, Text, View, TextInput } from 'react-native';
 import Colors from '../constants/Colors';
 
 export function FloatingLabel(props) {
@@ -56,7 +55,7 @@ export function FloatingLabel(props) {
     const errMsg = (
         <View style={{ flexDirection: 'row', paddingTop: 20, paddingBottom: 20, fontSize: 12, marginTop: -30}}>
             <Ionicons
-                name='md-close'
+                name='close'
                 size={18}
                 style={{ marginBottom: -5 }}
                 color= {Colors.errorText}
@@ -67,12 +66,11 @@ export function FloatingLabel(props) {
 
     return (
         <View>
-            <Item floatingLabel style={{ borderColor: (isFocused) ? Colors.accentGreen : '#CCCCCC', marginBottom: 20 }}>
-                <Label style={{ fontFamily: 'sodo-sans-regular' }}> {props.label} </Label>
-                <Input onFocus={onFocus} onBlur={onBlur} keyboardType={props.keyboardType} 
-                    onChangeText={onChangeText} value={value} maxLength={maxLength} secureTextEntry={props.secure} disabled={props.disabled} />
-                {/* <Icon name='close-circle' /> */}
-            </Item>
+            <View style={[styles.field, { borderColor: (isFocused) ? Colors.accentGreen : '#CCCCCC' }]}>
+                <Text style={styles.label}>{props.label}</Text>
+                <TextInput style={styles.input} onFocus={onFocus} onBlur={onBlur} keyboardType={props.keyboardType}
+                    onChangeText={onChangeText} value={value} maxLength={maxLength} secureTextEntry={props.secure} editable={!props.disabled} />
+            </View>
             {error && errMsg}
         </View>
        
@@ -80,8 +78,19 @@ export function FloatingLabel(props) {
 }
 
 const styles = StyleSheet.create({
-    item: {
-        fontFamily: 'sodo-sans-bold', 
-        marginBottom: 20
+    field: {
+        borderBottomWidth: 1,
+        marginBottom: 20,
+        paddingTop: 8
+    },
+    label: {
+        fontFamily: 'sodo-sans-regular',
+        fontSize: 13,
+        color: 'rgb(97,97,98)'
+    },
+    input: {
+        fontFamily: 'sodo-sans-regular',
+        fontSize: 17,
+        paddingVertical: 8
     }
 });

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useEffect } from 'react';
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import Token from '../../../helpers/Token';
 import { Layout } from '@ui-kitten/components';
 import { useNavigation } from '@react-navigation/native';
@@ -18,7 +18,7 @@ function AccountScreen(props) {
                 if (!_token)
                     return;
 
-                var decoded = jwt_decode(_token);
+                var decoded = jwtDecode(_token);
 
                 if (Date.now() >= decoded.exp * 1000)
                     return false;

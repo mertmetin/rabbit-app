@@ -6,7 +6,7 @@ import Colors from '../constants/Colors';
 export default function TabBarIcon(props) {
   return (
     <Ionicons
-      name={props.name}
+      name={props.name.replace(/^md-/, '')}
       size={30}
       style={{ marginBottom: -5 }}
       color={props.focused ? Colors.tabIconSelected : Colors.tabIconDefault}
