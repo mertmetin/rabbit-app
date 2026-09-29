@@ -11,6 +11,8 @@ import FlashMessage from "react-native-flash-message";
 import { Provider } from 'react-redux'
 import store from './store'
 import { StripeProvider } from '@stripe/stripe-react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { FlyToCartProvider } from './src/context/FlyToCart';
 
 import * as eva from '@eva-design/eva';
 // import { EvaIconsPack } from '@ui-kitten/eva-icons';
@@ -65,11 +67,15 @@ export default function App(props) {
         <Provider store={store}>
           <View style={styles.container}>
             {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+            <SafeAreaProvider>
+            <FlyToCartProvider>
             <NavigationContainer>
               <Stack.Navigator>
                 <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
               </Stack.Navigator>
             </NavigationContainer>
+            </FlyToCartProvider>
+            </SafeAreaProvider>
             <FlashMessage position="top" />
           </View>
         </Provider>

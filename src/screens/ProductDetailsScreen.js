@@ -18,6 +18,10 @@ export default function ProductDetailsScreen({ route }) {
     const { width } = useWindowDimensions();
     const { name, size } = splitTitle(product.title);
     const [related, setRelated] = React.useState([]);
+    const photo = React.useRef(null);
+    const add = () => photo.current
+        ? photo.current.measureInWindow((x, y, w, h) => cart.increase(product, { x, y, width: w, height: h }))
+        : cart.increase(product);
 
     React.useEffect(() => {
         if (!store || !product.category_id)
@@ -31,7 +35,7 @@ export default function ProductDetailsScreen({ route }) {
         <View style={styles.screen}>
             <ScrollView contentContainerStyle={styles.content}>
                 <View style={styles.hero}>
-                    <Image source={{ uri: product.image }} style={{ width: width * 0.7, height: width * 0.7, borderRadius: theme.radius }} />
+                    <Image ref={photo} source={{ uri: product.image }} style={{ width: width * 0.7, height: width * 0.7, borderRadius: theme.radius }} />
                     <Text style={styles.price}>{formatPrice(product.price)}</Text>
                     <Text style={styles.name}>{name}</Text>
                     {!!size && <Text style={styles.size}>{size}</Text>}
@@ -48,11 +52,11 @@ export default function ProductDetailsScreen({ route }) {
 
             <View style={styles.footer}>
                 {quantity === 0
-                    ? <Button size='large' style={styles.addButton} onPress={() => cart.increase(product)}>
+                    ? <Button size='large' style={styles.addButton} onPress={add}>
                         {`Add to basket · ${formatPrice(product.price)}`}
                       </Button>
                     : <QuantityStepper size='large' quantity={quantity}
-                        onIncrease={() => cart.increase(product)} onDecrease={() => cart.decrease(product)} />}
+                        onIncrease={add} onDecrease={() => cart.decrease(product)} />}
             </View>
         </View>
     );

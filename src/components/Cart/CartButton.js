@@ -5,17 +5,22 @@ import { useNavigation } from '@react-navigation/native';
 import { theme, formatPrice } from '../../theme';
 import { useCart } from '../../hooks/useCart';
 import { useBump } from '../../hooks/useBump';
+import { useFlyToCart } from '../../context/FlyToCart';
 
 // Header pill with the basket total; opens the cart. Hidden while empty.
 export function CartButton() {
     const navigation = useNavigation();
     const { total, count } = useCart();
-    const scale = useBump(total);
+    const { pulse, setTarget } = useFlyToCart();
+    const scale = useBump(pulse);
+    const ref = React.useRef(null);
     if (count === 0)
         return null;
 
+    const register = () => ref.current?.measureInWindow((x, y, width, height) => setTarget('header', { x, y, width, height }));
+
     return (
-        <Animated.View style={{ transform: [{ scale }] }}>
+        <Animated.View ref={ref} onLayout={register} style={{ transform: [{ scale }] }}>
         <Pressable style={styles.pill} onPress={() => navigation.navigate('Root', { screen: 'Cart' })}>
             <View style={styles.iconBox}>
                 <Ionicons name="basket" size={18} color={theme.primary} />

@@ -11,17 +11,25 @@ export function ProductTile({ product, width }) {
     const cart = useCart();
     const quantity = cart.quantityOf(product.id);
     const { name, size } = splitTitle(product.title);
+    const photo = React.useRef(null);
+
+    // Add, flying the photo from where it sits on screen into the basket.
+    const add = () => {
+        if (!photo.current)
+            return cart.increase(product);
+        photo.current.measureInWindow((x, y, width, height) => cart.increase(product, { x, y, width, height }));
+    };
 
     return (
         <Pressable style={[styles.container, { width }]} onPress={() => navigation.navigate('ProductDetails', { item: product })}>
-            <View style={[styles.imageBox, quantity > 0 && styles.imageBoxSelected, { height: width }]}>
+            <View ref={photo} collapsable={false} style={[styles.imageBox, quantity > 0 && styles.imageBoxSelected, { height: width }]}>
                 <Image source={{ uri: product.image }} style={styles.image} />
             </View>
             <View style={styles.control}>
                 {quantity === 0
-                    ? <AddButton onPress={() => cart.increase(product)} />
+                    ? <AddButton onPress={add} />
                     : <QuantityStepper vertical quantity={quantity}
-                        onIncrease={() => cart.increase(product)} onDecrease={() => cart.decrease(product)} />}
+                        onIncrease={add} onDecrease={() => cart.decrease(product)} />}
             </View>
             <Text style={styles.price}>{formatPrice(product.price)}</Text>
             <Text style={styles.name} numberOfLines={2}>{name}</Text>

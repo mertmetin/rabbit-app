@@ -11,6 +11,7 @@ import PromotionsNavigator from './PromotionsNavigator';
 import { MinOrderBar } from '../components/Cart/MinOrderBar';
 import { useCart } from '../hooks/useCart';
 import { useBump } from '../hooks/useBump';
+import { useFlyToCart } from '../context/FlyToCart';
 import { theme } from '../theme';
 
 const BottomTab = createBottomTabNavigator();
@@ -29,10 +30,13 @@ const icon = (name) => ({ focused }) => (
 // The raised round basket in the middle of the tab bar.
 function CartTabButton({ onPress }) {
     const { count } = useCart();
-    const scale = useBump(count);
+    const { pulse, setTarget } = useFlyToCart();
+    const scale = useBump(pulse);
+    const ref = React.useRef(null);
+    const register = () => ref.current?.measureInWindow((x, y, width, height) => setTarget('tab', { x, y, width, height }));
     return (
         <Pressable onPress={onPress} style={styles.cartButtonWrap}>
-            <Animated.View style={[styles.cartButton, { transform: [{ scale }] }]}>
+            <Animated.View ref={ref} onLayout={register} style={[styles.cartButton, { transform: [{ scale }] }]}>
                 <Ionicons name="basket" size={30} color={theme.accent} />
                 {count > 0 && (
                     <View style={styles.badge}>
@@ -48,6 +52,8 @@ function CartTabButton({ onPress }) {
 function TabBarWithProgress(props) {
     const focused = props.state.routes[props.state.index];
     const hidden = tabBarStyleFor(focused).display === 'none';
+    const { setTabVisible } = useFlyToCart();
+    React.useEffect(() => setTabVisible(!hidden), [hidden]);
     // The basket screen shows its own minimum-order note.
     const showProgress = !hidden && focused.name !== 'Cart';
     return (
