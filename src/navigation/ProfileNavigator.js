@@ -14,7 +14,7 @@ import AddressDetails from '../screens/Profile/Address/AddressDetails';
 import AccountScreen from '../screens/Profile/Account/AccountScreen';
 import OrdersScreen from '../screens/Profile/Orders/OrdersScreen';
 import InfoScreen from '../screens/Profile/Account/InfoScreen';
-import CardsScreen from '../screens/Profile/Payment/CardsScreen';
+import CardsScreen from '../screens/Profile/Payment/PaymentMethodsScreen';
 import CardDetailsScreen from '../screens/Profile/Payment/CardDetailsScreen';
 import AddCardScreen from '../screens/Profile/Payment/AddCardScreen';
 import { screenOptions } from './screenOptions';
@@ -31,7 +31,7 @@ export default function ProfileNavigator({ navigation }) {
             <Stack.Screen name="PasswordResetScreen" component={PasswordResetScreen} options={{ title: 'Forgot Password' }} />
             <Stack.Screen name="PasswordRecoveryScreen" component={PasswordRecoveryScreen} options={{ title: 'Reset Password' }} />
             <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} options={{ title: 'Change Password' }} />
-            <Stack.Screen name="CardsScreen" component={CardsScreen} options={{ title: 'Payment' }} />
+            <Stack.Screen name="CardsScreen" component={CardsScreen} options={{ title: 'Payment methods' }} />
             <Stack.Screen name="CardDetailsScreen" component={CardDetailsScreen} options={{ title: 'Card Details' }} />
             <Stack.Screen name="AddCardScreen" component={AddCardScreen} options={{ title: 'Add Card' }} />
             <Stack.Screen name="AddressScreen" component={AddressScreen} options={{ title: 'Addresses' }} />

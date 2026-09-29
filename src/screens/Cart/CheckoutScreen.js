@@ -3,6 +3,8 @@ import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, Text
 import { useSelector } from 'react-redux';
 import { Ionicons } from '@expo/vector-icons';
 import { useStripe } from '@stripe/stripe-react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { cardLabel } from '../Profile/Payment/PaymentMethodsScreen';
 import { showMessage } from 'react-native-flash-message';
 import http from '../../helpers/Http';
 import { getCurrentUser } from '../../helpers/Auth';
@@ -40,11 +42,12 @@ function SummaryRow({ label, value, strong, accent }) {
 
 // Review and pay: address and ETA, notes, payment, basket and totals.
 // Totals come from the server; payment happens in Stripe's sheet.
-export default function CheckoutScreen({ navigation }) {
+export default function CheckoutScreen({ navigation, route }) {
     const cart = useCart();
     const address = useSelector((state) => state.deliveryAddress.address);
     const store = useSelector((state) => state.store.store);
-    const { initPaymentSheet, presentPaymentSheet } = useStripe();
+    const { handleNextAction } = useStripe();
+    const [cards, setCards] = React.useState(null);
 
     const [notes, setNotes] = React.useState('');
     const [contactless, setContactless] = React.useState(false);
@@ -69,6 +72,13 @@ export default function CheckoutScreen({ navigation }) {
             });
     }, [savedAddress?.id, store?.id, itemsKey]);
 
+    // Saved cards; the one picked on the Payment method screen, else the newest.
+    useFocusEffect(React.useCallback(() => {
+        http.get('payment/methods').then((res) => setCards(res.data)).catch(() => setCards([]));
+    }, []));
+    const card = cards && (cards.find((c) => c.id === route.params?.paymentMethodId) || cards[0]);
+    const chooseCard = () => navigation.navigate('PaymentMethods', { selecting: true, selectedId: card?.id });
+
     const chooseAddress = async () => {
         const user = await getCurrentUser();
         navigation.navigate('AddressScreen', { id: user?.id, returnTo: 'Checkout' });
@@ -77,36 +87,26 @@ export default function CheckoutScreen({ navigation }) {
     const placeOrder = async () => {
         if (!savedAddress)
             return chooseAddress();
+        if (!card)
+            return chooseCard();
         setPlacing(true);
         let orderId = null;
         try {
-            const user = await getCurrentUser();
             const res = await http.post('orders', {
-                store_id: store.id, address_id: savedAddress.id, items,
+                store_id: store.id, address_id: savedAddress.id, items, payment_method_id: card.id,
                 notes: notes.trim() || undefined, contactless, no_bell: noBell,
             });
             const { order, payment } = res.data;
             orderId = order.id;
 
-            const init = await initPaymentSheet({
-                merchantDisplayName: 'Rabbit',
-                customerId: payment.customer_id,
-                customerEphemeralKeySecret: payment.ephemeral_key,
-                paymentIntentClientSecret: payment.client_secret,
-                defaultBillingDetails: { name: user?.name, email: user?.email },
-                appearance: { colors: { primary: theme.primary } },
-                returnURL: 'rabbit://stripe-redirect',
-            });
-            if (init.error)
-                throw new Error(init.error.message);
-
-            const { error } = await presentPaymentSheet();
-            if (error) {
-                // Closing the sheet (or a declined card) releases the reserved stock.
-                await http.post(`orders/${orderId}/cancel`).catch(() => {});
-                if (error.code !== 'Canceled')
+            // Some banks ask for 3-D Secure; Stripe shows its own prompt.
+            if (payment.status === 'requires_action') {
+                const { error } = await handleNextAction(payment.client_secret, 'rabbit://stripe-redirect');
+                if (error) {
+                    await http.post(`orders/${orderId}/cancel`).catch(() => {});
                     showMessage({ message: error.message, type: 'danger' });
-                return;
+                    return;
+                }
             }
 
             const confirmed = await http.post(`orders/${orderId}/confirm`);
@@ -164,9 +164,12 @@ export default function CheckoutScreen({ navigation }) {
                             <Ionicons name="card" size={22} color={theme.primary} />
                         </View>
                         <View style={{ flex: 1 }}>
-                            <Text style={styles.paymentTitle}>Card or Apple Pay</Text>
-                            <Text style={styles.paymentHint}>You'll choose when you place the order. Cards are saved securely by Stripe.</Text>
+                            <Text style={styles.paymentTitle}>{card ? cardLabel(card) : 'Add a payment card'}</Text>
+                            {!card && <Text style={styles.paymentHint}>Stored securely by Stripe.</Text>}
                         </View>
+                        <Pressable style={styles.outlineButton} onPress={chooseCard} disabled={cards === null}>
+                            <Text style={styles.outlineText}>{card ? 'Change' : 'Add'}</Text>
+                        </Pressable>
                     </View>
                 </Section>
 
@@ -214,7 +217,7 @@ export default function CheckoutScreen({ navigation }) {
                         disabled={placing || (savedAddress && !quote)} onPress={placeOrder}>
                         {placing
                             ? <ActivityIndicator color={theme.white} />
-                            : <Text style={styles.placeText}>{savedAddress ? 'Place order' : 'Add address'}</Text>}
+                            : <Text style={styles.placeText}>{!savedAddress ? 'Add address' : !card ? 'Add card' : 'Place order'}</Text>}
                     </Pressable>
                     <View style={styles.totalBox}>
                         <Text style={styles.total}>{formatPrice(quote ? quote.total : cart.total)}</Text>
@@ -245,6 +248,8 @@ const styles = StyleSheet.create({
     paymentRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
     paymentIcon: { width: 44, height: 44, borderRadius: 10, backgroundColor: theme.primarySoft, alignItems: 'center', justifyContent: 'center' },
     paymentTitle: { color: theme.text, fontFamily: theme.font.semibold, fontSize: 15 },
+    outlineButton: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 10, borderWidth: 1.5, borderColor: theme.primary },
+    outlineText: { color: theme.primary, fontFamily: theme.font.bold, fontSize: 14 },
     paymentHint: { marginTop: 2, color: theme.muted, fontFamily: theme.font.regular, fontSize: 13 },
     productsRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
     productsTitle: { flex: 1, color: theme.text, fontFamily: theme.font.semibold, fontSize: 16 },
