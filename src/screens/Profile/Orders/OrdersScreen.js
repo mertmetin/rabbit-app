@@ -7,7 +7,8 @@ import { theme, formatPrice } from '../../../theme';
 
 const STATUS = {
     placed: { label: 'Placed', color: theme.primary },
-    preparing: { label: 'Preparing', color: theme.primary },
+    preparing: { label: 'Packing', color: theme.primary },
+    ready: { label: 'Packed', color: theme.primary },
     out_for_delivery: { label: 'On the way', color: theme.primary },
     delivered: { label: 'Delivered', color: theme.muted },
     cancelled: { label: 'Cancelled', color: theme.danger },
@@ -16,7 +17,7 @@ const STATUS = {
 const formatDate = (iso) => new Date(iso).toLocaleString('en-CA', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
 
 // The customer's past and current orders; placed orders can still be cancelled.
-export default function OrdersScreen() {
+export default function OrdersScreen({ navigation }) {
     const [orders, setOrders] = React.useState(null);
 
     const load = React.useCallback(() => {
@@ -52,7 +53,7 @@ export default function OrdersScreen() {
                 const status = STATUS[order.status] || { label: order.status, color: theme.muted };
                 const count = order.items.reduce((sum, i) => sum + i.quantity, 0);
                 return (
-                    <View style={styles.card}>
+                    <Pressable style={styles.card} onPress={() => navigation.navigate('OrderTracking', { orderId: order.id, order })}>
                         <View style={styles.header}>
                             <Text style={styles.orderId}>Order #{order.id}</Text>
                             <Text style={[styles.status, { color: status.color }]}>{status.label}</Text>
@@ -67,7 +68,7 @@ export default function OrdersScreen() {
                                 </Pressable>
                             )}
                         </View>
-                    </View>
+                    </Pressable>
                 );
             }}
         />

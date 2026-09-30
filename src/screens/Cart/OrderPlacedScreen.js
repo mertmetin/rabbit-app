@@ -36,8 +36,11 @@ export default function OrderPlacedScreen({ navigation, route }) {
                 </View>
             </View>
 
-            <Pressable style={styles.button} onPress={() => goHome(navigation)}>
-                <Text style={styles.buttonText}>Back to shopping</Text>
+            <Pressable style={styles.button} onPress={() => navigation.replace('OrderTracking', { orderId: order.id, order })}>
+                <Text style={styles.buttonText}>Track your order</Text>
+            </Pressable>
+            <Pressable onPress={() => goHome(navigation)} hitSlop={8} style={{ marginTop: 16 }}>
+                <Text style={styles.secondaryText}>Back to shopping</Text>
             </Pressable>
         </ScrollView>
     );
@@ -58,5 +61,6 @@ const styles = StyleSheet.create({
     totalLabel: { color: theme.text, fontFamily: theme.font.bold, fontSize: 16 },
     total: { color: theme.primary, fontFamily: theme.font.bold, fontSize: 18 },
     button: { alignSelf: 'stretch', alignItems: 'center', marginTop: 24, paddingVertical: 16, borderRadius: 14, backgroundColor: theme.primary },
+    secondaryText: { color: theme.primary, fontFamily: theme.font.bold, fontSize: 16 },
     buttonText: { color: theme.white, fontFamily: theme.font.bold, fontSize: 17 },
 });

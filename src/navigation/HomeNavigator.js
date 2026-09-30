@@ -9,6 +9,7 @@ import { TransitionSpecs, HeaderStyleInterpolators } from '@react-navigation/sta
 import { View, Text, Button, Image, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { screenOptions } from './screenOptions';
+import OrderTrackingScreen from '../screens/Orders/OrderTrackingScreen';
 import { Logo } from '../components/Logo';
 
 const Stack = createStackNavigator();
@@ -28,6 +29,7 @@ export default function HomeNavigator() {
         <Stack.Navigator screenOptions={screenOptions}>
             <Stack.Screen name="Home" component={HomeScreen} options={{
                 title: 'Rabbit', headerTitle: () => <Logo />, headerLeft: () => null }} />
+            <Stack.Screen name="OrderTracking" component={OrderTrackingScreen} options={{ title: 'Your order' }} />
             <Stack.Screen name="Products" component={ProductsScreen} options={{ title: 'Products' }} />
             <Stack.Screen name="ProductDetails" component={ProductDetailsScreen} options={{ title: 'Product Details' }} />
             <Stack.Screen name="AddAddressScreen" component={AddAddressScreen} options={{ title: 'Add Address' }} />

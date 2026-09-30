@@ -17,8 +17,10 @@ function apiUrl() {
     return `http://${host || 'localhost'}:3000/api/`;
 }
 
+export const API_URL = apiUrl();
+
 const http = axios.create({
-    baseURL: apiUrl(),
+    baseURL: API_URL,
     timeout: 30000
 });
 

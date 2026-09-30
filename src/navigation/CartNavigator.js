@@ -7,6 +7,7 @@ import AddressScreen from '../screens/Profile/Address/AddressScreen';
 import AddAddressScreen from '../screens/Profile/Address/AddAddressScreen';
 import PaymentMethodsScreen from '../screens/Profile/Payment/PaymentMethodsScreen';
 import { screenOptions } from './screenOptions';
+import OrderTrackingScreen from '../screens/Orders/OrderTrackingScreen';
 
 const Stack = createStackNavigator();
 
@@ -14,6 +15,7 @@ export default function HomeNavigator({ navigation }) {
     return (
         <Stack.Navigator screenOptions={{ ...screenOptions, headerRight: () => null }}>
             <Stack.Screen name="Cart" component={CartScreen} options={{ title: 'Basket' }} />
+            <Stack.Screen name="OrderTracking" component={OrderTrackingScreen} options={{ title: 'Your order' }} />
             <Stack.Screen name="Checkout" component={CheckoutScreen} options={{ title: 'Checkout' }} />
             <Stack.Screen name="OrderPlaced" component={OrderPlacedScreen} options={{ title: 'Thank you' }} />
             <Stack.Screen name="AddressScreen" component={AddressScreen} options={{ title: 'Delivery address' }} />

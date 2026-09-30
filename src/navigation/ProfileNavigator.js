@@ -11,6 +11,7 @@ import OrdersScreen from '../screens/Profile/Orders/OrdersScreen';
 import InfoScreen from '../screens/Profile/Account/InfoScreen';
 import CardsScreen from '../screens/Profile/Payment/PaymentMethodsScreen';
 import { screenOptions } from './screenOptions';
+import OrderTrackingScreen from '../screens/Orders/OrderTrackingScreen';
 
 const Stack = createStackNavigator();
 
@@ -25,6 +26,7 @@ export default function ProfileNavigator() {
             <Stack.Screen name="CardsScreen" component={CardsScreen} options={{ title: 'Payment methods' }} />
             <Stack.Screen name="AddressScreen" component={AddressScreen} options={{ title: 'Addresses' }} />
             <Stack.Screen name="AddAddressScreen" component={AddAddressScreen} options={{ title: 'Add Address' }} />
+            <Stack.Screen name="OrderTracking" component={OrderTrackingScreen} options={{ title: 'Your order' }} />
             <Stack.Screen name="OrdersScreen" component={OrdersScreen} options={{ title: 'Previous orders' }} />
             <Stack.Screen name="InfoScreen" component={InfoScreen} options={{ title: 'Personal info' }} />
         </Stack.Navigator>
