@@ -10,7 +10,7 @@ export default function PromotionsNavigator({ navigation }) {
     return (
         <Stack.Navigator screenOptions={screenOptions}>
             <Stack.Screen name="PromotionsScreen" component={PromotionsScreen} options={{ title: 'Promotions' }} />
-            <Stack.Screen name="PromotionDetailsScreen" component={PromotionDetailsScreen} options={{ title: 'Promotion Details' }} />
+            <Stack.Screen name="PromotionDetailsScreen" component={PromotionDetailsScreen} options={{ title: 'Offer' }} />
         </Stack.Navigator>
     );
 }
