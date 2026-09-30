@@ -6,6 +6,10 @@ import { AddUserAddress } from '@/components/Address/AddUserAddress';
 export default function AddAddressScreen({ navigation, route }) {
     const data = route.params.data;
 
+    React.useLayoutEffect(() => {
+        navigation.setOptions({ title: data.address ? 'Edit address' : 'New address' });
+    }, [navigation, data.address]);
+
     return (
         <SafeAreaView style={styles.container}>
             <Layout level='1' style={styles.innerContainer}>
