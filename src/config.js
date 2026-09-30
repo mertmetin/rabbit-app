@@ -1,6 +1,11 @@
 // Google Maps key for Places autocomplete and directions; set in .env.
 export const GOOGLE_MAPS_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY || '';
 
+// Chatwoot live chat in Help: the Website inbox's token and the Chatwoot
+// address (Chatwoot Cloud unless self-hosted). Hidden while the token is empty.
+export const CHATWOOT_WEBSITE_TOKEN = process.env.EXPO_PUBLIC_CHATWOOT_WEBSITE_TOKEN || '';
+export const CHATWOOT_BASE_URL = process.env.EXPO_PUBLIC_CHATWOOT_BASE_URL || 'https://app.chatwoot.com';
+
 // Where Help sends customers; set in .env. Contact rows are hidden while empty.
 export const SUPPORT_EMAIL = process.env.EXPO_PUBLIC_SUPPORT_EMAIL || '';
 export const SUPPORT_PHONE = process.env.EXPO_PUBLIC_SUPPORT_PHONE || '';

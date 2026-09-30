@@ -8,6 +8,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@chatwoot/react-native-widget": "^0.0.21",
     "@eva-design/eva": "^2.2.0",
     "@expo/metro-runtime": "~57.0.16",
     "@expo/vector-icons": "^15.0.2",
@@ -40,6 +41,7 @@
     "react-native-screens": "~4.26.0",
     "react-native-svg": "15.15.4",
     "react-native-web": "^0.21.2",
+    "react-native-webview": "13.16.1",
     "react-redux": "^9.3.0",
     "redux": "^5.0.1",
     "validate.js": "^0.13.1",

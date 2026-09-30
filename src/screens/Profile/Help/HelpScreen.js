@@ -1,8 +1,11 @@
 import * as React from 'react';
 import { LayoutAnimation, Linking, Platform, Pressable, ScrollView, StyleSheet, Text, UIManager, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import ChatWootWidget from '@chatwoot/react-native-widget';
+import { showMessage } from 'react-native-flash-message';
+import http from '../../../helpers/Http';
 import { theme, formatPrice } from '../../../theme';
-import { MIN_ORDER, SUPPORT_EMAIL, SUPPORT_PHONE } from '../../../config';
+import { CHATWOOT_BASE_URL, CHATWOOT_WEBSITE_TOKEN, MIN_ORDER, SUPPORT_EMAIL, SUPPORT_PHONE } from '../../../config';
 
 if (Platform.OS === 'android')
     UIManager.setLayoutAnimationEnabledExperimental?.(true);
@@ -62,9 +65,18 @@ function Question({ q, a }) {
     );
 }
 
-// Help: common questions, then ways to reach us.
+// Help: common questions, then ways to reach us, starting with live chat.
 export default function HelpScreen({ navigation }) {
+    const [chatUser, setChatUser] = React.useState(null);
+
+    // The server says who the customer is, so their chats arrive with their
+    // name, phone and account attached.
+    const openChat = () => http.get('support/chat-identity')
+        .then((res) => setChatUser(res.data))
+        .catch((error) => showMessage({ message: error.message, type: 'danger' }));
+
     const contacts = [
+        CHATWOOT_WEBSITE_TOKEN && { title: 'Chat with us', detail: 'We usually reply within a few minutes', icon: 'chatbubbles', onPress: openChat },
         { title: 'Problem with an order', icon: 'receipt', onPress: () => navigation.navigate('OrdersScreen') },
         SUPPORT_EMAIL && { title: 'Email us', detail: SUPPORT_EMAIL, icon: 'mail', onPress: () => Linking.openURL(`mailto:${SUPPORT_EMAIL}?subject=Rabbit%20help`) },
         SUPPORT_PHONE && { title: 'Text us', detail: SUPPORT_PHONE, icon: 'chatbubble-ellipses', onPress: () => Linking.openURL(`sms:${SUPPORT_PHONE}`) },
@@ -96,6 +108,19 @@ export default function HelpScreen({ navigation }) {
                     </Pressable>
                 ))}
             </View>
+
+            {!!chatUser && (
+                <ChatWootWidget
+                    websiteToken={CHATWOOT_WEBSITE_TOKEN}
+                    baseUrl={CHATWOOT_BASE_URL}
+                    locale='en'
+                    colorScheme='light'
+                    isModalVisible
+                    closeModal={() => setChatUser(null)}
+                    user={{ identifier: chatUser.identifier, identifier_hash: chatUser.identifier_hash, name: chatUser.name, email: chatUser.email }}
+                    customAttributes={chatUser.custom_attributes}
+                />
+            )}
         </ScrollView>
     );
 }
