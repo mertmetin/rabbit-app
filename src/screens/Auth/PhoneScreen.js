@@ -18,7 +18,7 @@ export default function PhoneScreen({ navigation, route }) {
         setError(null);
         try {
             const res = await http.post('auth/start', { phone: digits });
-            navigation.navigate('VerifyCode', { phone: res.data.phone, returnTo });
+            navigation.navigate('VerifyCode', { phone: res.data.phone, returnTo, devCode: res.data.dev_code });
         } catch (err) {
             setError(err.message);
         } finally {

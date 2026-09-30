@@ -12,6 +12,8 @@ const RESEND_SECONDS = 30;
 // offer the code from Messages and pasting works. Submits by itself when full.
 export default function CodeScreen({ navigation, route }) {
     const { phone, returnTo } = route.params;
+    // Only sent by a development server that isn't texting yet.
+    const [devCode, setDevCode] = React.useState(route.params.devCode);
     const [code, setCode] = React.useState('');
     const [error, setError] = React.useState(null);
     const [checking, setChecking] = React.useState(false);
@@ -53,7 +55,8 @@ export default function CodeScreen({ navigation, route }) {
 
     const resend = async () => {
         try {
-            await http.post('auth/start', { phone });
+            const res = await http.post('auth/start', { phone });
+            setDevCode(res.data.dev_code);
             setWait(RESEND_SECONDS);
             setError(null);
         } catch (err) {
@@ -88,6 +91,12 @@ export default function CodeScreen({ navigation, route }) {
             />
             {error && <Text style={authStyles.error}>{error}</Text>}
 
+            {devCode && (
+                <Pressable style={styles.dev} onPress={() => onChange(devCode)}>
+                    <Text style={styles.devText}>Dev code: <Text style={styles.devCode}>{devCode}</Text>  (tap to fill)</Text>
+                </Pressable>
+            )}
+
             <View style={styles.links}>
                 {wait > 0
                     ? <Text style={styles.muted}>Resend code in 0:{String(wait).padStart(2, '0')}</Text>
@@ -107,6 +116,9 @@ const styles = StyleSheet.create({
     boxError: { borderColor: theme.danger },
     digit: { color: theme.text, fontFamily: theme.font.bold, fontSize: 26 },
     hidden: { position: 'absolute', opacity: 0, height: 1, width: 1 },
+    dev: { marginTop: 18, padding: 12, borderRadius: 10, backgroundColor: '#fff6dc', borderWidth: 1, borderColor: theme.accent },
+    devText: { color: theme.text, fontFamily: theme.font.regular, fontSize: 14, textAlign: 'center' },
+    devCode: { fontFamily: theme.font.bold, letterSpacing: 2 },
     links: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 22 },
     muted: { color: theme.muted, fontFamily: theme.font.regular, fontSize: 15 },
 });
