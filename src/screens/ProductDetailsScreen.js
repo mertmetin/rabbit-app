@@ -7,11 +7,14 @@ import { useCart } from '../hooks/useCart';
 import { theme, formatPrice, splitTitle } from '../theme';
 import { ProductGrid } from '../components/Product/ProductGrid';
 import { QuantityStepper } from '../components/Product/QuantityStepper';
+import { VariantOptions } from '../components/Product/VariantOptions';
 
-// Big photo, price, name and size; more from the same aisle below;
-// add-to-cart / quantity pinned to the bottom.
+// Big photo, price, name and size; option chips when the product comes in
+// variants (milk fat, size); more from the same aisle below; add-to-cart /
+// quantity pinned to the bottom.
 export default function ProductDetailsScreen({ route }) {
-    const product = route.params.item;
+    const [product, setProduct] = React.useState(route.params.item);
+    const [variants, setVariants] = React.useState({ options: [], variants: [] });
     const store = useSelector((state) => state.store.store);
     const cart = useCart();
     const quantity = cart.quantityOf(product.id);
@@ -24,12 +27,21 @@ export default function ProductDetailsScreen({ route }) {
         : cart.increase(product);
 
     React.useEffect(() => {
+        if (!store || !product.group_id)
+            return;
+        http.get(`stores/${store.id}/products/${route.params.item.id}/variants`)
+            .then((res) => setVariants(res.data))
+            .catch(() => setVariants({ options: [], variants: [] }));
+    }, [store, route.params.item.id]);
+
+    React.useEffect(() => {
         if (!store || !product.category_id)
             return;
+        const sameItem = (p) => p.id === product.id || (product.group_id && p.group_id === product.group_id);
         http.get(`stores/${store.id}/products`, { params: { category: product.category_id } })
-            .then((res) => setRelated(res.data.flatMap((section) => section.data).filter((p) => p.id !== product.id)))
+            .then((res) => setRelated(res.data.flatMap((section) => section.data).filter((p) => !sameItem(p))))
             .catch(() => setRelated([]));
-    }, [store, product.id]);
+    }, [store, route.params.item.id]);
 
     return (
         <View style={styles.screen}>
@@ -40,6 +52,9 @@ export default function ProductDetailsScreen({ route }) {
                     <Text style={styles.name}>{name}</Text>
                     {!!size && <Text style={styles.size}>{size}</Text>}
                     {!!product.description && <Text style={styles.description}>{product.description}</Text>}
+                    {variants.variants.length > 1 &&
+                        <VariantOptions options={variants.options} variants={variants.variants}
+                            selected={product} onSelect={setProduct} />}
                 </View>
 
                 {related.length > 0 && (

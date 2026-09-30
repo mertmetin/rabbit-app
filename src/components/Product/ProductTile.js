@@ -5,7 +5,8 @@ import { theme, formatPrice, splitTitle } from '../../theme';
 import { useCart } from '../../hooks/useCart';
 import { AddButton, QuantityStepper } from './QuantityStepper';
 
-// Product card: photo, a +/stepper in the corner, then price, name and size.
+// Product card: photo, a +/stepper in the corner, then price, name and size,
+// and how many options (sizes, milk fats) it comes in.
 export function ProductTile({ product, width }) {
     const navigation = useNavigation();
     const cart = useCart();
@@ -34,6 +35,7 @@ export function ProductTile({ product, width }) {
             <Text style={styles.price}>{formatPrice(product.price)}</Text>
             <Text style={styles.name} numberOfLines={2}>{name}</Text>
             {!!size && <Text style={styles.size} numberOfLines={1}>{size}</Text>}
+            {product.variant_count > 1 && <Text style={styles.variants}>{`${product.variant_count} options`}</Text>}
         </Pressable>
     );
 }
@@ -80,6 +82,12 @@ const styles = StyleSheet.create({
         marginTop: 2,
         color: theme.muted,
         fontFamily: theme.font.regular,
+        fontSize: 12,
+    },
+    variants: {
+        marginTop: 3,
+        color: theme.primary,
+        fontFamily: theme.font.semibold,
         fontSize: 12,
     },
 });
