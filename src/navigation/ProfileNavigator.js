@@ -12,6 +12,9 @@ import InfoScreen from '../screens/Profile/Account/InfoScreen';
 import CardsScreen from '../screens/Profile/Payment/PaymentMethodsScreen';
 import { screenOptions } from './screenOptions';
 import OrderTrackingScreen from '../screens/Orders/OrderTrackingScreen';
+import FavoritesScreen from '../screens/Profile/Favorites/FavoritesScreen';
+import HelpScreen from '../screens/Profile/Help/HelpScreen';
+import ProductDetailsScreen from '../screens/ProductDetailsScreen';
 
 const Stack = createStackNavigator();
 
@@ -29,6 +32,9 @@ export default function ProfileNavigator() {
             <Stack.Screen name="OrderTracking" component={OrderTrackingScreen} options={{ title: 'Your order' }} />
             <Stack.Screen name="OrdersScreen" component={OrdersScreen} options={{ title: 'Previous orders' }} />
             <Stack.Screen name="InfoScreen" component={InfoScreen} options={{ title: 'Personal info' }} />
+            <Stack.Screen name="FavoritesScreen" component={FavoritesScreen} options={{ title: 'Favorites' }} />
+            <Stack.Screen name="HelpScreen" component={HelpScreen} options={{ title: 'Help' }} />
+            <Stack.Screen name="ProductDetails" component={ProductDetailsScreen} options={{ title: 'Product Details' }} />
         </Stack.Navigator>
     );
 }

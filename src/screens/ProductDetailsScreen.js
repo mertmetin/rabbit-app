@@ -8,6 +8,7 @@ import { theme, formatPrice, splitTitle } from '../theme';
 import { ProductGrid } from '../components/Product/ProductGrid';
 import { QuantityStepper } from '../components/Product/QuantityStepper';
 import { VariantOptions } from '../components/Product/VariantOptions';
+import { FavoriteButton } from '../components/Product/FavoriteButton';
 
 // Big photo, price, name and size; option chips when the product comes in
 // variants (milk fat, size); more from the same aisle below; add-to-cart /
@@ -47,7 +48,10 @@ export default function ProductDetailsScreen({ route }) {
         <View style={styles.screen}>
             <ScrollView contentContainerStyle={styles.content}>
                 <View style={styles.hero}>
-                    <Image ref={photo} source={{ uri: product.image }} style={{ width: width * 0.7, height: width * 0.7, borderRadius: theme.radius }} />
+                    <View>
+                        <Image ref={photo} source={{ uri: product.image }} style={{ width: width * 0.7, height: width * 0.7, borderRadius: theme.radius }} />
+                        <FavoriteButton product={product} style={styles.favorite} />
+                    </View>
                     <Text style={styles.price}>{formatPrice(product.price)}</Text>
                     <Text style={styles.name}>{name}</Text>
                     {!!size && <Text style={styles.size}>{size}</Text>}
@@ -90,6 +94,11 @@ const styles = StyleSheet.create({
         paddingTop: 24,
         paddingHorizontal: 24,
         paddingBottom: 20,
+    },
+    favorite: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
     },
     price: {
         marginTop: 18,

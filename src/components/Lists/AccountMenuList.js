@@ -8,8 +8,6 @@ import { Alert } from 'react-native';
 import http from '../../helpers/Http';
 import { theme } from '../../theme';
 
-const comingSoon = (what) => () => showMessage({ message: `${what} is coming soon.`, type: 'info' });
-
 const initials = (name = '') =>
     name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0].toUpperCase()).join('') || '?';
 
@@ -20,8 +18,8 @@ export const AccountMenuList = ({ user, logOut }) => {
 
     const tiles = [
         { title: 'Previous Orders', icon: 'receipt', onPress: go('OrdersScreen') },
-        { title: 'Favorites', icon: 'heart', onPress: comingSoon('Favorites') },
-        { title: 'Help', icon: 'chatbubbles', onPress: comingSoon('Support chat') },
+        { title: 'Favorites', icon: 'heart', onPress: go('FavoritesScreen') },
+        { title: 'Help', icon: 'chatbubbles', onPress: go('HelpScreen') },
     ];
 
     const menu = [
