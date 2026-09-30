@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { jwtDecode } from "jwt-decode";
 import Token from '../../../helpers/Token';
 import { Layout } from '@ui-kitten/components';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import { GuestMenuList } from '../../../components/Lists/GuestMenuList';
 import { AccountMenuList } from '../../../components/Lists/AccountMenuList';
@@ -14,10 +14,12 @@ function AccountScreen(props) {
     const [isLoggedIn, setLogin] = React.useState(false);
     const navigation = useNavigation();
 
-    useEffect(() => {
+    useFocusEffect(React.useCallback(() => {
         Token.getToken().then((_token) => {
-                if (!_token)
+                if (!_token) {
+                    setLogin(false);
                     return;
+                }
 
                 var decoded = jwtDecode(_token);
 
@@ -27,7 +29,7 @@ function AccountScreen(props) {
                 setUser(decoded);
                 setLogin(true);
             });
-    }, []);
+    }, []));
 
     const logOut = () => {
         Token.removeToken();

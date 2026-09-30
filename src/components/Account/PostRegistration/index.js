@@ -1,1 +1,0 @@
-export { PostRegistartion } from './PostRegistration';

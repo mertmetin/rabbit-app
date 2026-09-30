@@ -4,6 +4,8 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 import { showMessage } from 'react-native-flash-message';
+import { Alert } from 'react-native';
+import http from '../../helpers/Http';
 import { theme } from '../../theme';
 
 const comingSoon = (what) => () => showMessage({ message: `${what} is coming soon.`, type: 'info' });
@@ -26,7 +28,6 @@ export const AccountMenuList = ({ user, logOut }) => {
         { title: 'Addresses', icon: 'location', onPress: go('AddressScreen') },
         { title: 'Payment Methods', icon: 'card', onPress: go('CardsScreen') },
         { title: 'Personal Info', icon: 'person-circle', onPress: go('InfoScreen') },
-        { title: 'Change Password', icon: 'lock-closed', onPress: go('ChangePasswordScreen') },
     ];
 
     return (
@@ -69,6 +70,20 @@ export const AccountMenuList = ({ user, logOut }) => {
             <Pressable style={[styles.card, styles.row]} onPress={logOut}>
                 <Ionicons name="log-out" size={22} color={theme.primary} />
                 <Text style={styles.rowText}>Logout</Text>
+            </Pressable>
+
+            <Pressable onPress={() => Alert.alert(
+                'Delete your account?',
+                'Your name, email, phone, addresses and saved cards will be removed. This can\'t be undone.',
+                [
+                    { text: 'Cancel', style: 'cancel' },
+                    {
+                        text: 'Delete account', style: 'destructive', onPress: () =>
+                            http.delete(`users/${user.id}`).then(logOut)
+                                .catch((error) => showMessage({ message: error.message, type: 'danger' })),
+                    },
+                ])} hitSlop={8}>
+                <Text style={styles.delete}>Delete account</Text>
             </Pressable>
 
             <Text style={styles.version}>Version {Constants.expoConfig?.version ?? '1.0.0'}</Text>
@@ -159,6 +174,12 @@ const styles = StyleSheet.create({
         color: theme.text,
         fontFamily: theme.font.semibold,
         fontSize: 16,
+    },
+    delete: {
+        textAlign: 'center',
+        color: theme.danger,
+        fontFamily: theme.font.semibold,
+        fontSize: 14,
     },
     version: {
         marginTop: 6,

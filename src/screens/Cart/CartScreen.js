@@ -71,8 +71,7 @@ export default function CartScreen() {
             return;
         const user = await getCurrentUser();
         if (!user) {
-            showMessage({ message: 'Sign in to check out.', type: 'info' });
-            navigation.navigate('Root', { screen: 'Profile' });
+            navigation.navigate('Root', { screen: 'Profile', params: { screen: 'SignIn', params: { returnTo: 'Checkout' } } });
             return;
         }
         navigation.navigate('Checkout');

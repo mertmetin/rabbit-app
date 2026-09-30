@@ -1,109 +1,36 @@
 import React from 'react';
-import { Ionicons } from '@expo/vector-icons';
-import { StyleSheet, Text, SectionList, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Divider, List, ListItem, Menu, MenuItem, Avatar } from '@ui-kitten/components';
+import { Ionicons } from '@expo/vector-icons';
+import Constants from 'expo-constants';
+import { theme } from '../../theme';
 
-const data = [
-    {
-        id: 'login',
-        title: 'Login',
-        icon: 'person',
-        route: 'SignIn'
-    }
-];
-
-export const GuestMenuList = (props) => {
+// Profile tab while signed out.
+export const GuestMenuList = () => {
     const navigation = useNavigation();
-
-    const ForwardIcon = (props) => {
-        return <Ionicons size={24} name='chevron-forward' />
-    };
-
-    const renderItemIcon = (icon) => {
-        return <Ionicons size={24} name={icon} />
-    };
-
-    var versionData = [
-        {
-            id: 'version',
-            title: 'Version: 1.0'
-        }
-    ];
-
-    const renderItemOption = ({ item, index }) => (
-        <ListItem
-            key={index}
-            title={item.title}
-            accessoryLeft={() => { return renderItemIcon(item.icon) }}
-            accessoryRight={ForwardIcon}
-            onPress={() => {
-                item.id == 'logout' ? props.logOut() : navigation.navigate(item.route);
-            }}
-        />
-    );
-
-    const renderItemPlain = ({ item, index }) => (
-        <ListItem
-            key={"version"}
-            disabled
-            title={'Version: 1.0'}
-            children={
-                <View style={{ paddingLeft: 10, paddingRight: 10, flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
-                    <Text style={{ fontWeight: '500' }}>Version</Text>
-                    <Text style={{ fontWeight: '500', color: '#919293' }}>1.0</Text>
-                </View>
-            }
-        />
-    );
-
-    var sections = [
-        { title: 'OptionsMenu', data: [{ title: 'User Options', key: 'user-options', data: data, renderItem: renderItemOption }] },
-        { title: 'Version', data: [{ title: 'Version ', key: 'version', data: versionData, renderItem: renderItemPlain }] }
-    ];
-
-    const renderList = (item) => {
-        let list = item.section.data[0];
-
-        return <List
-            scrollEnabled={false}
-            style={styles.box_shadow}
-            data={list.data}
-            renderItem={list.renderItem}
-            keyExtractor={(item) => item.id}
-        />
-    }
-
     return (
-        <View style={styles.container}>
-            <SectionList
-                scrollEnabled={false}
-                sections={sections}
-                renderItem={renderList}
-                keyExtractor={(item, index) => index}
-            />
-        </View>
+        <ScrollView contentContainerStyle={styles.container}>
+            <Pressable style={[styles.card, styles.login]} onPress={() => navigation.navigate('SignIn')}>
+                <View style={styles.avatar}>
+                    <Ionicons name="person" size={26} color={theme.primary} />
+                </View>
+                <View style={{ flex: 1 }}>
+                    <Text style={styles.title}>Log in or sign up</Text>
+                    <Text style={styles.subtitle}>Save addresses, cards and your orders</Text>
+                </View>
+                <Ionicons name="chevron-forward" size={22} color={theme.primary} />
+            </Pressable>
+            <Text style={styles.version}>Version {Constants.expoConfig?.version ?? '1.0.0'}</Text>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
-    box_shadow: {
-        marginTop: 10,
-        marginBottom: 10,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity: 0.22,
-        shadowRadius: 2.22,
-        elevation: 3
-    },
-    text: {
-        fontSize: 14.5,
-        fontWeight: '500'
-    }
+    container: { padding: 16, gap: 14, backgroundColor: theme.background },
+    card: { backgroundColor: theme.white, borderRadius: 16 },
+    login: { flexDirection: 'row', alignItems: 'center', gap: 14, padding: 16 },
+    avatar: { width: 56, height: 56, borderRadius: 14, backgroundColor: theme.primarySoft, alignItems: 'center', justifyContent: 'center' },
+    title: { color: theme.text, fontFamily: theme.font.bold, fontSize: 17 },
+    subtitle: { marginTop: 2, color: theme.muted, fontFamily: theme.font.regular, fontSize: 14 },
+    version: { marginTop: 6, textAlign: 'center', color: theme.muted, fontFamily: theme.font.regular, fontSize: 13 },
 });

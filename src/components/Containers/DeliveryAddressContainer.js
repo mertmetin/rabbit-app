@@ -78,8 +78,7 @@ export const DeliveryAddressContainer = () => {
             navigation.navigate('ChooseAddress', { id: user.id });
             return;
         }
-        showMessage({ message: 'Sign in to save delivery addresses.', type: 'info' });
-        navigation.navigate('Profile');
+        navigation.navigate('Root', { screen: 'Profile', params: { screen: 'SignIn' } });
     };
 
     const browseDowntown = () =>
