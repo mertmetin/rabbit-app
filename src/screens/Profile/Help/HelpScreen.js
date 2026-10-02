@@ -5,7 +5,7 @@ import ChatWootWidget from '@chatwoot/react-native-widget';
 import { showMessage } from 'react-native-flash-message';
 import http from '../../../helpers/Http';
 import { theme, formatPrice } from '../../../theme';
-import { CHATWOOT_BASE_URL, CHATWOOT_WEBSITE_TOKEN, MIN_ORDER, SUPPORT_EMAIL, SUPPORT_PHONE } from '../../../config';
+import { CHATWOOT_BASE_URL, CHATWOOT_WEBSITE_TOKEN, DELIVERY_FEE, FREE_DELIVERY_OVER, MIN_ORDER, SUPPORT_EMAIL, SUPPORT_PHONE } from '../../../config';
 
 if (Platform.OS === 'android')
     UIManager.setLayoutAnimationEnabledExperimental?.(true);
@@ -15,7 +15,7 @@ if (Platform.OS === 'android')
 const FAQ = [
     {
         q: 'How much is delivery?',
-        a: `Delivery is free. Orders need to be at least ${formatPrice(MIN_ORDER)} before tax.`,
+        a: `Your first delivery is free. After that it's ${formatPrice(DELIVERY_FEE)}, or free on orders of ${formatPrice(FREE_DELIVERY_OVER)} or more. Orders need to be at least ${formatPrice(MIN_ORDER)} before tax.`,
     },
     {
         q: 'Where do you deliver?',

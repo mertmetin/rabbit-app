@@ -197,7 +197,12 @@ export default function CheckoutScreen({ navigation, route }) {
                     {quote ? (
                         <>
                             <SummaryRow label="Products" value={formatPrice(quote.subtotal)} />
-                            <SummaryRow label="Delivery" value={quote.delivery_fee ? formatPrice(quote.delivery_fee) : 'Free'} accent={!quote.delivery_fee} />
+                            <SummaryRow label="Delivery" value={deliveryLabel(quote)} accent={!quote.delivery_fee} />
+                            {quote.delivery_reason === 'standard' && (
+                                <Text style={styles.deliveryHint}>
+                                    Add {formatPrice(quote.free_delivery_over - quote.subtotal)} more for free delivery
+                                </Text>
+                            )}
                             <SummaryRow label="Tax (HST)" value={formatPrice(quote.tax)} />
                             <SummaryRow label="Total" value={formatPrice(quote.total)} strong />
                         </>
@@ -228,7 +233,15 @@ export default function CheckoutScreen({ navigation, route }) {
     );
 }
 
+// "Free (first order)", "Free (over $40)" or the fee.
+function deliveryLabel(quote) {
+    if (quote.delivery_reason === 'first_order') return 'Free · first order';
+    if (quote.delivery_reason === 'over_threshold') return 'Free';
+    return formatPrice(quote.delivery_fee);
+}
+
 const styles = StyleSheet.create({
+    deliveryHint: { color: theme.primary, fontFamily: theme.font.semibold, fontSize: 13, marginTop: -2, marginBottom: 6 },
     screen: { flex: 1, backgroundColor: theme.background },
     banner: { flexDirection: 'row', backgroundColor: theme.white, borderBottomWidth: 1, borderBottomColor: theme.border },
     bannerAddress: { flex: 1, justifyContent: 'center', paddingHorizontal: 16, paddingVertical: 14 },
