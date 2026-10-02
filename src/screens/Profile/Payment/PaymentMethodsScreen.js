@@ -40,7 +40,8 @@ export default function PaymentMethodsScreen({ navigation, route }) {
                 customerId: data.customer_id,
                 customerEphemeralKeySecret: data.ephemeral_key,
                 setupIntentClientSecret: data.client_secret,
-                defaultBillingDetails: { name: user?.name, email: user?.email },
+                // Canada preselected in the card form's country field.
+                defaultBillingDetails: { name: user?.name, email: user?.email, address: { country: 'CA' } },
                 appearance: { colors: { primary: theme.primary } },
                 returnURL: 'rabbit://stripe-redirect',
             });
