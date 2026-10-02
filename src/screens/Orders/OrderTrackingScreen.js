@@ -14,7 +14,7 @@ const REFRESH_MS = 5000;
 
 const STEPS = [
     { key: 'placed', label: 'Order placed', done: (o) => true, time: (o) => o.placed_at },
-    { key: 'packing', label: 'Packing', done: (o) => ['preparing', 'ready', 'out_for_delivery', 'delivered'].includes(o.status), time: () => null },
+    { key: 'packing', label: 'Shopping your order', done: (o) => ['preparing', 'ready', 'out_for_delivery', 'delivered'].includes(o.status), time: () => null },
     { key: 'on_the_way', label: 'On the way', done: (o) => ['out_for_delivery', 'delivered'].includes(o.status), time: (o) => o.picked_up_at },
     { key: 'delivered', label: 'Delivered', done: (o) => o.status === 'delivered', time: (o) => o.delivered_at },
 ];
@@ -125,14 +125,28 @@ export default function OrderTrackingScreen({ route }) {
 
             <View style={styles.card}>
                 <Text style={styles.cardTitle}>Order #{order.id}</Text>
-                {order.items.map((item) => (
-                    <View key={item.product_id} style={styles.row}>
-                        <Text style={styles.item} numberOfLines={1}>{item.quantity} × {item.title}</Text>
-                        <Text style={styles.price}>{formatPrice(item.line_total)}</Text>
-                    </View>
-                ))}
+                {order.items.map((item) => {
+                    // After shopping: what was found; missing items aren't charged.
+                    const found = item.found_quantity;
+                    const missing = found === 0;
+                    return (
+                        <View key={item.product_id} style={styles.row}>
+                            <View style={{ flex: 1 }}>
+                                <Text style={[styles.item, missing && styles.missing]} numberOfLines={1}>
+                                    {found !== null && found < item.quantity && !missing ? found : item.quantity} × {item.title}
+                                </Text>
+                                {found !== null && found < item.quantity && (
+                                    <Text style={styles.unavailable}>
+                                        {missing ? 'Not available, not charged' : `${item.quantity - found} not available, not charged`}
+                                    </Text>
+                                )}
+                            </View>
+                            <Text style={[styles.price, missing && styles.missing]}>{formatPrice(item.line_total)}</Text>
+                        </View>
+                    );
+                })}
                 <View style={[styles.row, styles.totalRow]}>
-                    <Text style={styles.totalLabel}>Total</Text>
+                    <Text style={styles.totalLabel}>{order.charged ? 'Total charged' : 'Total (held on your card)'}</Text>
                     <Text style={styles.total}>{formatPrice(order.total)}</Text>
                 </View>
                 {order.delivery_address?.address_line_1 && (
@@ -150,6 +164,8 @@ export default function OrderTrackingScreen({ route }) {
 }
 
 const styles = StyleSheet.create({
+    missing: { textDecorationLine: 'line-through', color: theme.muted },
+    unavailable: { color: '#c0392b', fontFamily: theme.font.regular, fontSize: 12, marginTop: 2 },
     screen: { flex: 1, backgroundColor: theme.background },
     content: { paddingBottom: 32, gap: 14 },
     map: { height: 280 },

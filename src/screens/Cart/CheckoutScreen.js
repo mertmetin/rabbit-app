@@ -31,6 +31,18 @@ function Checkbox({ label, value, onChange }) {
     );
 }
 
+function Choice({ label, hint, selected, onPress }) {
+    return (
+        <Pressable style={styles.choiceRow} onPress={onPress} hitSlop={4}>
+            <Ionicons name={selected ? 'radio-button-on' : 'radio-button-off'} size={22} color={theme.primary} />
+            <View style={{ flex: 1 }}>
+                <Text style={styles.checkLabel}>{label}</Text>
+                <Text style={styles.paymentHint}>{hint}</Text>
+            </View>
+        </Pressable>
+    );
+}
+
 function SummaryRow({ label, value, strong, accent }) {
     return (
         <View style={[styles.summaryRow, strong && styles.summaryRowStrong]}>
@@ -52,6 +64,7 @@ export default function CheckoutScreen({ navigation, route }) {
     const [notes, setNotes] = React.useState('');
     const [contactless, setContactless] = React.useState(false);
     const [noBell, setNoBell] = React.useState(false);
+    const [substitutions, setSubstitutions] = React.useState('similar');
     const [showItems, setShowItems] = React.useState(false);
     const [quote, setQuote] = React.useState(null);
     const [placing, setPlacing] = React.useState(false);
@@ -94,7 +107,7 @@ export default function CheckoutScreen({ navigation, route }) {
         try {
             const res = await http.post('orders', {
                 store_id: store.id, address_id: savedAddress.id, items, payment_method_id: card.id,
-                notes: notes.trim() || undefined, contactless, no_bell: noBell,
+                notes: notes.trim() || undefined, contactless, no_bell: noBell, substitutions,
             });
             const { order, payment } = res.data;
             orderId = order.id;
@@ -158,6 +171,13 @@ export default function CheckoutScreen({ navigation, route }) {
                     </View>
                 </Section>
 
+                <Section title="If something's unavailable">
+                    <Choice label="Replace with something similar" hint="Never more than the original price."
+                        selected={substitutions === 'similar'} onPress={() => setSubstitutions('similar')} />
+                    <Choice label="Skip it" hint="You won't be charged for it."
+                        selected={substitutions === 'skip'} onPress={() => setSubstitutions('skip')} />
+                </Section>
+
                 <Section title="Payment method">
                     <View style={styles.paymentRow}>
                         <View style={styles.paymentIcon}>
@@ -205,6 +225,9 @@ export default function CheckoutScreen({ navigation, route }) {
                             )}
                             <SummaryRow label="Tax (HST)" value={formatPrice(quote.tax)} />
                             <SummaryRow label="Total" value={formatPrice(quote.total)} strong />
+                            <Text style={styles.holdNote}>
+                                We'll hold {formatPrice(quote.total)} on your card and charge only for what we deliver, never more.
+                            </Text>
                         </>
                     ) : savedAddress ? (
                         <ActivityIndicator style={{ padding: 16 }} />
@@ -241,6 +264,8 @@ function deliveryLabel(quote) {
 }
 
 const styles = StyleSheet.create({
+    choiceRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, paddingVertical: 8 },
+    holdNote: { color: theme.muted, fontFamily: theme.font.regular, fontSize: 13, marginTop: 10, lineHeight: 18 },
     deliveryHint: { color: theme.primary, fontFamily: theme.font.semibold, fontSize: 13, marginTop: -2, marginBottom: 6 },
     screen: { flex: 1, backgroundColor: theme.background },
     banner: { flexDirection: 'row', backgroundColor: theme.white, borderBottomWidth: 1, borderBottomColor: theme.border },
