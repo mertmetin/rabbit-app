@@ -11,7 +11,6 @@ import { getCurrentUser } from '../../helpers/Auth';
 import { useCart } from '../../hooks/useCart';
 import { theme, formatPrice, splitTitle } from '../../theme';
 
-const DELIVERY_ESTIMATE = '20–35 min';
 
 function Section({ title, children }) {
     return (
@@ -149,7 +148,8 @@ export default function CheckoutScreen({ navigation, route }) {
                     <Ionicons name="time" size={20} color={theme.primary} />
                     <View>
                         <Text style={styles.etaLabel}>Delivery</Text>
-                        <Text style={styles.etaValue}>{DELIVERY_ESTIMATE}</Text>
+                        <Text style={styles.etaValue}>{quote?.eta_min ? `${quote.eta_min}–${quote.eta_max} min` : '…'}</Text>
+                        {quote?.eta_min && <Text style={styles.etaArrives}>by {arrivalTime(quote.eta_max)}</Text>}
                     </View>
                 </View>
             </View>
@@ -256,6 +256,13 @@ export default function CheckoutScreen({ navigation, route }) {
     );
 }
 
+// Clock time `minutes` from now, rounded up to 5 minutes: "12:45 PM".
+function arrivalTime(minutes) {
+    const at = new Date(Date.now() + minutes * 60_000);
+    at.setMinutes(Math.ceil(at.getMinutes() / 5) * 5, 0, 0);
+    return at.toLocaleTimeString('en-CA', { hour: 'numeric', minute: '2-digit' });
+}
+
 // "Free (first order)", "Free (over $40)" or the fee.
 function deliveryLabel(quote) {
     if (quote.delivery_reason === 'first_order') return 'Free · first order';
@@ -264,6 +271,7 @@ function deliveryLabel(quote) {
 }
 
 const styles = StyleSheet.create({
+    etaArrives: { color: theme.primary, fontFamily: theme.font.regular, fontSize: 12 },
     choiceRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, paddingVertical: 8 },
     holdNote: { color: theme.muted, fontFamily: theme.font.regular, fontSize: 13, marginTop: 10, lineHeight: 18 },
     deliveryHint: { color: theme.primary, fontFamily: theme.font.semibold, fontSize: 13, marginTop: -2, marginBottom: 6 },
