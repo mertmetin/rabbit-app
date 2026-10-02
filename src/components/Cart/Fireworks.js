@@ -10,12 +10,12 @@ function makeBurst(big) {
     const count = big ? 70 : 28;
     return Array.from({ length: count }, (_, i) => {
         const angle = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * (big ? 1.5 : 1.1);
-        const speed = (big ? 190 : 120) * (0.55 + Math.random() * 0.6);
+        const speed = (big ? 300 : 190) * (0.5 + Math.random() * 0.6);
         return {
             key: `${Date.now()}-${i}`,
             dx: Math.cos(angle) * speed,
             peak: Math.sin(angle) * speed,
-            fall: Math.sin(angle) * speed * 0.2 + (big ? 140 : 90),
+            fall: big ? 110 : 70,
             spin: (Math.random() - 0.5) * 720,
             size: 5 + Math.random() * (big ? 6 : 4),
             round: Math.random() < 0.4,
