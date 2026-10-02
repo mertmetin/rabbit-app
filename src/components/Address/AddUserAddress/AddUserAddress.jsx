@@ -12,6 +12,8 @@ import { goHome } from '../../../helpers/Navigation';
 
 const POSTAL_CODE = /^[A-Za-z]\d[A-Za-z] ?\d[A-Za-z]\d$/;
 
+// Fields carry iOS AutoFill types, so the keyboard offers the customer's own
+// saved addresses.
 // Turns a typed address into map coordinates with the phone's own geocoder
 // (Apple Maps on iOS), so no Google key is needed.
 async function locate(address) {
@@ -90,12 +92,16 @@ export const AddUserAddress = ({ data }) => {
             <Input label='Name (optional)' placeholder={TYPES.find((t) => t.key === type).label + ', Mom\'s place, Cottage…'}
                 value={form.label} onChangeText={set('label')} style={styles.field} />
             <Input label='Street address' placeholder='110 Laurier Ave W' value={form.address_line_1}
-                onChangeText={set('address_line_1')} style={styles.field} autoFocus={!existing} />
-            <Input label='Apt / Suite / Floor' value={form.address_line_2} onChangeText={set('address_line_2')} style={styles.field} />
+                onChangeText={set('address_line_1')} style={styles.field} autoFocus={!existing}
+                textContentType='streetAddressLine1' autoComplete='address-line1' />
+            <Input label='Apt / Suite / Floor' value={form.address_line_2} onChangeText={set('address_line_2')} style={styles.field}
+                textContentType='streetAddressLine2' autoComplete='address-line2' />
             <View style={styles.row}>
-                <Input label='City' value={form.city} onChangeText={set('city')} style={[styles.field, styles.half]} />
+                <Input label='City' value={form.city} onChangeText={set('city')} style={[styles.field, styles.half]}
+                    textContentType='addressCity' autoComplete='postal-address-locality' />
                 <Input label='Postal code' placeholder='K1P 1J1' value={form.postal_code} autoCapitalize='characters'
-                    onChangeText={set('postal_code')} style={[styles.field, styles.half]} />
+                    onChangeText={set('postal_code')} style={[styles.field, styles.half]}
+                    textContentType='postalCode' autoComplete='postal-code' />
             </View>
             <Input label='Delivery notes' placeholder='Buzzer, entrance, etc.' value={form.notes}
                 onChangeText={set('notes')} style={styles.field} multiline />
