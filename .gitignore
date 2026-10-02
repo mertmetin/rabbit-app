@@ -15,3 +15,7 @@ web-report/
 
 # Expo local state
 .expo/
+
+# Native projects are generated from app.json (npx expo prebuild / run:ios)
+/ios
+/android
