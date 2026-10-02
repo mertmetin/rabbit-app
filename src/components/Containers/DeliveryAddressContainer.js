@@ -3,7 +3,8 @@ import { useCart } from '../../hooks/useCart';
 import * as Location from 'expo-location';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text as RNText, View } from 'react-native';
+import { theme } from '../../theme';
 import { ListItem, Button, Text } from '@ui-kitten/components';
 import { Ionicons } from '@expo/vector-icons';
 import { showMessage } from 'react-native-flash-message';
@@ -116,24 +117,38 @@ export const DeliveryAddressContainer = () => {
     } else if (store) {
         body = <CategoriesCards storeId={store.id} />;
     } else {
-        body = (
-            <View style={[styles.box_shadow, styles.noService]}>
-                <NoServiceCard />
-                <Button appearance='ghost' onPress={browseDowntown}>Browse downtown Ottawa instead</Button>
-            </View>
-        );
+        body = <NoServiceCard onChangeAddress={chooseAddress} onBrowse={browseDowntown} />;
     }
 
     return (
         <View>
-            <View style={[styles.box_shadow, { zIndex: 100 }]}>
-                <ListItem
-                    title={place ? `Deliver to: ${place.label}` : 'Finding your location…'}
-                    // Delivery time, not distance: the store may be the shopper's home.
-                    description={eta ? `🐰 Delivery in about ${eta.eta_min}–${eta.eta_max} min` : undefined}
-                    accessoryRight={() => <Ionicons size={24} name='chevron-forward' />}
-                    onPress={chooseAddress}
-                />
+            <View style={[styles.box_shadow, styles.header]}>
+                <Pressable style={styles.addressButton} onPress={chooseAddress}>
+                    <RNText style={styles.deliverTo}>Deliver to</RNText>
+                    <View style={styles.addressRow}>
+                        <RNText style={styles.addressText} numberOfLines={1}>{place ? place.label : 'Finding your location…'}</RNText>
+                        <Ionicons size={18} name='chevron-down' color={theme.primary} />
+                    </View>
+                </Pressable>
+                {/* Delivery time, not distance: the store may be the shopper's home. */}
+                {checked && !store && !error && (
+                    <View style={[styles.eta, styles.etaOff]}>
+                        <Ionicons name='close-circle' size={22} color={theme.muted} />
+                        <View>
+                            <RNText style={[styles.etaLabel, styles.etaOffText]}>Delivery</RNText>
+                            <RNText style={[styles.etaTime, styles.etaOffText, { fontSize: 15 }]}>Not here yet</RNText>
+                        </View>
+                    </View>
+                )}
+                {eta && (
+                    <View style={styles.eta}>
+                        <Ionicons name='time' size={24} color={theme.primary} />
+                        <View>
+                            <RNText style={styles.etaLabel}>Delivery</RNText>
+                            <RNText style={styles.etaTime}>{eta.eta_min}–{eta.eta_max} min</RNText>
+                        </View>
+                    </View>
+                )}
             </View>
             <View style={styles.map}>
                 {place && <Map initialRegion={{ latitude: place.latitude, longitude: place.longitude }} />}
@@ -144,6 +159,19 @@ export const DeliveryAddressContainer = () => {
 }
 
 const styles = StyleSheet.create({
+    header: { zIndex: 100, flexDirection: 'row', alignItems: 'stretch', backgroundColor: theme.white, minHeight: 68 },
+    addressButton: { flex: 1, justifyContent: 'center', paddingHorizontal: 16, paddingVertical: 10 },
+    deliverTo: { color: theme.muted, fontFamily: theme.font.semibold, fontSize: 12 },
+    addressRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 2 },
+    addressText: { flexShrink: 1, color: theme.text, fontFamily: theme.font.bold, fontSize: 16 },
+    eta: {
+        flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 16,
+        backgroundColor: theme.accent, borderTopLeftRadius: 22, borderBottomLeftRadius: 22,
+    },
+    etaOff: { backgroundColor: theme.border },
+    etaOffText: { color: theme.muted },
+    etaLabel: { color: theme.primary, fontFamily: theme.font.semibold, fontSize: 13 },
+    etaTime: { color: theme.primary, fontFamily: theme.font.bold, fontSize: 20 },
     map: {
         height: 200
     },

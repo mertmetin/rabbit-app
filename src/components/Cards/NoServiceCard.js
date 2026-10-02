@@ -1,96 +1,35 @@
-import React, { Component, useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, View, SafeAreaView, SectionList, FlatList, TouchableOpacity } from 'react-native';
-import { Card, Text, Avatar, List } from '@ui-kitten/components';
+import React from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { LogoMark } from '../Logo';
+import { theme } from '../../theme';
 
-export function NoServiceCard(props) {
-
-    var data = [
-        {
-            icon: require('../../../assets/images/baguette-48.png')
-        },
-        {
-            icon: require('../../../assets/images/cheese-48.png')
-        },
-        {
-            icon: require('../../../assets/images/fish-and-vegetables-48.png')
-        },
-        {
-            icon: require('../../../assets/images/cereal-48.png')
-        },
-        {
-            icon: require('../../../assets/images/taco-48.png')
-        },
-        {
-            icon: require('../../../assets/images/ingredients-48.png')
-        },
-        {
-            icon: require('../../../assets/images/thanksgiving-48.png')
-        },
-        {
-            icon: require('../../../assets/images/vegetables-bag-48.png')
-        }
-    ];
-
-    const renderItem = ({ item, index }) => (
-        <Card style={styles.card} disabled>
-            <Avatar size={'small'} style={{ marginLeft: -10, marginRight: -10 }}
-                source={item.icon} />
-        </Card>
-    );
-
+// Shown when no Rabbit branch delivers to the chosen address.
+export function NoServiceCard({ onChangeAddress, onBrowse }) {
     return (
-        <View style={styles.container}>
-            <View style={{alignItems: 'center', marginTop: 10, marginBottom: 10}} disabled>
-                <Text style={{
-                    marginTop: 10, marginBottom: 10}}>
-                    Currently, we only provide service in Ottawa
-                </Text>
-                <List
-                    scrollEnabled={false}
-                    numColumns={4}
-                    style={styles.list}
-                    data={data}
-                    renderItem={renderItem}
-                    keyExtractor={(item, index) => index}
-                />
+        <View style={styles.card}>
+            <View style={styles.badge}>
+                <LogoMark size={52} />
             </View>
+            <Text style={styles.title}>We don't deliver here yet</Text>
+            <Text style={styles.text}>
+                Rabbit is just getting started in Ottawa and only delivers close to our shoppers for now. We're hopping further soon!
+            </Text>
+            <Pressable style={styles.primary} onPress={onChangeAddress}>
+                <Text style={styles.primaryText}>Change address</Text>
+            </Pressable>
+            <Pressable onPress={onBrowse} hitSlop={8}>
+                <Text style={styles.link}>Look around anyway</Text>
+            </Pressable>
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
-    card: {
-        backgroundColor: '#e0e1e5',
-        marginLeft: 15,
-        marginLeft: 15,
-        marginTop: 5,
-        marginBottom: 5
-
-    },
-    container: {
-        // flex: 1,
-        // padding: 25,
-        backgroundColor: '#fff',
-        borderRadius: 5,
-
-        // flexDirection: 'column',
-        // alignSelf: 'center',
-        // height: 300
-    },
-    list: {
-        backgroundColor: '#fff'
-    },  
-    box_shadow: {
-        marginTop: 10,
-        marginBottom: 10,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity: 0.22,
-        shadowRadius: 2.22,
-        elevation: 3
-    }
+    card: { alignItems: 'center', backgroundColor: theme.white, borderRadius: 18, padding: 24, margin: 16, gap: 10 },
+    badge: { width: 80, height: 80, borderRadius: 24, backgroundColor: theme.primary, alignItems: 'center', justifyContent: 'center', marginBottom: 6 },
+    title: { color: theme.primary, fontFamily: theme.font.bold, fontSize: 21, textAlign: 'center' },
+    text: { color: theme.text, fontFamily: theme.font.regular, fontSize: 15, lineHeight: 21, textAlign: 'center' },
+    primary: { alignSelf: 'stretch', height: 50, borderRadius: 12, backgroundColor: theme.primary, alignItems: 'center', justifyContent: 'center', marginTop: 8 },
+    primaryText: { color: theme.white, fontFamily: theme.font.bold, fontSize: 16 },
+    link: { color: theme.primary, fontFamily: theme.font.semibold, fontSize: 15, paddingVertical: 6 },
 });
