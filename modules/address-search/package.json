@@ -1,0 +1,7 @@
+{
+  "name": "address-search",
+  "version": "1.0.0",
+  "description": "Address suggestions as you type, from Apple Maps (iOS).",
+  "main": "src/index.js",
+  "private": true
+}

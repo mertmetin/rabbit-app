@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text as RNText, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../../../theme';
@@ -9,11 +9,13 @@ import { Button, Input, Text } from '@ui-kitten/components';
 import { showMessage } from 'react-native-flash-message';
 import http from '../../../helpers/Http';
 import { goHome } from '../../../helpers/Navigation';
+import { addressSearchAvailable, resolveAddress, searchAddresses } from '../../../../modules/address-search/src';
 
 const POSTAL_CODE = /^[A-Za-z]\d[A-Za-z] ?\d[A-Za-z]\d$/;
 
-// Fields carry iOS AutoFill types, so the keyboard offers the customer's own
-// saved addresses.
+// The street field suggests addresses as you type (Apple Maps); picking one
+// fills in the rest. Fields also carry iOS AutoFill types, so the keyboard
+// offers the customer's own saved addresses.
 // Turns a typed address into map coordinates with the phone's own geocoder
 // (Apple Maps on iOS), so no Google key is needed.
 async function locate(address) {
@@ -47,7 +49,46 @@ export const AddUserAddress = ({ data }) => {
         notes: existing?.notes ?? '',
     });
 
-    const set = (field) => (value) => setForm({ ...form, [field]: value });
+    // Suggestions while typing the street; `picked` is the map point of a
+    // chosen suggestion (typing again drops it and we geocode on save).
+    const [suggestions, setSuggestions] = useState([]);
+    const [picked, setPicked] = useState(null);
+    const typed = useRef(false);
+
+    const set = (field) => (value) => {
+        if (field === 'address_line_1') {
+            typed.current = true;
+            setPicked(null);
+        }
+        setForm({ ...form, [field]: value });
+    };
+
+    useEffect(() => {
+        if (!addressSearchAvailable || !typed.current)
+            return;
+        const timer = setTimeout(() => {
+            searchAddresses(form.address_line_1).then(setSuggestions).catch(() => setSuggestions([]));
+        }, 250);
+        return () => clearTimeout(timer);
+    }, [form.address_line_1]);
+
+    const choose = async (suggestion) => {
+        typed.current = false;
+        setSuggestions([]);
+        try {
+            const place = await resolveAddress(suggestion);
+            setForm((f) => ({
+                ...f,
+                address_line_1: place.address_line_1,
+                city: place.city || f.city,
+                zone_code: place.zone_code || f.zone_code,
+                postal_code: place.postal_code || f.postal_code,
+            }));
+            setPicked({ latitude: place.latitude, longitude: place.longitude });
+        } catch {
+            setForm((f) => ({ ...f, address_line_1: suggestion.title }));
+        }
+    };
 
     const save = async () => {
         if (!form.address_line_1.trim() || !form.city.trim())
@@ -57,7 +98,7 @@ export const AddUserAddress = ({ data }) => {
 
         setSaving(true);
         try {
-            const point = await locate(form);
+            const point = picked ?? await locate(form);
             if (!point) {
                 showMessage({ message: "We couldn't find that address on the map.", type: 'warning' });
                 return;
@@ -94,6 +135,19 @@ export const AddUserAddress = ({ data }) => {
             <Input label='Street address' placeholder='110 Laurier Ave W' value={form.address_line_1}
                 onChangeText={set('address_line_1')} style={styles.field} autoFocus={!existing}
                 textContentType='streetAddressLine1' autoComplete='address-line1' />
+            {suggestions.length > 0 && (
+                <View style={styles.suggestions}>
+                    {suggestions.map((sug, i) => (
+                        <Pressable key={`${sug.title}-${i}`} style={[styles.suggestion, i > 0 && styles.suggestionBorder]} onPress={() => choose(sug)}>
+                            <Ionicons name='location-outline' size={18} color={theme.primary} />
+                            <View style={{ flex: 1 }}>
+                                <RNText style={styles.suggestionTitle}>{sug.title}</RNText>
+                                {!!sug.subtitle && <RNText style={styles.suggestionSub}>{sug.subtitle}</RNText>}
+                            </View>
+                        </Pressable>
+                    ))}
+                </View>
+            )}
             <Input label='Apt / Suite / Floor' value={form.address_line_2} onChangeText={set('address_line_2')} style={styles.field}
                 textContentType='streetAddressLine2' autoComplete='address-line2' />
             <View style={styles.row}>
@@ -116,6 +170,11 @@ export const AddUserAddress = ({ data }) => {
 }
 
 const styles = StyleSheet.create({
+    suggestions: { marginTop: -6, marginBottom: 12, borderRadius: 12, borderWidth: 1, borderColor: theme.border, backgroundColor: theme.white, overflow: 'hidden' },
+    suggestion: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 10, paddingHorizontal: 12 },
+    suggestionBorder: { borderTopWidth: 1, borderTopColor: theme.border },
+    suggestionTitle: { color: theme.text, fontFamily: theme.font.semibold, fontSize: 15 },
+    suggestionSub: { color: theme.muted, fontFamily: theme.font.regular, fontSize: 13, marginTop: 1 },
     container: {
         padding: 20
     },
