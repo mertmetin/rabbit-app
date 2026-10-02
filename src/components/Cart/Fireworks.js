@@ -4,23 +4,26 @@ import { theme } from '../../theme';
 
 const COLORS = [theme.accent, '#ff6b6b', '#4dabf7', '#ffffff', '#69db7c', '#f783ac'];
 
-// One burst of confetti from the middle of its parent, arcing up and falling
-// back with a fade. `big` throws more pieces, higher, in two waves.
+// One burst of confetti from its parent, arcing up and falling back with a
+// fade. `big` is the free-delivery celebration: three waves from three points
+// along the bar, more and larger pieces, flying higher.
 function makeBurst(big) {
-    const count = big ? 70 : 28;
+    const count = big ? 150 : 28;
     return Array.from({ length: count }, (_, i) => {
-        const angle = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * (big ? 1.5 : 1.1);
-        const speed = (big ? 300 : 190) * (0.5 + Math.random() * 0.6);
+        const wave = big ? i % 3 : 0;
+        const angle = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * (big ? 1.3 : 1.1);
+        const speed = (big ? 420 : 190) * (0.45 + Math.random() * 0.65);
         return {
             key: `${Date.now()}-${i}`,
+            x: big ? [-110, 0, 110][Math.floor(Math.random() * 3)] : 0,
             dx: Math.cos(angle) * speed,
             peak: Math.sin(angle) * speed,
-            fall: big ? 110 : 70,
-            spin: (Math.random() - 0.5) * 720,
-            size: 5 + Math.random() * (big ? 6 : 4),
+            fall: big ? 160 : 70,
+            spin: (Math.random() - 0.5) * (big ? 1080 : 720),
+            size: big ? 6 + Math.random() * 8 : 5 + Math.random() * 4,
             round: Math.random() < 0.4,
             color: COLORS[i % COLORS.length],
-            delay: big && i % 2 ? 260 : 0,
+            delay: wave * 280,
             t: new Animated.Value(0),
         };
     });
@@ -36,7 +39,7 @@ export function Fireworks({ trigger }) {
         Animated.parallel(burst.map((p) =>
             Animated.timing(p.t, {
                 toValue: 1,
-                duration: trigger.big ? 1500 : 1100,
+                duration: trigger.big ? 1900 : 1100,
                 delay: p.delay,
                 easing: Easing.out(Easing.quad),
                 useNativeDriver: true,
@@ -53,6 +56,7 @@ export function Fireworks({ trigger }) {
                     style={[
                         styles.piece,
                         {
+                            left: p.x,
                             width: p.size,
                             height: p.round ? p.size : p.size * 1.8,
                             borderRadius: p.round ? p.size / 2 : 1,
