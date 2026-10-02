@@ -2,7 +2,9 @@ import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { theme, formatPrice } from '../../theme';
 import { useCart } from '../../hooks/useCart';
+import * as Haptics from 'expo-haptics';
 import { useFirstOrder } from '../../hooks/useFirstOrder';
+import { Fireworks } from './Fireworks';
 import { FREE_DELIVERY_OVER, MIN_ORDER } from '@/config';
 
 // Basket progress above the tabs, in stages: up to the minimum, then up to
@@ -11,6 +13,7 @@ import { FREE_DELIVERY_OVER, MIN_ORDER } from '@/config';
 export function MinOrderBar() {
     const { total, count } = useCart();
     const firstOrder = useFirstOrder(count > 0);
+    const celebration = useCelebration(total, firstOrder);
     if (count === 0)
         return null;
 
@@ -43,6 +46,7 @@ export function MinOrderBar() {
 
     return (
         <View style={styles.container}>
+            <Fireworks trigger={celebration} />
             <View style={styles.message}>
                 <Text style={styles.text} numberOfLines={1} adjustsFontSizeToFit>{message}</Text>
             </View>
@@ -51,6 +55,27 @@ export function MinOrderBar() {
             </View>
         </View>
     );
+}
+
+// Fireworks when the basket crosses a milestone while shopping: small at the
+// minimum, big at free delivery (on a first order the minimum is the free
+// delivery). Nothing on first render, so revisiting a full basket is quiet.
+function useCelebration(total, firstOrder) {
+    const previous = React.useRef(total);
+    const [trigger, setTrigger] = React.useState(null);
+    React.useEffect(() => {
+        const before = previous.current;
+        previous.current = total;
+        const crossed = (amount) => before < amount && total >= amount;
+        if (crossed(FREE_DELIVERY_OVER) || (firstOrder && crossed(MIN_ORDER))) {
+            setTrigger({ big: true, at: Date.now() });
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        } else if (crossed(MIN_ORDER)) {
+            setTrigger({ big: false, at: Date.now() });
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        }
+    }, [total, firstOrder]);
+    return trigger;
 }
 
 const styles = StyleSheet.create({
