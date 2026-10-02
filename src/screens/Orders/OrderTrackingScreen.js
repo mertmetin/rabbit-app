@@ -14,7 +14,7 @@ const REFRESH_MS = 5000;
 
 const STEPS = [
     { key: 'placed', label: 'Order placed', done: (o) => true, time: (o) => o.placed_at },
-    { key: 'packing', label: 'Shopping your order', done: (o) => ['preparing', 'ready', 'out_for_delivery', 'delivered'].includes(o.status), time: () => null },
+    { key: 'packing', label: 'Picking your groceries', done: (o) => ['preparing', 'ready', 'out_for_delivery', 'delivered'].includes(o.status), time: () => null },
     { key: 'on_the_way', label: 'On the way', done: (o) => ['out_for_delivery', 'delivered'].includes(o.status), time: (o) => o.picked_up_at },
     { key: 'delivered', label: 'Delivered', done: (o) => o.status === 'delivered', time: (o) => o.delivered_at },
 ];

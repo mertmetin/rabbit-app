@@ -2,12 +2,12 @@
 export const ACTIVE = ['placed', 'preparing', 'ready', 'out_for_delivery'];
 
 export const HEADLINE = {
-    placed: { title: 'Order received', subtitle: 'The store is getting started.' },
-    preparing: { title: 'Packing your order', subtitle: 'Fresh picks going into your bag.' },
-    ready: { title: 'Packed and ready', subtitle: 'Waiting for your driver to pick it up.' },
+    placed: { title: 'Order received', subtitle: "We've got your order." },
+    preparing: { title: 'Picking your groceries', subtitle: "We're getting everything on your list." },
+    ready: { title: 'All picked', subtitle: 'Heading your way shortly.' },
     out_for_delivery: { title: 'On the way', subtitle: 'Your driver is heading to you.' },
     delivered: { title: 'Delivered 🎉', subtitle: 'Enjoy your groceries!' },
-    cancelled: { title: 'Cancelled', subtitle: 'You have been refunded in full.' },
+    cancelled: { title: 'Cancelled', subtitle: "You weren't charged; the hold on your card is released." },
 };
 
 const rad = (d) => (d * Math.PI) / 180;

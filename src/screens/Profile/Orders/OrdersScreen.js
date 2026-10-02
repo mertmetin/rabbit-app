@@ -7,8 +7,8 @@ import { theme, formatPrice } from '../../../theme';
 
 const STATUS = {
     placed: { label: 'Placed', color: theme.primary },
-    preparing: { label: 'Packing', color: theme.primary },
-    ready: { label: 'Packed', color: theme.primary },
+    preparing: { label: 'Picking', color: theme.primary },
+    ready: { label: 'Picked', color: theme.primary },
     out_for_delivery: { label: 'On the way', color: theme.primary },
     delivered: { label: 'Delivered', color: theme.muted },
     cancelled: { label: 'Cancelled', color: theme.danger },
