@@ -7,8 +7,8 @@ import { theme, formatPrice } from '../../../theme';
 
 const STATUS = {
     placed: { label: 'Placed', color: theme.primary },
-    preparing: { label: 'Picking', color: theme.primary },
-    ready: { label: 'Picked', color: theme.primary },
+    preparing: { label: 'Preparing', color: theme.primary },
+    ready: { label: 'Ready', color: theme.primary },
     out_for_delivery: { label: 'On the way', color: theme.primary },
     delivered: { label: 'Delivered', color: theme.muted },
     cancelled: { label: 'Cancelled', color: theme.danger },
@@ -29,7 +29,7 @@ export default function OrdersScreen({ navigation }) {
 
     useFocusEffect(load);
 
-    const cancel = (order) => Alert.alert(`Cancel order #${order.id}?`, 'You will be refunded in full.', [
+    const cancel = (order) => Alert.alert(`Cancel order #${order.id}?`, "You won't be charged.", [
         { text: 'Keep order', style: 'cancel' },
         {
             text: 'Cancel order', style: 'destructive', onPress: () =>

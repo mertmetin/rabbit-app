@@ -3,8 +3,8 @@ export const ACTIVE = ['placed', 'preparing', 'ready', 'out_for_delivery'];
 
 export const HEADLINE = {
     placed: { title: 'Order received', subtitle: "We've got your order." },
-    preparing: { title: 'Picking your groceries', subtitle: "We're getting everything on your list." },
-    ready: { title: 'All picked', subtitle: 'Heading your way shortly.' },
+    preparing: { title: 'Preparing your order', subtitle: "We're getting everything on your list." },
+    ready: { title: 'Ready', subtitle: 'Heading your way shortly.' },
     out_for_delivery: { title: 'On the way', subtitle: 'Your driver is heading to you.' },
     delivered: { title: 'Delivered 🎉', subtitle: 'Enjoy your groceries!' },
     cancelled: { title: 'Cancelled', subtitle: "You weren't charged; the hold on your card is released." },

@@ -14,7 +14,7 @@ const REFRESH_MS = 5000;
 
 const STEPS = [
     { key: 'placed', label: 'Order placed', done: (o) => true, time: (o) => o.placed_at },
-    { key: 'packing', label: 'Picking your groceries', done: (o) => ['preparing', 'ready', 'out_for_delivery', 'delivered'].includes(o.status), time: () => null },
+    { key: 'packing', label: 'Preparing your order', done: (o) => ['preparing', 'ready', 'out_for_delivery', 'delivered'].includes(o.status), time: () => null },
     { key: 'on_the_way', label: 'On the way', done: (o) => ['out_for_delivery', 'delivered'].includes(o.status), time: (o) => o.picked_up_at },
     { key: 'delivered', label: 'Delivered', done: (o) => o.status === 'delivered', time: (o) => o.delivered_at },
 ];
@@ -58,7 +58,7 @@ export default function OrderTrackingScreen({ route }) {
     const headline = HEADLINE[order.status] ?? { title: order.status, subtitle: '' };
     const eta = order.status === 'out_for_delivery' ? etaMinutes(driver, destination) : null;
 
-    const cancel = () => Alert.alert(`Cancel order #${order.id}?`, 'You will be refunded in full.', [
+    const cancel = () => Alert.alert(`Cancel order #${order.id}?`, "You won't be charged.", [
         { text: 'Keep order', style: 'cancel' },
         { text: 'Cancel order', style: 'destructive', onPress: () =>
             http.post(`orders/${order.id}/cancel`).then((res) => setOrder(res.data))
