@@ -7,7 +7,8 @@ import http from '../../helpers/Http';
 import { getCurrentUser } from '../../helpers/Auth';
 import { useCart } from '../../hooks/useCart';
 import { theme, formatPrice, splitTitle } from '../../theme';
-import { MIN_ORDER } from '@/config';
+import { FREE_DELIVERY_OVER, MIN_ORDER } from '@/config';
+import { useFirstOrder } from '../../hooks/useFirstOrder';
 import { QuantityStepper } from '../../components/Product/QuantityStepper';
 import { ProductTile } from '../../components/Product/ProductTile';
 import { EmptyCart } from '../../components/Other/EmptyCart';
@@ -59,12 +60,15 @@ export default function CartScreen() {
         http.get(`stores/${store.id}/popular`).then((res) => setRecommended(res.data)).catch(() => {});
     }, [store]);
 
+    const firstOrder = useFirstOrder(cart.count > 0);
+
     if (cart.count === 0)
         return <EmptyCart />;
 
     const lines = Object.values(cart.items);
     const suggestions = recommended.filter((p) => !cart.items[p.id]).slice(0, 8);
     const remaining = MIN_ORDER - cart.total;
+    const toFreeDelivery = FREE_DELIVERY_OVER - cart.total;
 
     const onContinue = async () => {
         if (remaining > 0)
@@ -99,10 +103,18 @@ export default function CartScreen() {
             </ScrollView>
 
             <View style={styles.footer}>
-                {remaining > 0 && (
+                {remaining > 0 ? (
                     <Text style={styles.minimum}>
                         Add <Text style={styles.minimumStrong}>{formatPrice(remaining)}</Text> more to reach the {formatPrice(MIN_ORDER)} minimum
                     </Text>
+                ) : firstOrder ? (
+                    <Text style={styles.minimum}>🎉 <Text style={styles.minimumStrong}>Your first delivery is free</Text></Text>
+                ) : toFreeDelivery > 0 ? (
+                    <Text style={styles.minimum}>
+                        Add <Text style={styles.minimumStrong}>{formatPrice(toFreeDelivery)}</Text> more for free delivery
+                    </Text>
+                ) : (
+                    <Text style={styles.minimum}>🎉 <Text style={styles.minimumStrong}>You've got free delivery</Text></Text>
                 )}
                 <View style={styles.checkout}>
                     <Pressable style={[styles.continue, remaining > 0 && styles.continueDisabled]} onPress={onContinue}>
