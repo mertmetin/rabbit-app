@@ -111,7 +111,8 @@ export const DeliveryAddressContainer = () => {
             <View style={[styles.box_shadow, { zIndex: 100 }]}>
                 <ListItem
                     title={place ? `Deliver to: ${place.label}` : 'Finding your location…'}
-                    description={store ? `From ${store.name} · ${store.distance_km} km away` : undefined}
+                    // Delivery time, not distance: the store may be the shopper's home.
+                    description={store?.eta_min ? `🐰 Delivery in about ${store.eta_min}–${store.eta_max} min` : undefined}
                     accessoryRight={() => <Ionicons size={24} name='chevron-forward' />}
                     onPress={chooseAddress}
                 />
