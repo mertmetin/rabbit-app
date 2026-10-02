@@ -7,6 +7,7 @@ import { showMessage } from 'react-native-flash-message';
 import http, { API_URL } from '../../helpers/Http';
 import Token from '../../helpers/Token';
 import { LogoMark } from '../../components/Logo';
+import { RateOrder } from '../../components/Orders/RateOrder';
 import { theme, formatPrice } from '../../theme';
 import { ACTIVE, HEADLINE, destinationOf, etaMinutes, timeOf } from '../../helpers/Tracking';
 
@@ -113,6 +114,8 @@ export default function OrderTrackingScreen({ route }) {
                 </View>
             </View>
 
+            {order.status === 'delivered' && <RateOrder order={order} onRated={setOrder} />}
+
             {order.has_photo && token && (
                 <View style={styles.card}>
                     <Text style={styles.cardTitle}>Where we left it</Text>
@@ -145,6 +148,12 @@ export default function OrderTrackingScreen({ route }) {
                         </View>
                     );
                 })}
+                {order.tip > 0 && (
+                    <View style={styles.row}>
+                        <Text style={styles.item}>Driver tip</Text>
+                        <Text style={styles.price}>{formatPrice(order.tip)}</Text>
+                    </View>
+                )}
                 <View style={[styles.row, styles.totalRow]}>
                     <Text style={styles.totalLabel}>{order.charged ? 'Total charged' : 'Total (held on your card)'}</Text>
                     <Text style={styles.total}>{formatPrice(order.total)}</Text>

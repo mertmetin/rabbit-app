@@ -64,6 +64,11 @@ export default function CheckoutScreen({ navigation, route }) {
     const [contactless, setContactless] = React.useState(false);
     const [noBell, setNoBell] = React.useState(false);
     const [substitutions, setSubstitutions] = React.useState('similar');
+    // Driver tip in dollars; $3 preselected. null while typing a custom amount.
+    const [tip, setTip] = React.useState(3);
+    const [customTip, setCustomTip] = React.useState('');
+    const tipAmount = tip ?? (Math.max(0, Math.min(100, Number(customTip.replace(',', '.')) || 0)));
+    const total = quote ? Math.round((quote.total + tipAmount) * 100) / 100 : cart.total;
     const [showItems, setShowItems] = React.useState(false);
     const [quote, setQuote] = React.useState(null);
     const [placing, setPlacing] = React.useState(false);
@@ -107,6 +112,7 @@ export default function CheckoutScreen({ navigation, route }) {
             const res = await http.post('orders', {
                 store_id: store.id, address_id: savedAddress.id, items, payment_method_id: card.id,
                 notes: notes.trim() || undefined, contactless, no_bell: noBell, substitutions,
+                tip_cents: Math.round(tipAmount * 100),
             });
             const { order, payment } = res.data;
             orderId = order.id;
@@ -178,6 +184,24 @@ export default function CheckoutScreen({ navigation, route }) {
                         selected={substitutions === 'skip'} onPress={() => setSubstitutions('skip')} />
                 </Section>
 
+                <Section title="Tip your driver">
+                    <View style={styles.tips}>
+                        {[0, 2, 3, 5].map((amount) => (
+                            <Pressable key={amount} style={[styles.tipChip, tip === amount && styles.tipChipOn]} onPress={() => setTip(amount)}>
+                                <Text style={[styles.tipText, tip === amount && styles.tipTextOn]}>{amount ? `$${amount}` : 'No tip'}</Text>
+                            </Pressable>
+                        ))}
+                        <Pressable style={[styles.tipChip, tip === null && styles.tipChipOn]} onPress={() => setTip(null)}>
+                            <Text style={[styles.tipText, tip === null && styles.tipTextOn]}>Other</Text>
+                        </Pressable>
+                    </View>
+                    {tip === null && (
+                        <TextInput style={styles.tipInput} value={customTip} onChangeText={setCustomTip} placeholder="Tip amount, e.g. 4"
+                            placeholderTextColor={theme.muted} keyboardType="decimal-pad" autoFocus />
+                    )}
+                    <Text style={styles.paymentHint}>💚 100% goes to your driver.</Text>
+                </Section>
+
                 <Section title="Payment method">
                     <View style={styles.paymentRow}>
                         <View style={styles.paymentIcon}>
@@ -224,9 +248,10 @@ export default function CheckoutScreen({ navigation, route }) {
                                 </Text>
                             )}
                             <SummaryRow label="Tax (HST)" value={formatPrice(quote.tax)} />
-                            <SummaryRow label="Total" value={formatPrice(quote.total)} strong />
+                            {tipAmount > 0 && <SummaryRow label="Driver tip" value={formatPrice(tipAmount)} />}
+                            <SummaryRow label="Total" value={formatPrice(total)} strong />
                             <Text style={styles.holdNote}>
-                                We'll hold {formatPrice(quote.total)} on your card and charge only for what we deliver, never more.
+                                We'll hold {formatPrice(total)} on your card and charge only for what we deliver, never more.
                             </Text>
                         </>
                     ) : savedAddress ? (
@@ -248,7 +273,7 @@ export default function CheckoutScreen({ navigation, route }) {
                             : <Text style={styles.placeText}>{!savedAddress ? 'Add address' : !card ? 'Add card' : 'Place order'}</Text>}
                     </Pressable>
                     <View style={styles.totalBox}>
-                        <Text style={styles.total}>{formatPrice(quote ? quote.total : cart.total)}</Text>
+                        <Text style={styles.total}>{formatPrice(total)}</Text>
                     </View>
                 </View>
             </View>
@@ -271,6 +296,12 @@ function deliveryLabel(quote) {
 }
 
 const styles = StyleSheet.create({
+    tips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 8 },
+    tipChip: { paddingHorizontal: 14, height: 40, borderRadius: 20, borderWidth: 1.5, borderColor: theme.border, alignItems: 'center', justifyContent: 'center' },
+    tipChipOn: { borderColor: theme.primary, backgroundColor: theme.primarySoft },
+    tipText: { color: theme.text, fontFamily: theme.font.semibold, fontSize: 15 },
+    tipTextOn: { color: theme.primary },
+    tipInput: { borderWidth: 1, borderColor: theme.border, borderRadius: 10, paddingHorizontal: 12, height: 44, marginBottom: 8, fontFamily: theme.font.regular, fontSize: 16, color: theme.text },
     etaArrives: { color: theme.primary, fontFamily: theme.font.regular, fontSize: 12 },
     choiceRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, paddingVertical: 8 },
     holdNote: { color: theme.muted, fontFamily: theme.font.regular, fontSize: 13, marginTop: 10, lineHeight: 18 },
