@@ -2,15 +2,37 @@ import * as React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { showMessage } from 'react-native-flash-message';
+import http from '../../helpers/Http';
+import { finishSignIn } from '../../helpers/AuthFlow';
+import { getGoogleIdToken, googleSignInAvailable } from '../../helpers/GoogleAuth';
 import { LogoMark } from '../../components/Logo';
 import { theme } from '../../theme';
 
 // "Let's get started": choose how to sign in or sign up.
-// Google and Facebook are placeholders for now. Note for launch: Apple
-// requires "Sign in with Apple" alongside any Google/Facebook login on iOS.
+// Google: a linked account signs straight in; a new one confirms the phone
+// number once (PhoneSignIn with the link token).
 export default function WelcomeScreen({ navigation, route }) {
     const returnTo = route.params?.returnTo;
-    const comingSoon = (name) => () => showMessage({ message: `${name} sign-in is coming soon. Use your phone for now.`, type: 'info' });
+    const [googleBusy, setGoogleBusy] = React.useState(false);
+
+    const continueWithGoogle = async () => {
+        setGoogleBusy(true);
+        try {
+            const idToken = await getGoogleIdToken();
+            if (!idToken) return;
+            const { data } = await http.post('auth/google', { id_token: idToken });
+            if (data.token) {
+                if (data.user.needs_profile) navigation.replace('CompleteProfile', { token: data.token, user: data.user, returnTo });
+                else await finishSignIn(navigation, data.token, returnTo);
+                return;
+            }
+            navigation.navigate('PhoneSignIn', { returnTo, linkToken: data.link_token });
+        } catch (err) {
+            showMessage({ message: err.message || "Couldn't sign in with Google.", type: 'danger' });
+        } finally {
+            setGoogleBusy(false);
+        }
+    };
 
     return (
         <View style={styles.screen}>
@@ -23,14 +45,12 @@ export default function WelcomeScreen({ navigation, route }) {
             </View>
 
             <View style={styles.buttons}>
-                <Pressable style={styles.outline} onPress={comingSoon('Google')}>
-                    <Ionicons name="logo-google" size={22} color="#4285F4" />
-                    <Text style={styles.outlineText}>Continue with Google</Text>
-                </Pressable>
-                <Pressable style={styles.outline} onPress={comingSoon('Facebook')}>
-                    <Ionicons name="logo-facebook" size={24} color="#1877F2" />
-                    <Text style={styles.outlineText}>Continue with Facebook</Text>
-                </Pressable>
+                {googleSignInAvailable && (
+                    <Pressable style={styles.outline} onPress={continueWithGoogle} disabled={googleBusy}>
+                        <Ionicons name="logo-google" size={22} color="#4285F4" />
+                        <Text style={styles.outlineText}>Continue with Google</Text>
+                    </Pressable>
+                )}
                 <Pressable style={styles.primary} onPress={() => navigation.navigate('PhoneSignIn', { returnTo })}>
                     <Ionicons name="call" size={20} color={theme.white} />
                     <Text style={styles.primaryText}>Continue with phone</Text>

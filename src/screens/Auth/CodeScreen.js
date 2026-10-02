@@ -11,7 +11,7 @@ const RESEND_SECONDS = 30;
 // Step 2: the 6-digit code. One hidden input drives the six boxes, so iOS can
 // offer the code from Messages and pasting works. Submits by itself when full.
 export default function CodeScreen({ navigation, route }) {
-    const { phone, returnTo } = route.params;
+    const { phone, returnTo, linkToken } = route.params;
     // Only sent by a development server that isn't texting yet.
     const [devCode, setDevCode] = React.useState(route.params.devCode);
     const [code, setCode] = React.useState('');
@@ -30,7 +30,7 @@ export default function CodeScreen({ navigation, route }) {
         setChecking(true);
         setError(null);
         try {
-            const res = await http.post('auth/verify', { phone, code: value });
+            const res = await http.post('auth/verify', { phone, code: value, link_token: linkToken });
             const { token, user } = res.data;
             if (user.needs_profile) {
                 navigation.replace('CompleteProfile', { token, user, returnTo });

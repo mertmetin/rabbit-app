@@ -1,6 +1,10 @@
 // Google Maps key for Places autocomplete and directions; set in .env.
 export const GOOGLE_MAPS_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY || '';
 
+// "Continue with Google": the iOS OAuth client ID from Google Cloud. The
+// button is hidden while it's empty.
+export const GOOGLE_IOS_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID || '';
+
 // Chatwoot live chat in Help: the Website inbox's token and the Chatwoot
 // address (Chatwoot Cloud unless self-hosted). Hidden while the token is empty.
 export const CHATWOOT_WEBSITE_TOKEN = process.env.EXPO_PUBLIC_CHATWOOT_WEBSITE_TOKEN || '';

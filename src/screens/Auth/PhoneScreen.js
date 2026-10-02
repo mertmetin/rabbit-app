@@ -6,8 +6,11 @@ import { theme } from '../../theme';
 import { AuthLayout, PrimaryButton, authStyles } from './AuthLayout';
 
 // Step 1: the phone number. Works for new and returning customers alike.
+// After "Continue with Google" for a new Google account, this confirms the
+// phone number the Google account gets linked to.
 export default function PhoneScreen({ navigation, route }) {
     const returnTo = route.params?.returnTo;
+    const linkToken = route.params?.linkToken;
     const [phone, setPhone] = React.useState('');
     const [error, setError] = React.useState(null);
     const [sending, setSending] = React.useState(false);
@@ -18,7 +21,7 @@ export default function PhoneScreen({ navigation, route }) {
         setError(null);
         try {
             const res = await http.post('auth/start', { phone: digits });
-            navigation.navigate('VerifyCode', { phone: res.data.phone, returnTo, devCode: res.data.dev_code });
+            navigation.navigate('VerifyCode', { phone: res.data.phone, returnTo, linkToken, devCode: res.data.dev_code });
         } catch (err) {
             setError(err.message);
         } finally {
@@ -29,7 +32,9 @@ export default function PhoneScreen({ navigation, route }) {
     return (
         <AuthLayout
             title="What's your number?"
-            subtitle="We'll text you a code to sign in. New here? This creates your account."
+            subtitle={linkToken
+                ? "One last step: confirm your number so your driver can reach you. We'll text you a code."
+                : "We'll text you a code to sign in. New here? This creates your account."}
             footer={<PrimaryButton title="Send code" onPress={send} disabled={digits.length !== 10} loading={sending} />}
         >
             <View style={[styles.field, error && styles.fieldError]}>
