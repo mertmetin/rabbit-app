@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useCart } from '../../hooks/useCart';
 import * as Location from 'expo-location';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -72,6 +73,23 @@ export const DeliveryAddressContainer = () => {
         return () => { cancelled = true; };
     }, [address, attempt]);
 
+    // Delivery time for the header, re-estimated as the basket changes (the
+    // server counts different products; an empty basket means a typical one).
+    const cart = useCart();
+    const products = Object.keys(cart.items).length;
+    const [eta, setEta] = useState(null);
+    useEffect(() => {
+        if (!store || !place)
+            return setEta(null);
+        let cancelled = false;
+        const timer = setTimeout(() => {
+            http.get('stores/closest', { params: { lat: place.latitude, lng: place.longitude, products } })
+                .then((res) => !cancelled && setEta(res.data?.eta_min ? res.data : null))
+                .catch(() => {});
+        }, 400);
+        return () => { cancelled = true; clearTimeout(timer); };
+    }, [store?.id, place, products]);
+
     const chooseAddress = async () => {
         const user = await getCurrentUser();
         if (user) {
@@ -112,7 +130,7 @@ export const DeliveryAddressContainer = () => {
                 <ListItem
                     title={place ? `Deliver to: ${place.label}` : 'Finding your location…'}
                     // Delivery time, not distance: the store may be the shopper's home.
-                    description={store?.eta_min ? `🐰 Delivery in about ${store.eta_min}–${store.eta_max} min` : undefined}
+                    description={eta ? `🐰 Delivery in about ${eta.eta_min}–${eta.eta_max} min` : undefined}
                     accessoryRight={() => <Ionicons size={24} name='chevron-forward' />}
                     onPress={chooseAddress}
                 />
