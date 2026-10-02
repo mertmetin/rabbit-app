@@ -9,10 +9,12 @@ import { ProductGrid } from '../components/Product/ProductGrid';
 import { QuantityStepper } from '../components/Product/QuantityStepper';
 import { VariantOptions } from '../components/Product/VariantOptions';
 import { FavoriteButton } from '../components/Product/FavoriteButton';
+import { MinOrderBar } from '../components/Cart/MinOrderBar';
 
 // Big photo, price, name and size; option chips when the product comes in
 // variants (milk fat, size); more from the same aisle below; add-to-cart /
-// quantity pinned to the bottom.
+// quantity pinned to the bottom, under the basket progress bar (this screen
+// hides the tab bar, where that bar normally sits).
 export default function ProductDetailsScreen({ route }) {
     const [product, setProduct] = React.useState(route.params.item);
     const [variants, setVariants] = React.useState({ options: [], variants: [] });
@@ -69,13 +71,16 @@ export default function ProductDetailsScreen({ route }) {
                 )}
             </ScrollView>
 
-            <View style={styles.footer}>
-                {quantity === 0
-                    ? <Button size='large' style={styles.addButton} onPress={add}>
-                        {`Add to basket · ${formatPrice(product.price)}`}
-                      </Button>
-                    : <QuantityStepper size='large' quantity={quantity}
-                        onIncrease={add} onDecrease={() => cart.decrease(product)} />}
+            <View style={styles.bottom}>
+                <MinOrderBar />
+                <View style={styles.footer}>
+                    {quantity === 0
+                        ? <Button size='large' style={styles.addButton} onPress={add}>
+                            {`Add to basket · ${formatPrice(product.price)}`}
+                          </Button>
+                        : <QuantityStepper size='large' quantity={quantity}
+                            onIncrease={add} onDecrease={() => cart.decrease(product)} />}
+                </View>
             </View>
         </View>
     );
@@ -87,7 +92,7 @@ const styles = StyleSheet.create({
         backgroundColor: theme.white,
     },
     content: {
-        paddingBottom: 120,
+        paddingBottom: 200,
     },
     hero: {
         alignItems: 'center',
@@ -138,11 +143,13 @@ const styles = StyleSheet.create({
         fontFamily: theme.font.bold,
         fontSize: 17,
     },
-    footer: {
+    bottom: {
         position: 'absolute',
         left: 0,
         right: 0,
         bottom: 0,
+    },
+    footer: {
         alignItems: 'center',
         paddingTop: 14,
         paddingBottom: 34,
