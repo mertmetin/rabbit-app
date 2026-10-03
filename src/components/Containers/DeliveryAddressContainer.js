@@ -85,7 +85,7 @@ export const DeliveryAddressContainer = () => {
         let cancelled = false;
         const timer = setTimeout(() => {
             http.get('stores/closest', { params: { lat: place.latitude, lng: place.longitude, products } })
-                .then((res) => !cancelled && setEta(res.data?.eta_min ? res.data : null))
+                .then((res) => !cancelled && setEta(res.data?.open ? res.data : null))
                 .catch(() => {});
         }, 400);
         return () => { cancelled = true; clearTimeout(timer); };
@@ -129,8 +129,20 @@ export const DeliveryAddressContainer = () => {
                         <RNText style={styles.addressText} numberOfLines={1}>{place ? place.label : 'Finding your location…'}</RNText>
                         <Ionicons size={18} name='chevron-down' color={theme.primary} />
                     </View>
+                    {eta?.farther && (
+                        <RNText style={styles.farther} numberOfLines={2}>From our {eta.name} branch today, a little farther away</RNText>
+                    )}
                 </Pressable>
                 {/* Delivery time, not distance: the store may be the shopper's home. */}
+                {store && store.open === false && !eta && (
+                    <View style={[styles.eta, styles.etaOff]}>
+                        <Ionicons name='moon' size={20} color={theme.muted} />
+                        <View>
+                            <RNText style={[styles.etaLabel, styles.etaOffText]}>Delivery</RNText>
+                            <RNText style={[styles.etaTime, styles.etaOffText, { fontSize: 15 }]}>Closed right now</RNText>
+                        </View>
+                    </View>
+                )}
                 {checked && !store && !error && (
                     <View style={[styles.eta, styles.etaOff]}>
                         <Ionicons name='close-circle' size={22} color={theme.muted} />
@@ -168,6 +180,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 16,
         backgroundColor: theme.accent, borderTopLeftRadius: 22, borderBottomLeftRadius: 22,
     },
+    farther: { color: theme.muted, fontFamily: theme.font.regular, fontSize: 12, marginTop: 2 },
     etaOff: { backgroundColor: theme.border },
     etaOffText: { color: theme.muted },
     etaLabel: { color: theme.primary, fontFamily: theme.font.semibold, fontSize: 13 },

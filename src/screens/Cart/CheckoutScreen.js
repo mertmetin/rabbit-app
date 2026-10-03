@@ -69,6 +69,8 @@ export default function CheckoutScreen({ navigation, route }) {
     const [customTip, setCustomTip] = React.useState('');
     const tipAmount = tip ?? (Math.max(0, Math.min(100, Number(customTip.replace(',', '.')) || 0)));
     const total = quote ? Math.round((quote.total + tipAmount) * 100) / 100 : cart.total;
+    // No driver online at this branch: browsing is fine, ordering isn't.
+    const closed = quote?.open === false;
     const [showItems, setShowItems] = React.useState(false);
     const [quote, setQuote] = React.useState(null);
     const [placing, setPlacing] = React.useState(false);
@@ -261,16 +263,23 @@ export default function CheckoutScreen({ navigation, route }) {
                     )}
                 </Section>
 
+                {closed && (
+                    <Text style={styles.closedNote}>
+                        🌙 We're not taking orders right now. Your basket is saved, so check back a bit later.
+                    </Text>
+                )}
                 <Text style={styles.terms}>By placing your order you agree to Rabbit's terms of service.</Text>
             </ScrollView>
 
             <View style={styles.footer}>
                 <View style={styles.checkout}>
-                    <Pressable style={[styles.placeButton, (placing || (savedAddress && !quote)) && styles.disabled]}
-                        disabled={placing || (savedAddress && !quote)} onPress={placeOrder}>
+                    <Pressable style={[styles.placeButton, (placing || (savedAddress && !quote) || closed) && styles.disabled]}
+                        disabled={placing || (savedAddress && !quote) || closed} onPress={placeOrder}>
                         {placing
                             ? <ActivityIndicator color={theme.white} />
-                            : <Text style={styles.placeText}>{!savedAddress ? 'Add address' : !card ? 'Add card' : 'Place order'}</Text>}
+                            : <Text style={styles.placeText} numberOfLines={1} adjustsFontSizeToFit>
+                                {closed ? 'Closed right now' : !savedAddress ? 'Add address' : !card ? 'Add card' : 'Place order'}
+                              </Text>}
                     </Pressable>
                     <View style={styles.totalBox}>
                         <Text style={styles.total}>{formatPrice(total)}</Text>
@@ -296,6 +305,7 @@ function deliveryLabel(quote) {
 }
 
 const styles = StyleSheet.create({
+    closedNote: { marginHorizontal: 16, marginBottom: 12, padding: 12, borderRadius: 12, backgroundColor: theme.border, color: theme.text, fontFamily: theme.font.semibold, fontSize: 14, lineHeight: 20 },
     tips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 8 },
     tipChip: { paddingHorizontal: 14, height: 40, borderRadius: 20, borderWidth: 1.5, borderColor: theme.border, alignItems: 'center', justifyContent: 'center' },
     tipChipOn: { borderColor: theme.primary, backgroundColor: theme.primarySoft },
