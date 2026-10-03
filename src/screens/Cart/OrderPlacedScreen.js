@@ -1,10 +1,13 @@
 import * as React from 'react';
+import { registerForPush } from '../../helpers/Push';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { theme, formatPrice } from '../../theme';
 import { goHome } from '../../helpers/Navigation';
 
 export default function OrderPlacedScreen({ navigation, route }) {
+    // The moment updates are obviously useful: ask to send them.
+    React.useEffect(() => { registerForPush({ ask: true }); }, []);
     const order = route.params.order;
 
     React.useLayoutEffect(() => {

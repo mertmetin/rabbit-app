@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useEffect } from 'react';
 import { jwtDecode } from "jwt-decode";
+import { unregisterForPush } from '../../../helpers/Push';
 import Token from '../../../helpers/Token';
 import { Layout } from '@ui-kitten/components';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -31,7 +32,8 @@ function AccountScreen(props) {
             });
     }, []));
 
-    const logOut = () => {
+    const logOut = async () => {
+        await unregisterForPush();
         Token.removeToken();
         setLogin(false);
     };

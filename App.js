@@ -3,7 +3,10 @@ import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, createNavigationContainerRef } from '@react-navigation/native';
+import * as Notifications from 'expo-notifications';
+import { registerForPush } from './src/helpers/Push';
+import { getCurrentUser } from './src/helpers/Auth';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import BottomTabNavigator from './src/navigation/BottomTabNavigator';
@@ -19,6 +22,9 @@ import * as eva from '@eva-design/eva';
 import { ApplicationProvider } from '@ui-kitten/components';
 
 const Stack = createStackNavigator();
+
+// Lets notification taps navigate from outside a screen.
+const navigationRef = createNavigationContainerRef();
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = React.useState(false);
@@ -57,6 +63,21 @@ export default function App(props) {
     loadResourcesAndDataAsync();
   }, []);
 
+  // Notifications: re-register this phone if the customer said yes before, and
+  // open the order when one is tapped (also when it launched the app).
+  React.useEffect(() => {
+    getCurrentUser().then((user) => user && registerForPush());
+    const openOrder = (response) => {
+      const orderId = response?.notification?.request?.content?.data?.order_id;
+      if (!orderId) return;
+      const go = () => navigationRef.navigate('Root', { screen: 'Home', params: { screen: 'OrderTracking', params: { orderId } } });
+      navigationRef.isReady() ? go() : setTimeout(go, 800);
+    };
+    Notifications.getLastNotificationResponseAsync().then(openOrder);
+    const sub = Notifications.addNotificationResponseReceivedListener(openOrder);
+    return () => sub.remove();
+  }, []);
+
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return null;
   } else {
@@ -69,7 +90,7 @@ export default function App(props) {
             {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
             <SafeAreaProvider>
             <FlyToCartProvider>
-            <NavigationContainer>
+            <NavigationContainer ref={navigationRef}>
               <Stack.Navigator>
                 <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
               </Stack.Navigator>
