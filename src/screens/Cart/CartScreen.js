@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { Ionicons } from '@expo/vector-icons';
@@ -61,12 +61,17 @@ export default function CartScreen() {
     }, [store]);
 
     const firstOrder = useFirstOrder(cart.count > 0);
+    const { width: screenWidth } = useWindowDimensions();
 
     if (cart.count === 0)
         return <EmptyCart />;
 
     const lines = Object.values(cart.items);
     const suggestions = recommended.filter((p) => !cart.items[p.id]).slice(0, 8);
+    // Cards sized to the screen: three fit exactly; with more, a slice of the
+    // next one shows that the row scrolls.
+    const shown = suggestions.length > 3 ? 3.35 : 3;
+    const tileWidth = Math.floor((screenWidth - 24 - 32 - 12 * Math.floor(shown)) / shown);
     const remaining = MIN_ORDER - cart.total;
     const toFreeDelivery = FREE_DELIVERY_OVER - cart.total;
 
@@ -95,7 +100,7 @@ export default function CartScreen() {
                         <Text style={styles.suggestionsTitle}>Recommended for you</Text>
                         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.suggestionRow}>
                             {suggestions.map((product) => (
-                                <ProductTile key={product.id} product={product} width={112} />
+                                <ProductTile key={product.id} product={product} width={tileWidth} />
                             ))}
                         </ScrollView>
                     </View>
