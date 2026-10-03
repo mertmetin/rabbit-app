@@ -33,14 +33,25 @@ http.interceptors.request.use(async config => {
     return config;
 });
 
-// Surface the server's `{ message }` as error.message, which is what
-// most screens show to the user.
+// Messages people can act on, instead of "Network Error" or a stack trace.
+export const OFFLINE_MESSAGE = "Can't reach Rabbit. Check your internet connection and try again.";
+export const SLOW_MESSAGE = 'Rabbit is taking too long to answer. Please try again.';
+export const SERVER_MESSAGE = 'Something went wrong on our side. Please try again in a moment.';
+
+// error.message is what screens show: the server's own `{ message }` when it
+// sent one (written for people), otherwise one of the messages above.
 http.interceptors.response.use(
     response => response,
     error => {
         const message = error.response?.data?.message;
-        if (message)
+        if (message && error.response.status < 500)
             error.message = message;
+        else if (error.code === 'ECONNABORTED')
+            error.message = SLOW_MESSAGE;
+        else if (!error.response)
+            error.message = OFFLINE_MESSAGE;
+        else
+            error.message = SERVER_MESSAGE;
         return Promise.reject(error);
     }
 );
