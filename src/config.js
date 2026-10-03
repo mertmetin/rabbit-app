@@ -18,7 +18,7 @@ export const SUPPORT_PHONE = process.env.EXPO_PUBLIC_SUPPORT_PHONE || '';
 // Orders below this total (in dollars) can't be placed.
 export const MIN_ORDER = 20;
 // Delivery pricing shown in Help; checkout always uses the server's quote.
-export const DELIVERY_FEE = 4.99;
+export const DELIVERY_FEE = 3.99;
 export const FREE_DELIVERY_OVER = 40;
 
 export const DEFAULT_LOCATION = { latitude: 45.4215, longitude: -75.6972 };
