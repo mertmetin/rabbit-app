@@ -8,7 +8,8 @@ import { theme } from '../../theme';
 import { ListItem, Button, Text } from '@ui-kitten/components';
 import { Ionicons } from '@expo/vector-icons';
 import { showMessage } from 'react-native-flash-message';
-import http from '../../helpers/Http';
+import EventSource from 'react-native-sse';
+import http, { API_URL } from '../../helpers/Http';
 import { getCurrentUser } from '../../helpers/Auth';
 import { DEFAULT_LOCATION } from '@/config';
 import { Map } from '../Maps';
@@ -74,23 +75,36 @@ export const DeliveryAddressContainer = () => {
         return () => { cancelled = true; };
     }, [address, attempt]);
 
-    // Delivery time for the header, re-estimated as the basket changes (the
-    // server counts different products; an empty basket means a typical one),
-    // and re-checked every 20 seconds while this screen is showing and
-    // whenever the app comes back to the front: branches open and close as
-    // drivers go online and offline, and a closed branch may hand over to a
-    // farther open one.
+    // The branch serving this place, live: /api/stores/stream pushes it as
+    // soon as anything changes (a driver going online or offline, a queue
+    // growing). It reconnects when the basket's product count changes (that
+    // changes the delivery time) and closes while this screen isn't showing
+    // or the app is in the background. A check every 60 seconds and on
+    // returning to the app backs it up.
     const cart = useCart();
     const products = Object.keys(cart.items).length;
     const [eta, setEta] = useState(null);
     const [tick, setTick] = useState(0);
+    const [live, setLive] = useState(false); // screen focused and app in front
 
     useFocusEffect(useCallback(() => {
+        setLive(AppState.currentState === 'active');
         setTick((t) => t + 1);
-        const timer = setInterval(() => setTick((t) => t + 1), 20_000);
-        const sub = AppState.addEventListener('change', (state) => state === 'active' && setTick((t) => t + 1));
-        return () => { clearInterval(timer); sub.remove(); };
+        const timer = setInterval(() => setTick((t) => t + 1), 60_000);
+        const sub = AppState.addEventListener('change', (state) => {
+            setLive(state === 'active');
+            if (state === 'active') setTick((t) => t + 1);
+        });
+        return () => { clearInterval(timer); sub.remove(); setLive(false); };
     }, []));
+
+    // A new answer from the server: the delivery time, and the branch itself
+    // when it changed or opened/closed.
+    const apply = useCallback((latest) => {
+        setEta(latest?.open ? latest : null);
+        if (latest && store && (latest.id !== store.id || latest.open !== store.open))
+            dispatch({ type: 'SET_STORE', payload: latest });
+    }, [store?.id, store?.open]);
 
     useEffect(() => {
         if (!store || !place)
@@ -98,18 +112,26 @@ export const DeliveryAddressContainer = () => {
         let cancelled = false;
         const timer = setTimeout(() => {
             http.get('stores/closest', { params: { lat: place.latitude, lng: place.longitude, products } })
-                .then((res) => {
-                    if (cancelled) return;
-                    const latest = res.data;
-                    setEta(latest?.open ? latest : null);
-                    // A different branch, or the same one opening or closing.
-                    if (latest && (latest.id !== store.id || latest.open !== store.open))
-                        dispatch({ type: 'SET_STORE', payload: latest });
-                })
+                .then((res) => !cancelled && apply(res.data))
                 .catch(() => {});
         }, 400);
         return () => { cancelled = true; clearTimeout(timer); };
     }, [store?.id, store?.open, place, products, tick]);
+
+    useEffect(() => {
+        if (!store || !place || !live)
+            return;
+        let source = null;
+        const timer = setTimeout(() => {
+            source = new EventSource(`${API_URL}stores/stream?lat=${place.latitude}&lng=${place.longitude}&products=${products}`, {
+                pollingInterval: 3000, // reconnect delay after a dropped connection
+            });
+            source.addEventListener('branch', (event) => {
+                try { apply(JSON.parse(event.data)); } catch {}
+            });
+        }, 400);
+        return () => { clearTimeout(timer); source?.removeAllEventListeners(); source?.close(); };
+    }, [store?.id, store?.open, place, products, live]);
 
     const chooseAddress = async () => {
         const user = await getCurrentUser();
