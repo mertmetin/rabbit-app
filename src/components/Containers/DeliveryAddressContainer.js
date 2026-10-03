@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { useCart } from '../../hooks/useCart';
 import * as Location from 'expo-location';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { ActivityIndicator, Pressable, StyleSheet, Text as RNText, View } from 'react-native';
+import { ActivityIndicator, AppState, Pressable, StyleSheet, Text as RNText, View } from 'react-native';
 import { theme } from '../../theme';
 import { ListItem, Button, Text } from '@ui-kitten/components';
 import { Ionicons } from '@expo/vector-icons';
@@ -75,21 +75,41 @@ export const DeliveryAddressContainer = () => {
     }, [address, attempt]);
 
     // Delivery time for the header, re-estimated as the basket changes (the
-    // server counts different products; an empty basket means a typical one).
+    // server counts different products; an empty basket means a typical one),
+    // and re-checked every 20 seconds while this screen is showing and
+    // whenever the app comes back to the front: branches open and close as
+    // drivers go online and offline, and a closed branch may hand over to a
+    // farther open one.
     const cart = useCart();
     const products = Object.keys(cart.items).length;
     const [eta, setEta] = useState(null);
+    const [tick, setTick] = useState(0);
+
+    useFocusEffect(useCallback(() => {
+        setTick((t) => t + 1);
+        const timer = setInterval(() => setTick((t) => t + 1), 20_000);
+        const sub = AppState.addEventListener('change', (state) => state === 'active' && setTick((t) => t + 1));
+        return () => { clearInterval(timer); sub.remove(); };
+    }, []));
+
     useEffect(() => {
         if (!store || !place)
             return setEta(null);
         let cancelled = false;
         const timer = setTimeout(() => {
             http.get('stores/closest', { params: { lat: place.latitude, lng: place.longitude, products } })
-                .then((res) => !cancelled && setEta(res.data?.open ? res.data : null))
+                .then((res) => {
+                    if (cancelled) return;
+                    const latest = res.data;
+                    setEta(latest?.open ? latest : null);
+                    // A different branch, or the same one opening or closing.
+                    if (latest && (latest.id !== store.id || latest.open !== store.open))
+                        dispatch({ type: 'SET_STORE', payload: latest });
+                })
                 .catch(() => {});
         }, 400);
         return () => { cancelled = true; clearTimeout(timer); };
-    }, [store?.id, place, products]);
+    }, [store?.id, store?.open, place, products, tick]);
 
     const chooseAddress = async () => {
         const user = await getCurrentUser();
